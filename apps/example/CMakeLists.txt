@@ -8,6 +8,21 @@ set(ALL_LIBS
 	${OPENGL_LIBRARY}
   )
   
+  FIND_PACKAGE(Qt4 COMPONENTS QtMain QtCore QtGui QtNetwork QtOpenGL REQUIRED)
+
+  IF(QT_FOUND)
+    INCLUDE_DIRECTORIES(${QT_INCLUDE_DIR})
+    INCLUDE(${QT_USE_FILE})
+    ADD_DEFINITIONS(${QT_DEFINITIONS})
+  ELSE()
+    MESSAGE(FATAL_ERROR "QT 4.8 or greater is required to build SCIRun")
+  ENDIF()
+
+  ADD_DEFINITIONS(-DQT_NO_KEYWORDS)
+  
+SET(QT_USE_QTOPENGL TRUE)
+  
+  
 #---------------- OS specific settings -------------
 # Windows Section #
 if (MSVC)
@@ -36,7 +51,7 @@ endif()
 #----------------------Application------------------------------
 
 add_executable (${PROJECT_NAME} main.cpp )
-target_link_libraries(${PROJECT_NAME} VRMain VRPlugin VRDisplay VRIndex VRMath VRNet ${ALL_LIBS})
+target_link_libraries(${PROJECT_NAME} VRMain VRPlugin VRDisplay VRIndex VRMath VRNet ${QT_LIBRARIES} ${ALL_LIBS})
 
 install( TARGETS ${PROJECT_NAME}
          LIBRARY DESTINATION lib

@@ -19,15 +19,174 @@
 #include <GL/glu.h>
 #endif
 
+#include <QMainWindow>
+
+/*namespace Ui {
+class Notepad;
+}
+
+class Notepad : public QMainWindow
+{
+    Q_OBJECT
+
+public:
+    explicit Notepad(QWidget *parent = 0) :
+    QMainWindow(parent),
+    ui(new Ui::Notepad)
+    {
+
+        ui->setupUi(this);
+    }
+    ~Notepad()
+    {
+
+        delete ui;
+    }
+
+private:
+    Ui::Notepad *ui;
+};
+*/
+void initGL();
+bool perFrame();
+void render2(VRRenderState& state);
+void handleEvent(const std::string &eventName, VRDataIndex *dataIndex);
+
+
+#include <QtCore>
+#include <QApplication>
+#include <QWidget>
+#include <QPushButton>
+#include <QGLWidget>
+
+class MyGLDrawer : public QGLWidget
+{
+    Q_OBJECT        // must include this if you use Qt signals/slots
+
+public:
+    MyGLDrawer(QWidget *parent = NULL)
+        : QGLWidget(parent) {}
+    virtual ~MyGLDrawer() {}
+
+protected:
+
+    void initializeGL()
+    {
+    	initGL();
+    }
+
+    void resizeGL(int w, int h)
+    {
+        // setup viewport, projection etc.:
+        glViewport(0, 0, (GLint)w, (GLint)h);
+        initGL();
+    }
+
+    void paintGL()
+    {
+    	VRRenderState state;
+        render2(state);
+    }
+
+};
+
+class MyButton : public QWidget {
+
+ public:
+     MyButton(QWidget *parent = 0);
+};
+
+MyButton::MyButton(QWidget *parent)
+    : QWidget(parent) {
+
+
+  QPushButton *quitBtn = new QPushButton("Quit", this);
+  quitBtn->setGeometry(50, 40, 75, 30);
+
+  connect(quitBtn, SIGNAL(clicked()), qApp, SLOT(quit()));
+}
+
+/*
+#include <QtOpenGL/QGLWidget>
+class GLWidget : public QGLWidget {
+
+    Q_OBJECT // must include this if you use Qt signals/slots
+
+public:
+    GLWidget(QWidget *parent = NULL);
+
+protected:
+    void initializeGL();
+    void resizeGL(int w, int h);
+    void paintGL();
+    void mousePressEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
+    void keyPressEvent(QKeyEvent *event);
+};
+
+#include <QtGui/QMouseEvent>
+
+GLWidget::GLWidget(QWidget *parent) : QGLWidget(parent) {
+    setMouseTracking(true);
+}
+
+void GLWidget::initializeGL() {
+    glDisable(GL_TEXTURE_2D);
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_COLOR_MATERIAL);
+    glEnable(GL_BLEND);
+    glEnable(GL_POLYGON_SMOOTH);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glClearColor(0, 0, 0, 0);
+}
+
+void GLWidget::resizeGL(int w, int h) {
+    glViewport(0, 0, w, h);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(0, w, 0, h); // set origin to bottom left corner
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+}
+
+void GLWidget::paintGL() {
+    glClear(GL_COLOR_BUFFER_BIT);
+    glColor3f(1,0,0);
+    glBegin(GL_POLYGON);
+    glVertex2f(0,0);
+    glVertex2f(100,500);
+    glVertex2f(500,100);
+    glEnd();
+}
+
+void GLWidget::mousePressEvent(QMouseEvent *event) {
+
+}
+void GLWidget::mouseMoveEvent(QMouseEvent *event) {
+    printf("%d, %d\n", event->x(), event->y());
+}
+
+void GLWidget::keyPressEvent(QKeyEvent* event) {
+    switch(event->key()) {
+    case Qt::Key_Escape:
+        close();
+        break;
+    default:
+        event->ignore();
+        break;
+    }
+}
+*/
+
 using namespace MinVR;
 using namespace std;
 
 //-----------------Call back prototypes----------------
-void initGL();
+/*void initGL();
 bool perFrame();
 void render(VRRenderState& state);
 void handleEvent(const std::string &eventName, VRDataIndex *dataIndex);
-
+*/
 //--------------------Variables-------------------------
 
 VRMain *MVR;
@@ -38,6 +197,25 @@ int frame = 0;
 //------------------ Main Loop -------------------------
 
 int main(int argc, char **argv) {
+
+	std::cout << "Qt version: " << qVersion() << std::endl;
+
+    QApplication app(argc, argv);
+
+    //QWidget window;
+    //MyButton window;
+    //MyGLDrawer window();
+
+    /*window.resize(250, 150);
+    window.setWindowTitle("Simple example");
+    window.show();*/
+
+    //GLWidget
+    MyGLDrawer window;
+        window.resize(800,600);
+        window.show();
+
+    return app.exec();
 
 	// Initialize VRMain and register callbacks
 	MVR = new VRMain();
@@ -73,7 +251,7 @@ bool perFrame()
 	MVR->synchronizeAndProcessEvents();
 
 	// Render the scene on all displays (passing render function into display)
-	display->startRendering(render);
+	display->startRendering(render2);
 	MVR->renderEverywhere();
 	display->finishRendering();
 
@@ -127,7 +305,7 @@ void initGL() {
 }
 
 /* Render function */
-void render(VRRenderState& state) {
+void render2(VRRenderState& state) {
 	if (!state.display->allowGraphics())
 	{
 		cout << "Command line only device: " << state.display->getName() << " (Frame: " << frame << ")" << endl;
