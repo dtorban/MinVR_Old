@@ -9,6 +9,7 @@ set (${PROJECT_NAME}_source_files
 	renderers/VRRenderState.cpp
 	nodes/console/VRConsoleDisplay.cpp
 	nodes/graphics/VRGraphicsWindowNode.cpp
+	nodes/graphics/camera/VROffAxisCameraNode.cpp
 	nodes/graphics/stereo/VRStereoNode.cpp
 	nodes/graphics/stereo/VRSideBySideNode.cpp
 	nodes/graphics/structure/VRViewportNode.cpp

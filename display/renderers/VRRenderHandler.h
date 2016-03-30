@@ -26,8 +26,8 @@ public:
 	virtual ~VRRenderHandler();
 
 	// The render functions use a template method pattern to call renderContextCallback(state) and renderSceneCallback(state)
-	void renderContextCallback();
-	void renderSceneCallback();
+	virtual void renderContextCallback();
+	virtual void renderSceneCallback();
 
 	// ------------ User defined render functions: -------------
 	// allows a user to specify a function which handles per frame functionality.
@@ -38,14 +38,14 @@ public:
 
 	// ------------ State control functions: -------------
 	// Returns the current state
-	VRRenderState& getState();
+	virtual VRRenderState& getState();
 	// Pushes a state, which usually implies that previous state information is available and changes to the state
 	// will not affect the previous states
-	void pushState();
+	virtual void pushState();
 	// Pops the state, so the state will return to a previous state and undo changes from the popped state.
-	void popState();
+	virtual void popState();
 	// Resets the state
-	void resetState();
+	virtual void resetState();
 
 private:
 	VRRenderState m_state;

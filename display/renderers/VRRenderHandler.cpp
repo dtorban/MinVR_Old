@@ -19,11 +19,11 @@ VRRenderHandler::~VRRenderHandler() {
 }
 
 void VRRenderHandler::renderContextCallback() {
-	renderContextCallback(m_state);
+	renderContextCallback(getState());
 }
 
 void VRRenderHandler::renderSceneCallback() {
-	renderSceneCallback(m_state);
+	renderSceneCallback(getState());
 }
 
 VRRenderState& VRRenderHandler::getState() {

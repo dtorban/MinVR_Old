@@ -8,6 +8,7 @@
 #include "display/nodes/console/VRConsoleDisplay.h"
 #include "display/nodes/graphics/stereo/VRStereoNode.h"
 #include "display/nodes/graphics/structure/VRViewportNode.h"
+#include "display/nodes/graphics/camera/VROffAxisCameraNode.h"
 
 void emptyEventCallbackMVR(const std::string &eventName, VRDataIndex *dataIndex) {}
 void emptyRenderCallbackMVR(VRDataIndex* index) {}
@@ -22,6 +23,7 @@ VRMain::VRMain() : initialized(false),_vrNet(NULL), _display(NULL)
 	  _displayFactory = _displayFactories;
 	  _displayFactory = new MinVR::VRViewportFactory(_displayFactory);
 	  _displayFactories->addFactory(new MinVR::VRStereoFactory());
+	  _displayFactories->addFactory(new MinVR::VRCameraDisplayFactory());
 }
 
 

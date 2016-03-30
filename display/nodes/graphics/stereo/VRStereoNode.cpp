@@ -33,7 +33,6 @@ VRDisplayNode* VRStereoFactory::create(VRDataIndex& config,
 
 	if(std::equal(ending.rbegin(), ending.rend(), nameSpace.rbegin()))
 	{
-		std::cout << "True " << nameSpace << std::endl;
 		VRSideBySideNode* sideBySideNode = new VRSideBySideNode();
 		createChildren(sideBySideNode, baseFactory, config, nameSpace);
 		return sideBySideNode;
