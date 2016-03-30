@@ -44,6 +44,7 @@ void VRRenderHandler::popState() {
 }
 
 void VRRenderHandler::resetState() {
+	m_nodeNum = 0;
 	m_state = VRRenderState();
 	m_nameSpaces.push_back("/display");
 	m_state.setNameSpace("/display");

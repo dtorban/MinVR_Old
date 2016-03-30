@@ -22,16 +22,21 @@
 		<yOffset type="double">0</yOffset>
 		<width type="double">800</width>
 		<height type="double">400</height>
-		<SideBySideStereo>
+		<CameraNode>
+			<displayType type="string">offAxisCamera</displayType>
+			<defaultFrame type="doublearray">1@0@0@0@0@1@0@0@0@0@1@1@0@0@0@1</defaultFrame>
+			<nearClip type="double">0.01</nearClip>
+			<farClip type="double">100.0</farClip>
 			<tile>
 				<topLeft type="doublearray">-0.5@0.5@0.0</topLeft>
 				<topRight type="doublearray">0.5@0.5@0.0</topRight>
 				<bottomLeft type="doublearray">-0.5@-0.5@0.0</bottomLeft>
 				<bottomRight type="doublearray">0.5@-0.5@0.0</bottomRight>
-				<nearClip type="double">0.01</nearClip>
-				<farClip type="double">100.0</farClip>
 			</tile>
-		</SideBySideStereo>
+			<SideBySideStereo>
+				<interocularDistance type="double">0.2083</interocularDistance>
+			</SideBySideStereo>
+		</CameraNode>
 	</Desktop>
 </VRDisplayDevices>
 
