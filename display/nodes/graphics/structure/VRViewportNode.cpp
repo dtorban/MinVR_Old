@@ -58,15 +58,15 @@ VRRect VRViewportNode::calculate(std::string inName, VRRenderState& state,
 }
 
 VRDisplayNode* VRViewportFactory::create(VRDataIndex& config,
-		const std::string nameSpace) {
+		const std::string nameSpace, VRDisplayFactory& baseFactory) {
 
-	VRDisplayNode* display = m_innerFactory->create(config, nameSpace);
+	VRDisplayNode* display = m_innerFactory->create(config, nameSpace, baseFactory);
 	bool createdScope = false;
 	if (!display)
 	{
 		std::cout << "Created scope" << std::endl;
 		VRStateScopeNode* scope = new VRStateScopeNode();
-		createChildren(scope, m_vrSystem->getDisplayFactory(), config, nameSpace);
+		createChildren(scope, baseFactory, config, nameSpace);
 		display = scope;
 		createdScope = true;
 	}

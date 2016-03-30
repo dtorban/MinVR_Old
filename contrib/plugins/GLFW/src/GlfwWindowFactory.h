@@ -17,10 +17,10 @@ namespace MinVR {
 
 class GlfwWindowFactory : public VRGraphicsWindowFactory {
 public:
-	PLUGIN_API GlfwWindowFactory(GlfwInputDevice* inputDevice, VRSystem* vrSystem);
+	PLUGIN_API GlfwWindowFactory(GlfwInputDevice* inputDevice);
 	PLUGIN_API virtual ~GlfwWindowFactory();
 
-	PLUGIN_API VRGraphicsWindowNode* createWindow(VRDataIndex& config, const std::string nameSpace, std::string type);
+	PLUGIN_API VRGraphicsWindowNode* createWindow(VRDataIndex& config, const std::string nameSpace, std::string type, VRDisplayFactory& baseFactory);
 
 private:
 	GlfwInputDevice* inputDevice;

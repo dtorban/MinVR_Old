@@ -18,12 +18,12 @@ class VRDisplayFactory {
 public:
 	virtual ~VRDisplayFactory() {}
 
-	virtual VRDisplayNode* create(VRDataIndex& config, const std::string nameSpace) = 0;
+	virtual VRDisplayNode* create(VRDataIndex& config, const std::string nameSpace, VRDisplayFactory& baseFactory) = 0;
 
-	static void createChildren(VRDisplayNode* display, VRDisplayFactory& factory, VRDataIndex& config, const std::string nameSpace);
+	static void createChildren(VRDisplayNode* display, VRDisplayFactory& baseFactory, VRDataIndex& config, const std::string nameSpace);
 };
 
-inline void VRDisplayFactory::createChildren(VRDisplayNode* display, VRDisplayFactory& factory, VRDataIndex& config, const std::string nameSpace)
+inline void VRDisplayFactory::createChildren(VRDisplayNode* display, VRDisplayFactory& baseFactory, VRDataIndex& config, const std::string nameSpace)
 {
 	if (display)
 	{
@@ -35,7 +35,7 @@ inline void VRDisplayFactory::createChildren(VRDisplayNode* display, VRDisplayFa
 			if (config.getType(*f) == VRCORETYPE_CONTAINER)
 			{
 				std::cout << *f << std::endl;
-				VRDisplayNode* subDisplay = factory.create(config, *f);
+				VRDisplayNode* subDisplay = baseFactory.create(config, *f, baseFactory);
 				if (subDisplay)
 				{
 					display->addChild(subDisplay);

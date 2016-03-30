@@ -13,7 +13,6 @@
 #include "math/VRRect.h"
 #include "display/nodes/graphics/structure/VRTile.h"
 #include "display/factories/VRTypedDisplayFactory.h"
-#include "main/VRSystem.h"
 
 namespace MinVR {
 
@@ -48,12 +47,9 @@ public:
 	virtual ~VRGraphicsWindowFactory() {}
 
 protected:
-	VRGraphicsWindowFactory(VRSystem* vrSystem) : m_vrSystem(vrSystem) {}
-	VRDisplayNode* create(VRDataIndex& config, const std::string nameSpace, std::string type);
-	virtual VRGraphicsWindowNode* createWindow(VRDataIndex& config, const std::string nameSpace, std::string type) = 0;
-
-private:
-	VRSystem* m_vrSystem;
+	VRGraphicsWindowFactory() {}
+	VRDisplayNode* create(VRDataIndex& config, const std::string nameSpace, std::string type, VRDisplayFactory& baseFactory);
+	virtual VRGraphicsWindowNode* createWindow(VRDataIndex& config, const std::string nameSpace, std::string type, VRDisplayFactory& baseFactory) = 0;
 };
 
 } /* namespace MinVR */

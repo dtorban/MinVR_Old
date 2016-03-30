@@ -55,7 +55,7 @@ public:
 		if (vrInterface != NULL)
 		{
 			std::cout << "Adding GLFW window factory" << std::endl;
-			displayFactory = new GlfwWindowFactory(inputDevice, vrInterface->getVRSystem());
+			displayFactory = new GlfwWindowFactory(inputDevice);
 			inputDeviceFactory = new GlfwInputDeviceFactory(inputDevice);
 			timer = new GlfwTimer();
 			vrInterface->addVRDisplayFactory(displayFactory);

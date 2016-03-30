@@ -20,8 +20,8 @@ VRMain::VRMain() : initialized(false),_vrNet(NULL), _display(NULL)
 	  registerSwapCallback(&emptyRenderSwapMVR);
 	  _displayFactories = new MinVR::VRCompositeDisplayFactory();
 	  _displayFactory = _displayFactories;
-	  _displayFactory = new MinVR::VRViewportFactory(this, _displayFactory);
-	  _displayFactories->addFactory(new MinVR::VRStereoFactory(this));
+	  _displayFactory = new MinVR::VRViewportFactory(_displayFactory);
+	  _displayFactories->addFactory(new MinVR::VRStereoFactory());
 }
 
 
@@ -161,7 +161,7 @@ void VRMain::initialize()
   }
 
   // Create display
-  _display = _displayFactory->create(*_index, "/MVR/VRDisplayDevices/Desktop");
+  _display = _displayFactory->create(*_index, "/MVR/VRDisplayDevices/Desktop", *_displayFactory);
 
  // exit(0);
 

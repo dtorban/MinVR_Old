@@ -11,7 +11,6 @@
 
 #include "display/VRDisplayNode.h"
 #include "display/factories/VRDisplayFactory.h"
-#include "main/VRSystem.h"
 
 namespace MinVR {
 
@@ -30,13 +29,10 @@ protected:
 
 class VRStereoFactory : public VRDisplayFactory {
 public:
-	VRStereoFactory(VRSystem* vrSystem) : m_vrSystem(vrSystem) {}
+	VRStereoFactory() {}
 	virtual ~VRStereoFactory() {}
 
-	VRDisplayNode* create(VRDataIndex& config, const std::string nameSpace);
-
-private:
-	VRSystem* m_vrSystem;
+	VRDisplayNode* create(VRDataIndex& config, const std::string nameSpace, VRDisplayFactory& baseFactory);
 };
 
 } /* namespace MinVR */

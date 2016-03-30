@@ -21,10 +21,10 @@ VRCompositeDisplayFactory::~VRCompositeDisplayFactory() {
 }
 
 VRDisplayNode* VRCompositeDisplayFactory::create(VRDataIndex& config,
-		const std::string nameSpace) {
+		const std::string nameSpace, VRDisplayFactory& baseFactory) {
 	for (int f = 0; f < m_displayFactories.size(); f++)
 	{
-		VRDisplayNode* display = m_displayFactories[f]->create(config, nameSpace);
+		VRDisplayNode* display = m_displayFactories[f]->create(config, nameSpace, baseFactory);
 		if (display != NULL)
 		{
 			return display;

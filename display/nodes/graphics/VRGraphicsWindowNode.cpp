@@ -60,11 +60,11 @@ void VRGraphicsWindowNode::setRect(const VRRect& rect) {
 }
 
 VRDisplayNode* VRGraphicsWindowFactory::create(VRDataIndex& config,
-		const std::string nameSpace, std::string type) {
+		const std::string nameSpace, std::string type, VRDisplayFactory& baseFactory) {
 	if (config.exists(nameSpace + "/windowType", ""))
 	{
-		VRGraphicsWindowNode* display = createWindow(config, nameSpace, config.getValue(nameSpace + "/windowType", ""));
-		createChildren(display, m_vrSystem->getDisplayFactory(), config, nameSpace);
+		VRGraphicsWindowNode* display = createWindow(config, nameSpace, config.getValue(nameSpace + "/windowType", ""), baseFactory);
+		createChildren(display, baseFactory, config, nameSpace);
 
 		return display;
 	}

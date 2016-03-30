@@ -32,13 +32,12 @@ private:
 
 class VRViewportFactory : public VRDisplayFactory {
 public:
-	VRViewportFactory(VRSystem* vrSystem, VRDisplayFactory* innerFactory) : m_vrSystem(vrSystem), m_innerFactory(innerFactory) {}
+	VRViewportFactory(VRDisplayFactory* innerFactory) : m_innerFactory(innerFactory) {}
 	virtual ~VRViewportFactory() {}
 
-	VRDisplayNode* create(VRDataIndex& config, const std::string nameSpace);
+	VRDisplayNode* create(VRDataIndex& config, const std::string nameSpace, VRDisplayFactory& baseFactory);
 
 private:
-	VRSystem* m_vrSystem;
 	VRDisplayFactory* m_innerFactory;
 };
 

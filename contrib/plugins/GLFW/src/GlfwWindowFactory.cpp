@@ -16,13 +16,13 @@
 
 namespace MinVR {
 
-GlfwWindowFactory::GlfwWindowFactory(GlfwInputDevice* iDevice, VRSystem* vrSystem) : VRGraphicsWindowFactory(vrSystem), inputDevice(iDevice) {
+GlfwWindowFactory::GlfwWindowFactory(GlfwInputDevice* iDevice) : inputDevice(iDevice) {
 }
 
 GlfwWindowFactory::~GlfwWindowFactory() {
 }
 
-VRGraphicsWindowNode* GlfwWindowFactory::createWindow(VRDataIndex& config, const std::string nameSpace, std::string type) {
+VRGraphicsWindowNode* GlfwWindowFactory::createWindow(VRDataIndex& config, const std::string nameSpace, std::string type, VRDisplayFactory& baseFactory) {
 
 	if (type != "GLFW")
 	{

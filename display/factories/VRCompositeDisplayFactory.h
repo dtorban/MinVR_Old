@@ -19,7 +19,7 @@ public:
 	VRCompositeDisplayFactory();
 	virtual ~VRCompositeDisplayFactory();
 
-	VRDisplayNode* create(VRDataIndex& config, const std::string nameSpace);
+	VRDisplayNode* create(VRDataIndex& config, const std::string nameSpace, VRDisplayFactory& baseFactory);
 	void addFactory(VRDisplayFactory* factory);
 
 private:
