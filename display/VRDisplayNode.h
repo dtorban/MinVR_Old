@@ -9,7 +9,7 @@
 #ifndef VRDISPLAYNODE_H_
 #define VRDISPLAYNODE_H_
 
-#include "display/renderers/VRRenderHandler.h"
+#include "display/renderers/VRRenderer.h"
 #include <vector>
 
 namespace MinVR {
@@ -27,7 +27,7 @@ public:
 
 	// Calls render function on each of the display node's children.  If there are no children, then we are
 	// at a leaf node and renderer.render() is called.  VRRenderer allows the display to control state and
-	virtual void render(VRRenderHandler& renderer);
+	virtual void render(VRRenderer& renderer);
 
 	// Waits for rendering to complete on the display node
 	virtual void waitForRenderToComplete();

@@ -20,7 +20,7 @@ class VRGraphicsWindowNode : public VRDisplayNode {
 public:
 	virtual ~VRGraphicsWindowNode();
 
-	virtual void render(VRRenderHandler& renderer);
+	virtual void render(VRRenderer& renderer);
 	virtual void waitForRenderToComplete();
 	virtual void displayTheFinishedRendering();
 

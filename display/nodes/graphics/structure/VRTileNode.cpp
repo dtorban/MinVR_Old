@@ -16,7 +16,7 @@ VRTileNode::VRTileNode(const VRTile& tile) : m_tile(tile) {
 VRTileNode::~VRTileNode() {
 }
 
-void VRTileNode::render(VRRenderHandler& renderer) {
+void VRTileNode::render(VRRenderer& renderer) {
 //	renderer.pushState();
 	renderer.getState().writeValue("tile", m_tile);
 

@@ -19,7 +19,7 @@ VRViewportNode::VRViewportNode(const VRRect& rect) : m_rect(rect) {
 VRViewportNode::~VRViewportNode() {
 }
 
-void VRViewportNode::render(VRRenderHandler& renderer) {
+void VRViewportNode::render(VRRenderer& renderer) {
 	calculate("viewport", renderer.getState(), m_rect, true);
 
 	VRDisplayNode::render(renderer);

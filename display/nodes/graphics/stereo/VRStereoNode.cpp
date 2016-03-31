@@ -17,7 +17,7 @@ VRStereoNode::VRStereoNode() {
 VRStereoNode::~VRStereoNode() {
 }
 
-void VRStereoNode::render(VRRenderHandler& renderer) {
+void VRStereoNode::render(VRRenderer& renderer) {
 	for (int passNum = 0; passNum < getNumPasses(); passNum++)
 	{
 		preRenderPass(renderer, passNum);

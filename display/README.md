@@ -27,7 +27,7 @@ To create a new display, simply inherit from MinVR::VRDisplayNode and override t
   /* MyDisplayNode sets myValue and uses the command line to display. */
   class MyDisplayNode : public MinVR::VRDisplayNode {
   
-    void render(MinVR::VRRenderHandler& renderer) {
+    void render(MinVR::VRRenderer& renderer) {
       std::cout << "This is called when this display node renders." << std::endl;
     
       // Pushes the current render state for node state changes

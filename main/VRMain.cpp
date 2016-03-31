@@ -294,7 +294,7 @@ VRMain::renderEverywhere() {
 }
 
 void
-VRMain::renderEverywhere(MinVR::VRRenderHandler& renderer) {
+VRMain::renderEverywhere(MinVR::VRRenderer& renderer) {
 
   if (!initialized) {
     std::cerr << "VRMain not initialized." << std::endl;

@@ -19,7 +19,7 @@ VROffAxisCameraNode::~VROffAxisCameraNode() {
 	// TODO Auto-generated destructor stub
 }
 
-void VROffAxisCameraNode::render(VRRenderHandler& renderer) {
+void VROffAxisCameraNode::render(VRRenderer& renderer) {
 	renderer.pushState();
 	std::cout << "off axis camera" << std::endl;
 	VROffAxisRenderHandler offAxisRenderer(&renderer);

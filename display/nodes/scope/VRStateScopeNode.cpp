@@ -16,7 +16,7 @@ VRStateScopeNode::VRStateScopeNode() {
 VRStateScopeNode::~VRStateScopeNode() {
 }
 
-void VRStateScopeNode::render(VRRenderHandler& renderer) {
+void VRStateScopeNode::render(VRRenderer& renderer) {
 	renderer.pushState();
 	VRDisplayNode::render(renderer);
 	renderer.popState();

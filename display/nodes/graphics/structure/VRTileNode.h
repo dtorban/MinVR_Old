@@ -19,7 +19,7 @@ public:
 	VRTileNode(const VRTile& tile);
 	virtual ~VRTileNode();
 
-	void render(VRRenderHandler& renderer);
+	void render(VRRenderer& renderer);
 
 private:
 	VRTile m_tile;

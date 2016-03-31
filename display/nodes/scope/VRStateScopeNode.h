@@ -22,7 +22,7 @@ public:
 	VRStateScopeNode();
 	virtual ~VRStateScopeNode();
 
-	void render(VRRenderHandler& renderer);
+	void render(VRRenderer& renderer);
 };
 
 } /* namespace MinVR */

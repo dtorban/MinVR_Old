@@ -23,12 +23,12 @@ int VRSideBySideNode::getNumPasses() {
 	return 2;
 }
 
-void VRSideBySideNode::preRenderPass(VRRenderHandler& renderer, int passNum) {
+void VRSideBySideNode::preRenderPass(VRRenderer& renderer, int passNum) {
 	renderer.pushState();
 	VRViewportNode::calculate("viewport", renderer.getState(), m_viewports[passNum]);
 }
 
-void VRSideBySideNode::postRenderPass(VRRenderHandler& renderer, int passNum) {
+void VRSideBySideNode::postRenderPass(VRRenderer& renderer, int passNum) {
 	renderer.popState();
 }
 

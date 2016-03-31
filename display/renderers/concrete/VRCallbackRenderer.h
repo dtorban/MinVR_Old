@@ -9,7 +9,7 @@
 #ifndef VRCALLBACKRENDERER_H_
 #define VRCALLBACKRENDERER_H_
 
-#include "display/renderers/VRRenderHandler.h"
+#include "display/renderers/VRRenderer.h"
 
 namespace MinVR {
 
@@ -18,7 +18,7 @@ namespace MinVR {
  * These functions are registered as callback functions for the VRRenderer.  The state is controlled
  * in the VRBasicRenderer subclass.
  */
-class VRCallbackRenderer : public VRRenderHandler {
+class VRCallbackRenderer : public VRRenderer {
 public:
 	typedef void (*MethodType)(VRRenderState&);
 

@@ -6,31 +6,31 @@
  * 		Dan Orban (dtorban)
  */
 
-#include <display/renderers/VRRenderHandler.h>
+#include <display/renderers/VRRenderer.h>
 #include <sstream>
 
 namespace MinVR {
 
-VRRenderHandler::VRRenderHandler() {
+VRRenderer::VRRenderer() {
 	resetState();
 }
 
-VRRenderHandler::~VRRenderHandler() {
+VRRenderer::~VRRenderer() {
 }
 
-void VRRenderHandler::renderContextCallback() {
+void VRRenderer::renderContextCallback() {
 	renderContextCallback(getState());
 }
 
-void VRRenderHandler::renderSceneCallback() {
+void VRRenderer::renderSceneCallback() {
 	renderSceneCallback(getState());
 }
 
-VRRenderState& VRRenderHandler::getState() {
+VRRenderState& VRRenderer::getState() {
 	return m_state;
 }
 
-void VRRenderHandler::pushState() {
+void VRRenderer::pushState() {
 	m_nodeNum++;
 	std::stringstream ss;
 	ss << m_nameSpaces[m_nameSpaces.size() - 1] << "/" << "node" << m_nodeNum;
@@ -38,12 +38,12 @@ void VRRenderHandler::pushState() {
 	m_state.setNameSpace(m_nameSpaces[m_nameSpaces.size() - 1]);
 }
 
-void VRRenderHandler::popState() {
+void VRRenderer::popState() {
 	m_nameSpaces.pop_back();
 	m_state.setNameSpace(m_nameSpaces[m_nameSpaces.size() - 1]);
 }
 
-void VRRenderHandler::resetState() {
+void VRRenderer::resetState() {
 	m_nodeNum = 0;
 	m_state = VRRenderState();
 	m_nameSpaces.push_back("/display");

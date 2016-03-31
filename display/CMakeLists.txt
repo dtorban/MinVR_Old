@@ -5,7 +5,7 @@ project (VRDisplay)
 set (${PROJECT_NAME}_source_files 
 	VRDisplayNode.cpp
 	renderers/concrete/VRCallbackRenderer.cpp
-	renderers/VRRenderHandler.cpp
+	renderers/VRRenderer.cpp
 	renderers/VRRenderState.cpp
 	nodes/console/VRConsoleDisplay.cpp
 	nodes/graphics/VRGraphicsWindowNode.cpp

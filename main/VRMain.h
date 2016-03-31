@@ -73,7 +73,7 @@ public:
   // OpenGL or whatever graphics engine you are using.
   virtual void renderEverywhere();
 
-  virtual void renderEverywhere(MinVR::VRRenderHandler& renderer);
+  virtual void renderEverywhere(MinVR::VRRenderer& renderer);
 
   // END LOOP
 

@@ -19,12 +19,12 @@ public:
 	VRStereoNode();
 	virtual ~VRStereoNode();
 
-	virtual void render(VRRenderHandler& renderer);
+	virtual void render(VRRenderer& renderer);
 
 protected:
 	virtual int getNumPasses() = 0;
-	virtual void preRenderPass(VRRenderHandler& renderer, int passNum) = 0;
-	virtual void postRenderPass(VRRenderHandler& renderer, int passNum) = 0;
+	virtual void preRenderPass(VRRenderer& renderer, int passNum) = 0;
+	virtual void postRenderPass(VRRenderer& renderer, int passNum) = 0;
 };
 
 class VRStereoFactory : public VRDisplayFactory {

@@ -19,7 +19,7 @@ public:
 	VRConsoleDisplay(std::ostream *stream = &std::cout);
 	virtual ~VRConsoleDisplay();
 
-	void render(VRRenderHandler& renderer);
+	void render(VRRenderer& renderer);
 	void waitForRenderToComplete();
 	void displayTheFinishedRendering();
 

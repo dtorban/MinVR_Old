@@ -14,16 +14,16 @@
 namespace MinVR {
 
 /*
- * VRRenderHandler has a simple implementation of controlling state.  When a state is pushed,
+ * VRRenderer has a simple implementation of controlling state.  When a state is pushed,
  * a new namespace in the VRDataIndex is created as a sub namespace to the current namespace.
  * This enables the use of the VRDataIndex for walking up a namespace tree.  The user defined
  * functions updateFrame(VRRenderState& state) and render(VRRenderState& state) still need to be
  * defined by the user.
  */
-class VRRenderHandler{
+class VRRenderer{
 public:
-	VRRenderHandler();
-	virtual ~VRRenderHandler();
+	VRRenderer();
+	virtual ~VRRenderer();
 
 	// The render functions use a template method pattern to call renderContextCallback(state) and renderSceneCallback(state)
 	virtual void renderContextCallback();

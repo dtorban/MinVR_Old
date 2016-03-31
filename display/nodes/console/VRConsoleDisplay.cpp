@@ -20,7 +20,7 @@ VRConsoleDisplay::~VRConsoleDisplay() {
 }
 
 
-void VRConsoleDisplay::render(VRRenderHandler& renderer) {
+void VRConsoleDisplay::render(VRRenderer& renderer) {
 	renderer.pushState();
 	renderer.getState().setValue("isConsole", 1);
 	renderer.renderSceneCallback();

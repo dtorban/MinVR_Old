@@ -19,12 +19,12 @@ public:
 	VROffAxisCameraNode();
 	virtual ~VROffAxisCameraNode();
 
-	void render(VRRenderHandler& renderer);
+	void render(VRRenderer& renderer);
 };
 
-class VROffAxisRenderHandler : public VRRenderHandler {
+class VROffAxisRenderHandler : public VRRenderer {
 public:
-	VROffAxisRenderHandler(VRRenderHandler* renderer) : m_renderer(renderer) {}
+	VROffAxisRenderHandler(VRRenderer* renderer) : m_renderer(renderer) {}
 	virtual ~VROffAxisRenderHandler() {}
 
 	void renderContextCallback(VRRenderState& state);
@@ -35,7 +35,7 @@ public:
 	void resetState() { m_renderer->resetState(); }
 
 private:
-	VRRenderHandler* m_renderer;
+	VRRenderer* m_renderer;
 };
 
 class VRCameraDisplayFactory : public VRTypedDisplayFactory {

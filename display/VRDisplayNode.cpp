@@ -20,7 +20,7 @@ VRDisplayNode::~VRDisplayNode() {
 	clearChildren(true);
 }
 
-void VRDisplayNode::render(VRRenderHandler& renderer) {
+void VRDisplayNode::render(VRRenderer& renderer) {
 	if (m_children.size() > 0)
 	{
 		for (vector<VRDisplayNode*>::iterator it = m_children.begin(); it != m_children.end(); it++)

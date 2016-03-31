@@ -21,7 +21,7 @@ public:
 	VRViewportNode(const VRRect& rect);
 	virtual ~VRViewportNode();
 
-	void render(VRRenderHandler& renderer);
+	void render(VRRenderer& renderer);
 
 	static VRRect calculate(std::string inName, std::string outName, VRRenderState& state, const VRRect& rect, bool modifyTile = false);
 	static VRRect calculate(std::string inName, VRRenderState& state, const VRRect& rect, bool modifyTile = false);

@@ -21,8 +21,8 @@ public:
 
 protected:
 	int getNumPasses();
-	void preRenderPass(VRRenderHandler& renderer, int passNum);
-	void postRenderPass(VRRenderHandler& renderer, int passNum);
+	void preRenderPass(VRRenderer& renderer, int passNum);
+	void postRenderPass(VRRenderer& renderer, int passNum);
 
 private:
 	VRRect m_viewports[2];

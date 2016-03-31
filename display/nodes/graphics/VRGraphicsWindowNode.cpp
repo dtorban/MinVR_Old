@@ -20,7 +20,7 @@ VRGraphicsWindowNode::VRGraphicsWindowNode(const VRRect& rect) : m_rect(rect) {
 VRGraphicsWindowNode::~VRGraphicsWindowNode() {
 }
 
-void VRGraphicsWindowNode::render(VRRenderHandler& renderer) {
+void VRGraphicsWindowNode::render(VRRenderer& renderer) {
 	renderer.pushState();
 	setCurrentContext();
 	renderer.getState().setValue("graphicsContextType", getContextType());
