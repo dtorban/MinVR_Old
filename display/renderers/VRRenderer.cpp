@@ -11,19 +11,11 @@
 
 namespace MinVR {
 
-VRRenderer::VRRenderer() {
+VRRenderer::VRRenderer(VRRenderHandler* renderHandler) : m_renderHandler(renderHandler) {
 	resetState();
 }
 
 VRRenderer::~VRRenderer() {
-}
-
-void VRRenderer::renderContextCallback() {
-	renderContextCallback(getState());
-}
-
-void VRRenderer::renderSceneCallback() {
-	renderSceneCallback(getState());
 }
 
 VRRenderState& VRRenderer::getState() {

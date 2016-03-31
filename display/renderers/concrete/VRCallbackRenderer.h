@@ -18,7 +18,7 @@ namespace MinVR {
  * These functions are registered as callback functions for the VRRenderer.  The state is controlled
  * in the VRBasicRenderer subclass.
  */
-class VRCallbackRenderer : public VRRenderer {
+class VRCallbackRenderer : public VRRenderer, public VRRenderHandler {
 public:
 	typedef void (*MethodType)(VRRenderState&);
 

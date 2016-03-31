@@ -11,31 +11,18 @@
 
 #include "display/VRDisplayNode.h"
 #include "display/factories/VRTypedDisplayFactory.h"
+#include "display/nodes/scope/VRLeafRenderedNode.h"
 
 namespace MinVR {
 
-class VROffAxisCameraNode : public VRDisplayNode {
+class VROffAxisCameraNode : public VRLeafRenderedNode {
 public:
 	VROffAxisCameraNode();
 	virtual ~VROffAxisCameraNode();
 
 	void render(VRRenderer& renderer);
-};
 
-class VROffAxisRenderHandler : public VRRenderer {
-public:
-	VROffAxisRenderHandler(VRRenderer* renderer) : m_renderer(renderer) {}
-	virtual ~VROffAxisRenderHandler() {}
-
-	void renderContextCallback(VRRenderState& state);
-	void renderSceneCallback(VRRenderState& state);
-	VRRenderState& getState() { return m_renderer->getState(); }
-	void pushState() { m_renderer->pushState(); }
-	void popState() { m_renderer->popState(); }
-	void resetState() { m_renderer->resetState(); }
-
-private:
-	VRRenderer* m_renderer;
+	void renderSceneAtLeaf(VRRenderer& renderer);
 };
 
 class VRCameraDisplayFactory : public VRTypedDisplayFactory {

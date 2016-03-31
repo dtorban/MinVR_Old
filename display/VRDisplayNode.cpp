@@ -30,7 +30,7 @@ void VRDisplayNode::render(VRRenderer& renderer) {
 	}
 	else
 	{
-		renderer.renderSceneCallback();
+		renderer.getRenderHandler().renderSceneCallback(renderer.getState());
 	}
 }
 

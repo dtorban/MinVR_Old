@@ -25,7 +25,7 @@ void VRGraphicsWindowNode::render(VRRenderer& renderer) {
 	setCurrentContext();
 	renderer.getState().setValue("graphicsContextType", getContextType());
 	updateState(renderer.getState());
-	renderer.renderContextCallback();
+	renderer.getRenderHandler().renderContextCallback(renderer.getState());
 	VRDisplayNode::render(renderer);
 	flush();
 	renderer.popState();

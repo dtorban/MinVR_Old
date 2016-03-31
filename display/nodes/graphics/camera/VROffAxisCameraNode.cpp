@@ -22,10 +22,14 @@ VROffAxisCameraNode::~VROffAxisCameraNode() {
 void VROffAxisCameraNode::render(VRRenderer& renderer) {
 	renderer.pushState();
 	std::cout << "off axis camera" << std::endl;
-	VROffAxisRenderHandler offAxisRenderer(&renderer);
-	VRDisplayNode::render(offAxisRenderer);
-	//VRDisplayNode::render(renderer);
+	renderAtLeaf(renderer);
 	renderer.popState();
+}
+
+void VROffAxisCameraNode::renderSceneAtLeaf(VRRenderer& renderer) {
+	std::cout << "Scene callback for off axis" << std::endl;
+	VRLeafRenderedNode::renderSceneAtLeaf(renderer);
+	std::cout << "Scene callback for off axis2" << std::endl;
 }
 
 VRDisplayNode* VRCameraDisplayFactory::create(VRDataIndex& config,
@@ -45,15 +49,6 @@ VRDisplayNode* VRCameraDisplayFactory::create(VRDataIndex& config,
 	}
 
 	return cameraNode;
-}
-
-void VROffAxisRenderHandler::renderContextCallback(VRRenderState& state) {
-	m_renderer->renderContextCallback(state);
-}
-
-void VROffAxisRenderHandler::renderSceneCallback(VRRenderState& state) {
-	std::cout << "Scene callback for off axis" << std::endl;
-	m_renderer->renderSceneCallback(state);
 }
 
 } /* namespace MinVR */

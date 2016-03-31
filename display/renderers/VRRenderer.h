@@ -10,6 +10,7 @@
 #define VRBASICRENDERER_H_
 
 #include "VRRenderState.h"
+#include "VRRenderHandler.h"
 
 namespace MinVR {
 
@@ -20,21 +21,12 @@ namespace MinVR {
  * functions updateFrame(VRRenderState& state) and render(VRRenderState& state) still need to be
  * defined by the user.
  */
-class VRRenderer{
+class VRRenderer {
 public:
-	VRRenderer();
+	VRRenderer(VRRenderHandler* renderHandler);
 	virtual ~VRRenderer();
 
-	// The render functions use a template method pattern to call renderContextCallback(state) and renderSceneCallback(state)
-	virtual void renderContextCallback();
-	virtual void renderSceneCallback();
-
-	// ------------ User defined render functions: -------------
-	// allows a user to specify a function which handles per frame functionality.
-	// for example, a user may want to use this function to update VBO objects per frame if needed.
-	virtual void renderContextCallback(VRRenderState& state) = 0;
-	// render() allows a user to specify a render function which displays application specific graphics.
-	virtual void renderSceneCallback(VRRenderState& state) = 0;
+	virtual VRRenderHandler& getRenderHandler() { return *m_renderHandler; }
 
 	// ------------ State control functions: -------------
 	// Returns the current state
@@ -51,6 +43,7 @@ private:
 	VRRenderState m_state;
 	int m_nodeNum;
 	std::vector<std::string> m_nameSpaces;
+	VRRenderHandler* m_renderHandler;
 };
 
 } /* namespace MinVR */

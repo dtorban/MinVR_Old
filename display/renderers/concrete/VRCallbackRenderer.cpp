@@ -10,7 +10,7 @@
 
 namespace MinVR {
 
-VRCallbackRenderer::VRCallbackRenderer(MethodType sceneCallback, MethodType contextCallback) {
+VRCallbackRenderer::VRCallbackRenderer(MethodType sceneCallback, MethodType contextCallback) : VRRenderer(this) {
 	m_sceneCallback = sceneCallback;
 	m_contextCallback = contextCallback;
 }
