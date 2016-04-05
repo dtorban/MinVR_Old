@@ -7,6 +7,7 @@ set (${PROJECT_NAME}_source_files
 	renderers/concrete/VRCallbackRenderer.cpp
 	renderers/VRRenderer.cpp
 	renderers/VRRenderState.cpp
+	renderers/state/VRGraphicsState.cpp
 	nodes/console/VRConsoleDisplay.cpp
 	nodes/graphics/VRGraphicsWindowNode.cpp
 	nodes/graphics/camera/VROffAxisCameraNode.cpp

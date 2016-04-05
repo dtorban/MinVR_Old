@@ -25,6 +25,7 @@ int VRSideBySideNode::getNumPasses() {
 
 void VRSideBySideNode::preRenderPass(VRRenderer& renderer, int passNum) {
 	renderer.pushState();
+	renderer.getState().setValue("stereoPassNum", passNum);
 	VRViewportNode::calculate("viewport", renderer.getState(), m_viewports[passNum]);
 }
 

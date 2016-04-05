@@ -7,6 +7,7 @@
 #include "main/VRMain.h"
 #include "display/renderers/concrete/VRCallbackRenderer.h"
 #include "math/VRRect.h"
+#include "display/renderers/state/VRGraphicsState.h"
 
 #if defined(WIN32)
 #include <Windows.h>
@@ -150,8 +151,9 @@ void initGL(VRRenderState& state) {
 void render(VRRenderState& state) {
 
 	bool isConsole = state.getValue("isConsole", 0);
+	VRGraphicsState graphicsState(state);
 
-	std::string contextType = state.getValue("graphicsContextType", std::string("none"));
+	std::string contextType = graphicsState.getContextType();
 	cout << "test " << state.getNameSpace() << " " << isConsole << " " << contextType << " (Frame: " << frame << ")" << std::endl;
 
 	if (isConsole)
@@ -160,14 +162,13 @@ void render(VRRenderState& state) {
 		return;
 	}
 
+
 	glEnable(GL_SCISSOR_TEST);
-	VRRect viewport;
-	if (state.readValue("viewport", viewport))
-	{
-		std::cout << viewport.getXOffset() << " " << viewport.getYOffset() << " " << viewport.getWidth() << " " << viewport.getHeight() << std::endl;
-		glScissor(viewport.getXOffset(), viewport.getYOffset(), viewport.getWidth(), viewport.getHeight());
-		glViewport(viewport.getXOffset(), viewport.getYOffset(), viewport.getWidth(), viewport.getHeight());
-	}
+	VRRect viewport = graphicsState.getViewport();
+
+	std::cout << viewport.getXOffset() << " " << viewport.getYOffset() << " " << viewport.getWidth() << " " << viewport.getHeight() << std::endl;
+	glScissor(viewport.getXOffset(), viewport.getYOffset(), viewport.getWidth(), viewport.getHeight());
+	glViewport(viewport.getXOffset(), viewport.getYOffset(), viewport.getWidth(), viewport.getHeight());
 
 	//std::cout << state.display->getName() << std::endl;
 
