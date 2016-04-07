@@ -45,7 +45,7 @@ VRDisplayNode* VRStereoFactory::create(VRDataIndex& config,
 
 	if(std::equal(ending.rbegin(), ending.rend(), nameSpace.rbegin()))
 	{
-		double ioc = config.getValue("interocularDistance", nameSpace);
+		double ioc = config.getValue("interOcularDistance", nameSpace);
 		VRSideBySideNode* sideBySideNode = new VRSideBySideNode(ioc);
 		createChildren(sideBySideNode, baseFactory, config, nameSpace);
 		return sideBySideNode;

@@ -17,15 +17,15 @@
 <VRDisplayDevices>
 	<CameraNode>
 		<displayType type="string">lookAtCamera</displayType>
-		<cameraPosition type="doublearray">0,0,1</cameraPosition>
-		<cameraLookAtDirection type="doublearray">0,0,-1</cameraLookAtDirection>
-		<cameraUpDirection type="doublearray">0,1,0</cameraUpDirection>
+		<position type="doublearray">0,0,1</cameraPosition>
+		<lookAtDirection type="doublearray">0,0,-1</cameraLookAtDirection>
+		<upDirection type="doublearray">0,1,0</cameraUpDirection>
 		<fieldOfView type="double">90.0</fieldOfView>
 		<nearClip type="double">0.01</nearClip>
 		<farClip type="double">100.0</farClip>
 		
 		<SideBySideStereo>
-			<interocularDistance type="double">0.2083</interocularDistance>
+			<interOcularDistance type="double">0.2083</interOcularDistance>
 			<Desktop>
 				<displayType type="string">window</displayType>
 				<windowType type="string">GLFW</windowType>

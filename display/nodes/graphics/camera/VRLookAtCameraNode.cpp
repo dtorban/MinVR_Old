@@ -12,9 +12,9 @@
 namespace MinVR {
 
 VRLookAtCameraNode::VRLookAtCameraNode(VRDataIndex& index, std::string cameraName) {
-	m_position = index.getValue("cameraPosition", cameraName);
-	m_lookAtDirection = index.getValue("cameraLookAtDirection", cameraName);
-	m_upDirection = index.getValue("cameraUpDirection", cameraName);
+	m_position = index.getValue("position", cameraName);
+	m_lookAtDirection = index.getValue("lookAtDirection", cameraName);
+	m_upDirection = index.getValue("upDirection", cameraName);
 	m_fieldOfView = index.getValue("fieldOfView", cameraName);
 	m_nearClip = index.getValue("nearClip", cameraName);
 	m_farClip = index.getValue("farClip", cameraName);
