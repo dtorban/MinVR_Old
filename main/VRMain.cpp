@@ -163,7 +163,7 @@ void VRMain::initialize()
   }
 
   // Create display
-  _display = _displayFactory->create(*_index, "/MVR/VRDisplayDevices/Desktop", *_displayFactory);
+  _display = _displayFactory->create(*_index, "/MVR/VRDisplayDevices", *_displayFactory);
 
  // exit(0);
 

@@ -10,34 +10,28 @@
 
 <VRPlugins>
     <MinVRDefaultPlugins>
-        <Names type="stringarray">MinVR_GLFW@MinVR_OpenGL@MinVR_Threading</Names>
+        <Names type="stringarray">MinVR_GLFW,MinVR_OpenGL,MinVR_Threading</Names>
     </MinVRDefaultPlugins>
 </VRPlugins>
 
 <VRDisplayDevices>
-	<Desktop>
-		<displayType type="string">window</displayType>
-		<windowType type="string">GLFW</windowType>
-		<xOffset type="double">0</xOffset>
-		<yOffset type="double">0</yOffset>
-		<width type="double">800</width>
-		<height type="double">400</height>
-		<CameraNode>
-			<displayType type="string">offAxisCamera</displayType>
-			<defaultFrame type="doublearray">1@0@0@0@0@1@0@0@0@0@1@1@0@0@0@1</defaultFrame>
-			<nearClip type="double">0.01</nearClip>
-			<farClip type="double">100.0</farClip>
-			<tile>
-				<topLeft type="doublearray">-0.5@0.5@0.0</topLeft>
-				<topRight type="doublearray">0.5@0.5@0.0</topRight>
-				<bottomLeft type="doublearray">-0.5@-0.5@0.0</bottomLeft>
-				<bottomRight type="doublearray">0.5@-0.5@0.0</bottomRight>
-			</tile>
-			<SideBySideStereo>
-				<interocularDistance type="double">0.2083</interocularDistance>
-			</SideBySideStereo>
-		</CameraNode>
-	</Desktop>
+	<CameraNode>
+		<displayType type="string">offAxisCamera</displayType>
+		<defaultFrame type="doublearray">1,0,0,0,0,1,0,0,0,0,1,1,0,0,0,1</defaultFrame>
+		<nearClip type="double">0.01</nearClip>
+		<farClip type="double">100.0</farClip>		
+		<SideBySideStereo>
+			<interocularDistance type="double">0.2083</interocularDistance>
+			<Desktop>
+				<displayType type="string">window</displayType>
+				<windowType type="string">GLFW</windowType>
+				<xOffset type="double">0</xOffset>
+				<yOffset type="double">0</yOffset>
+				<width type="double">800</width>
+				<height type="double">400</height>
+			</Desktop>
+		</SideBySideStereo>
+	</CameraNode>
 </VRDisplayDevices>
 
 </MVR>

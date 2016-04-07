@@ -11,15 +11,17 @@
 
 #include "display/VRDisplayNode.h"
 #include "display/factories/VRDisplayFactory.h"
+#include "display/nodes/scope/VRLeafRenderedNode.h"
 
 namespace MinVR {
 
-class VRStereoNode : public VRDisplayNode {
+class VRStereoNode : public VRLeafRenderedNode {
 public:
 	VRStereoNode();
 	virtual ~VRStereoNode();
 
 	virtual void render(VRRenderer& renderer);
+	virtual void renderSceneAtLeaf(VRRenderer& renderer);
 
 protected:
 	virtual int getNumPasses() = 0;

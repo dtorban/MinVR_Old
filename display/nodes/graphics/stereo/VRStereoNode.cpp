@@ -18,10 +18,14 @@ VRStereoNode::~VRStereoNode() {
 }
 
 void VRStereoNode::render(VRRenderer& renderer) {
+	renderAtLeaf(renderer);
+}
+
+void VRStereoNode::renderSceneAtLeaf(VRRenderer& renderer) {
 	for (int passNum = 0; passNum < getNumPasses(); passNum++)
 	{
 		preRenderPass(renderer, passNum);
-		VRDisplayNode::render(renderer);
+		VRLeafRenderedNode::renderSceneAtLeaf(renderer);
 		postRenderPass(renderer, passNum);
 	}
 }
