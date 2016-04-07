@@ -16,7 +16,7 @@
 
 <VRCameras>
 	<Head>
-		<cameraPosition type="doublearray">15,0,0</cameraPosition>
+		<cameraPosition type="doublearray">0,0,1</cameraPosition>
 		<cameraLookAtDirection type="doublearray">0,0,-1</cameraLookAtDirection>
 		<cameraUpDirection type="doublearray">0,1,0</cameraUpDirection>
 		<fieldOfView type="double">90.0</fieldOfView>

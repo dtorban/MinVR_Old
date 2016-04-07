@@ -12,7 +12,7 @@
 
 namespace MinVR {
 
-VRStereoNode::VRStereoNode() {
+VRStereoNode::VRStereoNode(double interocularDistance) : m_interocularDistance(interocularDistance) {
 }
 
 VRStereoNode::~VRStereoNode() {
@@ -23,16 +23,19 @@ void VRStereoNode::render(VRRenderer& renderer) {
 }
 
 void VRStereoNode::renderSceneAtLeaf(VRRenderer& renderer) {
-	//VRGraphicsState state(renderer.getState());
+	VRGraphicsState state(renderer.getState());
 
 	for (int passNum = 0; passNum < getNumPasses(); passNum++)
+	//for (int passNum = 0; passNum < 1; passNum++)
 	{
-		//VRVector3 cameraPos = state.getCameraPosition();
-		//cameraPos.x += -0.25 + 0.5*passNum;
-		//state.setCameraPosition(cameraPos);
+		VRVector3 cameraPos = state.getCameraPosition();
+		cameraPos.x += -m_interocularDistance/2.0 + m_interocularDistance*(passNum);
+		renderer.pushState();
+		state.setCameraPosition(cameraPos);
 		preRenderPass(renderer, passNum);
 		VRLeafRenderedNode::renderSceneAtLeaf(renderer);
 		postRenderPass(renderer, passNum);
+		renderer.popState();
 	}
 }
 
@@ -43,7 +46,8 @@ VRDisplayNode* VRStereoFactory::create(VRDataIndex& config,
 
 	if(std::equal(ending.rbegin(), ending.rend(), nameSpace.rbegin()))
 	{
-		VRSideBySideNode* sideBySideNode = new VRSideBySideNode();
+		double ioc = config.getValue("interocularDistance", nameSpace);
+		VRSideBySideNode* sideBySideNode = new VRSideBySideNode(ioc);
 		createChildren(sideBySideNode, baseFactory, config, nameSpace);
 		return sideBySideNode;
 	}

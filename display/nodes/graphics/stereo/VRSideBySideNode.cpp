@@ -11,7 +11,7 @@
 
 namespace MinVR {
 
-VRSideBySideNode::VRSideBySideNode() {
+VRSideBySideNode::VRSideBySideNode(double interocularDistance) : VRStereoNode(interocularDistance) {
 	m_viewports[0] = VRRect(0.0, 0.0, 0.5, 1.0, true);
 	m_viewports[1] = VRRect(0.5, 0.0, 0.5, 1.0, true);
 }

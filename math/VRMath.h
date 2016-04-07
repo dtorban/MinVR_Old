@@ -229,6 +229,8 @@ public:
   /// Converts the point to a VRDoubleArray for data in a VRDataIndex
   VRDoubleArray toVRDoubleArray();
 
+  const double* getArray() { return m; }
+
 public:		
   double m[16]; // hold a 4 by 4 matrix 
 };

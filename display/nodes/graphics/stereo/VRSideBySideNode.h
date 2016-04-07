@@ -16,7 +16,7 @@ namespace MinVR {
 
 class VRSideBySideNode : public VRStereoNode {
 public:
-	VRSideBySideNode();
+	VRSideBySideNode(double interocularDistance);
 	virtual ~VRSideBySideNode();
 
 protected:

@@ -136,15 +136,7 @@ void initGL(VRRenderState& state) {
 	cameraAim[1] = cos(vertAngle);
 	cameraAim[2] = sin(horizAngle) * sin(vertAngle);
 
-	// Compute aspect ratio of the new window
-	GLfloat aspect = (GLfloat)500 / (GLfloat)500;
 
-	// Set the aspect ratio of the clipping volume to match the viewport
-	glMatrixMode(GL_PROJECTION);  // To operate on the Projection matrix
-	glLoadIdentity();             // Reset
-
-	// Enable perspective projection with fovy, aspect, zNear and zFar
-	gluPerspective(1.6*45.0f, aspect, 0.1f, 100.0f);
 }
 
 /* Render function */
@@ -182,20 +174,41 @@ void render(VRRenderState& state) {
 	// Set the type of depth-test
 	glDepthFunc(GL_LEQUAL);
 
+	// Compute aspect ratio of the new window
+	GLfloat aspect = (GLfloat)viewport.getWidth() / (GLfloat)viewport.getHeight();
+
+	// Set the aspect ratio of the clipping volume to match the viewport
+	glMatrixMode(GL_PROJECTION);  // To operate on the Projection matrix
+	glLoadIdentity();             // Reset
+
+	// Enable perspective projection with fovy, aspect, zNear and zFar
+	gluPerspective(1.6*45.0f, aspect, 0.1f, 100.0f);
+
 	glMatrixMode(GL_MODELVIEW);     // To operate on model-view matrix
 
 	// Render a color-cube consisting of 6 quads with different colors
 	glLoadIdentity();                 // Reset the model-view matrix
 
+	VRVector3 pos = graphicsState.getCameraPosition();
+
+	VRMatrix4 four;
+	four = VRMatrix4::translation(pos*-1.0);
+	four = four*VRMatrix4::scale(VRVector3(1, 1, 1)*1.0/15.0);
+	four = four*VRMatrix4::rotationX(-vertAngle);
+	four = four*VRMatrix4::rotationZ(-horizAngle);
+	GLfloat matrix[16];
+    for (int c = 0; c < 16; ++c) {
+			matrix[c] = (float)(four.getArray()[c]);
+    }
+	glLoadMatrixf(matrix);
 	// The stuff that used to be here has moved to the event handler.
 
-	VRVector3 pos = graphicsState.getCameraPosition();
 	std::cout << cameraPos[0] << " " << cameraPos[1] << " " << cameraPos[2] << std::endl;
 	std::cout << pos.x << " " << pos.y << " " << pos.z << std::endl;
-	gluLookAt (pos.x, pos.y, pos.z,
-	//gluLookAt (cameraPos[0], cameraPos[1], cameraPos[2],
+	//gluLookAt (pos.x, pos.y, pos.z,
+	/*gluLookAt (cameraPos[0], cameraPos[1], cameraPos[2],
 			targetPos[0], targetPos[1], targetPos[2],
-			cameraAim[0], cameraAim[1], cameraAim[2]);
+			cameraAim[0], cameraAim[1], cameraAim[2]);*/
 
 	glBegin(GL_LINES);
 	glColor3f(1.0, 1.0, 0.0);

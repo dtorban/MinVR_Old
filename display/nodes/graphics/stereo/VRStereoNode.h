@@ -17,7 +17,7 @@ namespace MinVR {
 
 class VRStereoNode : public VRLeafRenderedNode {
 public:
-	VRStereoNode();
+	VRStereoNode(double interocularDistance);
 	virtual ~VRStereoNode();
 
 	virtual void render(VRRenderer& renderer);
@@ -27,6 +27,9 @@ protected:
 	virtual int getNumPasses() = 0;
 	virtual void preRenderPass(VRRenderer& renderer, int passNum) = 0;
 	virtual void postRenderPass(VRRenderer& renderer, int passNum) = 0;
+
+private:
+	double m_interocularDistance;
 };
 
 class VRStereoFactory : public VRDisplayFactory {
