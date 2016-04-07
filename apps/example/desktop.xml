@@ -14,12 +14,21 @@
     </MinVRDefaultPlugins>
 </VRPlugins>
 
+<VRCameras>
+	<Head>
+		<cameraPosition type="doublearray">15,0,0</cameraPosition>
+		<cameraLookAtDirection type="doublearray">0,0,-1</cameraLookAtDirection>
+		<cameraUpDirection type="doublearray">0,1,0</cameraUpDirection>
+		<fieldOfView type="double">90.0</fieldOfView>
+		<nearClip type="double">0.01</nearClip>
+		<farClip type="double">100.0</farClip>
+	</Head>
+</VRCameras>
+
 <VRDisplayDevices>
 	<CameraNode>
-		<displayType type="string">offAxisCamera</displayType>
-		<defaultFrame type="doublearray">1,0,0,0,0,1,0,0,0,0,1,1,0,0,0,1</defaultFrame>
-		<nearClip type="double">0.01</nearClip>
-		<farClip type="double">100.0</farClip>		
+		<displayType type="string">lookAtCamera</displayType>
+		<camera type="string">/MVR/VRCameras/Head</camera>
 		<SideBySideStereo>
 			<interocularDistance type="double">0.2083</interocularDistance>
 			<Desktop>

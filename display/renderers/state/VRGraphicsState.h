@@ -30,6 +30,8 @@ public:
 	void setProjectionMatrix(const VRMatrix4& mat);
 	const VRMatrix4 getViewMatrix() const;
 	void setViewMatrix(const VRMatrix4& mat);
+	const VRVector3 getCameraPosition() const;
+	void setCameraPosition(const VRVector3& pos) const;
 
 	const std::string getContextType() const;
 	void setContextType(const std::string& contextType) const;

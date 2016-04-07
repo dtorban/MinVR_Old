@@ -7,6 +7,7 @@
  */
 
 #include <display/nodes/graphics/camera/VROffAxisCameraNode.h>
+#include "display/nodes/graphics/camera/VRLookAtCameraNode.h"
 
 namespace MinVR {
 
@@ -41,6 +42,11 @@ VRDisplayNode* VRCameraDisplayFactory::create(VRDataIndex& config,
 	if (type == "offAxisCamera")
 	{
 		cameraNode = new VROffAxisCameraNode();
+	}
+	else if (type == "lookAtCamera")
+	{
+		std::string camera = config.getValue("camera", nameSpace);
+		cameraNode = new VRLookAtCameraNode(config, "/" + camera);
 	}
 
 	if (cameraNode)

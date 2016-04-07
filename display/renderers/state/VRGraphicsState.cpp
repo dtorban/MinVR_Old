@@ -65,8 +65,17 @@ const VRMatrix4 VRGraphicsState::getViewMatrix() const {
 void VRGraphicsState::setViewMatrix(const VRMatrix4& mat) {
 }
 
+const VRVector3 VRGraphicsState::getCameraPosition() const {
+	return m_state.getValue("cameraPosition");
+}
+
+void VRGraphicsState::setCameraPosition(const VRVector3& pos) const {
+	m_state.setValue("cameraPosition", pos);
+}
+
 void VRGraphicsState::setViewport(const VRRect& rect) {
 	m_state.writeValue("viewport", rect);
 }
 
 } /* namespace MinVR */
+

@@ -11,6 +11,7 @@ set (${PROJECT_NAME}_source_files
 	nodes/console/VRConsoleDisplay.cpp
 	nodes/graphics/VRGraphicsWindowNode.cpp
 	nodes/graphics/camera/VROffAxisCameraNode.cpp
+	nodes/graphics/camera/VRLookAtCameraNode.cpp
 	nodes/graphics/stereo/VRStereoNode.cpp
 	nodes/graphics/stereo/VRSideBySideNode.cpp
 	nodes/graphics/structure/VRViewportNode.cpp

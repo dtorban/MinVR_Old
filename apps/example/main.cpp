@@ -189,7 +189,11 @@ void render(VRRenderState& state) {
 
 	// The stuff that used to be here has moved to the event handler.
 
-	gluLookAt (cameraPos[0], cameraPos[1], cameraPos[2],
+	VRVector3 pos = graphicsState.getCameraPosition();
+	std::cout << cameraPos[0] << " " << cameraPos[1] << " " << cameraPos[2] << std::endl;
+	std::cout << pos.x << " " << pos.y << " " << pos.z << std::endl;
+	gluLookAt (pos.x, pos.y, pos.z,
+	//gluLookAt (cameraPos[0], cameraPos[1], cameraPos[2],
 			targetPos[0], targetPos[1], targetPos[2],
 			cameraAim[0], cameraAim[1], cameraAim[2]);
 

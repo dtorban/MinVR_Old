@@ -8,6 +8,7 @@
 
 #include <display/nodes/graphics/stereo/VRStereoNode.h>
 #include "display/nodes/graphics/stereo/VRSideBySideNode.h"
+#include "display/renderers/state/VRGraphicsState.h"
 
 namespace MinVR {
 
@@ -22,8 +23,13 @@ void VRStereoNode::render(VRRenderer& renderer) {
 }
 
 void VRStereoNode::renderSceneAtLeaf(VRRenderer& renderer) {
+	//VRGraphicsState state(renderer.getState());
+
 	for (int passNum = 0; passNum < getNumPasses(); passNum++)
 	{
+		//VRVector3 cameraPos = state.getCameraPosition();
+		//cameraPos.x += -0.25 + 0.5*passNum;
+		//state.setCameraPosition(cameraPos);
 		preRenderPass(renderer, passNum);
 		VRLeafRenderedNode::renderSceneAtLeaf(renderer);
 		postRenderPass(renderer, passNum);
