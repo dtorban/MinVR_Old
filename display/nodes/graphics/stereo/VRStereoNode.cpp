@@ -26,12 +26,11 @@ void VRStereoNode::renderSceneAtLeaf(VRRenderer& renderer) {
 	VRGraphicsState state(renderer.getState());
 
 	for (int passNum = 0; passNum < getNumPasses(); passNum++)
-	//for (int passNum = 0; passNum < 1; passNum++)
 	{
-		VRVector3 cameraPos = state.getCameraPosition();
-		cameraPos.x += -m_interocularDistance/2.0 + m_interocularDistance*(passNum);
+		VRMatrix4 cameraFrame = state.getCameraFrame();
+		cameraFrame = VRMatrix4::translation(VRVector3(-m_interocularDistance/2.0 + m_interocularDistance*(passNum), 0, 0))*cameraFrame;
 		renderer.pushState();
-		state.setCameraPosition(cameraPos);
+		state.setCameraFrame(cameraFrame);
 		preRenderPass(renderer, passNum);
 		VRLeafRenderedNode::renderSceneAtLeaf(renderer);
 		postRenderPass(renderer, passNum);

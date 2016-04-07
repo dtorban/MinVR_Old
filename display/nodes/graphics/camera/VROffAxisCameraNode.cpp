@@ -45,8 +45,8 @@ VRDisplayNode* VRCameraDisplayFactory::create(VRDataIndex& config,
 	}
 	else if (type == "lookAtCamera")
 	{
-		std::string camera = config.getValue("camera", nameSpace);
-		cameraNode = new VRLookAtCameraNode(config, "/" + camera);
+		std::string camera = nameSpace;//config.getValue("camera", nameSpace);
+		cameraNode = new VRLookAtCameraNode(config, camera);
 	}
 
 	if (cameraNode)

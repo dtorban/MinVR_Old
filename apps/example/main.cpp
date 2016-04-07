@@ -189,7 +189,8 @@ void render(VRRenderState& state) {
 	// Render a color-cube consisting of 6 quads with different colors
 	glLoadIdentity();                 // Reset the model-view matrix
 
-	VRVector3 pos = graphicsState.getCameraPosition();
+	VRMatrix4 frame = graphicsState.getCameraFrame();
+	VRVector3 pos(frame(0,3), frame(1,3), frame(2,3));// = graphicsState.getCameraPosition();
 
 	VRMatrix4 four;
 	four = VRMatrix4::translation(pos*-1.0);

@@ -28,7 +28,7 @@ void VRLookAtCameraNode::render(VRRenderer& renderer) {
 	renderer.pushState();
 	std::cout << "look at camera" << std::endl;
 	VRGraphicsState state(renderer.getState());
-	state.setCameraPosition(m_position);
+	state.setCameraFrame(VRMatrix4::translation(m_position));
 	renderAtLeaf(renderer);
 	renderer.popState();
 }

@@ -184,7 +184,7 @@ public:
   
   /// Returns the (r,c) elment of the matrix
   double& operator()(const int r, const int c);
-	
+
 
   // --- Static Constructors for Special Matrices ---
 
@@ -229,6 +229,7 @@ public:
   /// Converts the point to a VRDoubleArray for data in a VRDataIndex
   VRDoubleArray toVRDoubleArray();
 
+  // Gets the double array
   const double* getArray() { return m; }
 
 public:		

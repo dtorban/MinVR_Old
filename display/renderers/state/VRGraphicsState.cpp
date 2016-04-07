@@ -21,10 +21,11 @@ VRRenderState& VRGraphicsState::getState() const {
 }
 
 const VRMatrix4 VRGraphicsState::getCameraFrame() const {
-	return VRMatrix4();
+	return m_state.getValue("cameraFrame");
 }
 
 void VRGraphicsState::setCameraFrame(const VRMatrix4& frame) {
+	m_state.setValue("cameraFrame", frame);
 }
 
 const std::string VRGraphicsState::getContextType() const {
@@ -66,16 +67,14 @@ void VRGraphicsState::setViewMatrix(const VRMatrix4& mat) {
 }
 
 const VRVector3 VRGraphicsState::getCameraPosition() const {
-	return m_state.getValue("cameraPosition");
-}
-
-void VRGraphicsState::setCameraPosition(const VRVector3& pos) const {
-	m_state.setValue("cameraPosition", pos);
+	VRMatrix4 frame = getCameraFrame();
+	return VRVector3(frame(0,3), frame(1,3), frame(2,3));
 }
 
 void VRGraphicsState::setViewport(const VRRect& rect) {
 	m_state.writeValue("viewport", rect);
 }
+
 
 } /* namespace MinVR */
 
