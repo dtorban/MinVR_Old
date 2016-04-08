@@ -129,15 +129,15 @@ double& VRVector3::operator[](const int i) {
   else return z;
 }
   
-double VRVector3::dot(const VRVector3& v) {
+double VRVector3::dot(const VRVector3& v) const {
   return x * v[0] + y * v[1] + z * v[2];
 }
 
-VRVector3 VRVector3::cross(const VRVector3& v) {
+VRVector3 VRVector3::cross(const VRVector3& v) const {
   return VRVector3(y * v[2] - z * v[1],  z * v[0] - x * v[2],  x * v[1] - y * v[0]);
 }
 
-double VRVector3::length() {
+double VRVector3::length() const {
   return sqrt(x*x + y*y + z*z); 
 }
 

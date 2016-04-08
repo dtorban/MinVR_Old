@@ -26,6 +26,8 @@ public:
 	void renderSceneAtLeaf(VRRenderer& renderer);
 
 private:
+	VRMatrix4 calculateViewMatrix(const VRVector3& eye, const VRVector3& lookAt, const VRVector3& up) const;
+
 	VRVector3 m_position;
 	VRVector3 m_lookAtDirection;
 	VRVector3 m_upDirection;

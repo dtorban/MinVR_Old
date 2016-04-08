@@ -26,7 +26,6 @@ VRLookAtCameraNode::~VRLookAtCameraNode() {
 
 void VRLookAtCameraNode::render(VRRenderer& renderer) {
 	renderer.pushState();
-	std::cout << "look at camera" << std::endl;
 	VRGraphicsState state(renderer.getState());
 	state.setCameraFrame(VRMatrix4::translation(m_position));
 	renderAtLeaf(renderer);
@@ -34,9 +33,24 @@ void VRLookAtCameraNode::render(VRRenderer& renderer) {
 }
 
 void VRLookAtCameraNode::renderSceneAtLeaf(VRRenderer& renderer) {
-	std::cout << "Scene callback for look at camera" << std::endl;
+	VRGraphicsState state(renderer.getState());
+	state.setViewMatrix(calculateViewMatrix(state.getCameraPosition(), m_lookAtDirection, m_upDirection));
 	VRLeafRenderedNode::renderSceneAtLeaf(renderer);
-	std::cout << "Scene callback for look at camera" << std::endl;
+}
+
+VRMatrix4 VRLookAtCameraNode::calculateViewMatrix(const VRVector3& eye, const VRVector3& lookAt, const VRVector3& up) const
+{
+	VRVector3 zaxis = lookAt*-1.0;
+	VRVector3 xaxis = (up.cross(zaxis)).normalize();
+	VRVector3 yaxis = zaxis. cross(xaxis);
+
+	VRMatrix4 view = VRMatrix4(
+	       xaxis.x, xaxis.y, xaxis.z, -xaxis.dot(eye),
+	       yaxis.x, yaxis.y, yaxis.z, -yaxis.dot(eye),
+	       zaxis.x, zaxis.y, zaxis.z, -zaxis.dot(eye),
+	       0,       0,       0,     1 );
+
+    return (view);
 }
 
 } /* namespace MinVR */

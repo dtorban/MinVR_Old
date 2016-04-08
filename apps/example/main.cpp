@@ -192,8 +192,12 @@ void render(VRRenderState& state) {
 	VRMatrix4 frame = graphicsState.getCameraFrame();
 	VRVector3 pos(frame(0,3), frame(1,3), frame(2,3));// = graphicsState.getCameraPosition();
 
-	VRMatrix4 four;
-	four = VRMatrix4::translation(pos*-1.0);
+	VRMatrix4 four = graphicsState.getViewMatrix();
+	 for (int c = 0; c < 16; ++c) {
+				std::cout << " " << four.getArray()[c];
+	    }
+	 std::cout << std::endl;
+	//four = VRMatrix4::translation(pos*-1.0);
 	four = four*VRMatrix4::scale(VRVector3(1, 1, 1)*1.0/15.0);
 	four = four*VRMatrix4::rotationX(-vertAngle);
 	four = four*VRMatrix4::rotationZ(-horizAngle);

@@ -53,17 +53,19 @@ const VRRect VRGraphicsState::getViewport() const {
 }
 
 const VRMatrix4 VRGraphicsState::getProjectionMatrix() const {
-	return VRMatrix4();
+	return m_state.getValue("projectionMatrix");
 }
 
 void VRGraphicsState::setProjectionMatrix(const VRMatrix4& mat) {
+	m_state.setValue("projectionMatrix", mat);
 }
 
 const VRMatrix4 VRGraphicsState::getViewMatrix() const {
-	return VRMatrix4();
+	return m_state.getValue("viewMatrix");
 }
 
 void VRGraphicsState::setViewMatrix(const VRMatrix4& mat) {
+	m_state.setValue("viewMatrix", mat);
 }
 
 const VRVector3 VRGraphicsState::getCameraPosition() const {

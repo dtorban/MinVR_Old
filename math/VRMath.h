@@ -116,13 +116,13 @@ public:
   // --- Vector operations ---
 
   /// Returns "this dot v"
-  double dot(const VRVector3& v);
+  double dot(const VRVector3& v) const;
 
   /// Returns "this cross v"
-  VRVector3 cross(const VRVector3& v);
+  VRVector3 cross(const VRVector3& v) const;
 
   /// Returns the length of the vector
-  double length();
+  double length() const;
 
   /// Returns a normalized (i.e. unit length) version of the vector
   VRVector3 normalize();

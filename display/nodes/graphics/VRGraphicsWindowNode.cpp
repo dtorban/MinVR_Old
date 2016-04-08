@@ -45,7 +45,7 @@ void VRGraphicsWindowNode::displayTheFinishedRendering() {
 }
 
 void VRGraphicsWindowNode::updateState(VRRenderState& state) {
-	VRRect r = VRViewportNode::calculate("rect", "viewport", state, m_rect, true);
+	VRRect r = VRViewportNode::calculate("viewport", "viewport", state, m_rect, true);
 	r.setXOffset(0);
 	r.setYOffset(0);
 	state.writeValue("viewport", r);
