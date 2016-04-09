@@ -42,9 +42,7 @@ VRGraphicsWindowNode* GlfwWindowFactory::createWindow(VRDataIndex& config, const
 	tile.setTopLeft(VRPoint3(-0.5,  0.5, 0.0));
 	tile.setTopRight(VRPoint3( 0.5,  0.5, 0.0));
 	tile.setBottomLeft(VRPoint3(-0.5, -0.5, 0.0));
-	tile.setBottomRight(VRPoint3( 0.5, -0.5, 0.0));
-	tile.setNearClip(0.01);
-	tile.setFarClip(100.0);
+	tile.setBottomRight(VRPoint3( 0.5, -0.5, 0.0));\
 
 	//window->addChild(new VRSideBySideNode());
 

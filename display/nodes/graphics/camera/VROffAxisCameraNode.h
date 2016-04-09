@@ -12,17 +12,23 @@
 #include "display/VRDisplayNode.h"
 #include "display/factories/VRTypedDisplayFactory.h"
 #include "display/nodes/scope/VRLeafRenderedNode.h"
+#include "math/VRMath.h"
 
 namespace MinVR {
 
 class VROffAxisCameraNode : public VRLeafRenderedNode {
 public:
-	VROffAxisCameraNode();
+	VROffAxisCameraNode(VRDataIndex& index, std::string cameraName);
 	virtual ~VROffAxisCameraNode();
 
 	void render(VRRenderer& renderer);
 
 	void renderSceneAtLeaf(VRRenderer& renderer);
+
+private:
+	VRMatrix4 m_defaultCameraFrame;
+	double m_nearClip;
+	double m_farClip;
 };
 
 class VRCameraDisplayFactory : public VRTypedDisplayFactory {

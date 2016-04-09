@@ -10,7 +10,7 @@
 
 namespace MinVR {
 
-VRTile::VRTile() : m_topLeft(), m_topRight(), m_bottomLeft(), m_bottomRight(), m_nearClip(0.0), m_farClip(0.0) {
+VRTile::VRTile() : m_topLeft(), m_topRight(), m_bottomLeft(), m_bottomRight() {
 }
 
 VRTile::~VRTile() {
@@ -25,8 +25,6 @@ void VRTile::write(VRDataIndex& index, std::string name) const {
 	index.addData(name + "/bottomLeft", bottomLeft);
 	VRPoint3 bottomRight(m_bottomRight);
 	index.addData(name + "/bottomRight", bottomRight);
-	index.addData(name + "/nearClip", m_nearClip);
-	index.addData(name + "/farClip", m_farClip);
 }
 
 bool VRTile::read(VRDataIndex& index, std::string name, std::string nameSpace) {
@@ -40,8 +38,6 @@ bool VRTile::read(VRDataIndex& index, std::string name, std::string nameSpace) {
 	m_topRight = index.getValue("topRight", newNamespace);
 	m_bottomLeft = index.getValue("bottomLeft", newNamespace);
 	m_bottomRight = index.getValue("bottomRight", newNamespace);
-	m_nearClip = index.getValue("nearClip", newNamespace);
-	m_farClip = index.getValue("farClip", newNamespace);
 
 	return true;
 }

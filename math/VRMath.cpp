@@ -69,7 +69,9 @@ VRDoubleArray VRPoint3::toVRDoubleArray() {
   return a;
 }
 
-
+VRVector3 VRPoint3::toVector() const {
+	return VRVector3(x, y, z);
+}
 
 
 VRVector3::VRVector3() { 
@@ -528,3 +530,4 @@ std::istream & operator>> ( std::istream &is, VRMatrix4 &m) {
         >> c >> m(2,0) >> c >> m(2,1) >> c >> m(2,2) >> c >> m(2,3) >> c >> c
         >> c >> m(3,0) >> c >> m(3,1) >> c >> m(3,2) >> c >> m(3,3) >> c >> c;
 }
+

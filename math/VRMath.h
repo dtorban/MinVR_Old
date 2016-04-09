@@ -16,6 +16,7 @@
 
 #include <config/VRDatum.h>
 
+class VRVector3;
 
 /** @class VRPoint3 
   * @brief 3D Point with floating point coordinates.
@@ -62,6 +63,9 @@ public:
   
   /// Converts the point to a VRDoubleArray for data in a VRDataIndex
   VRDoubleArray toVRDoubleArray();
+
+  /// Converts point to a VRVector3
+  VRVector3 toVector() const;
 
 public:
   double x,y,z; 

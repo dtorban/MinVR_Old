@@ -41,22 +41,6 @@ public:
 		m_bottomRight = bottomRight;
 	}
 
-	double getFarClip() const {
-		return m_farClip;
-	}
-
-	void setFarClip(double farClip) {
-		m_farClip = farClip;
-	}
-
-	double getNearClip() const {
-		return m_nearClip;
-	}
-
-	void setNearClip(double nearClip) {
-		m_nearClip = nearClip;
-	}
-
 	const VRPoint3& getTopLeft() const {
 		return m_topLeft;
 	}
@@ -78,8 +62,6 @@ private:
 	VRPoint3 m_topRight;
 	VRPoint3 m_bottomLeft;
 	VRPoint3 m_bottomRight;
-	double m_nearClip;
-	double m_farClip;
 };
 
 } /* namespace MinVR */

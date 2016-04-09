@@ -15,16 +15,16 @@
 </VRPlugins>
 
 <VRDisplayDevices>
-	<CameraNode>
+	<!--CameraNode>
 		<displayType type="string">lookAtCamera</displayType>
-		<position type="doublearray">0,0,1</cameraPosition>
-		<lookAtDirection type="doublearray">0,0,-1</cameraLookAtDirection>
-		<upDirection type="doublearray">0,1,0</cameraUpDirection>
+		<position type="doublearray">0,0,1</position>
+		<lookAtDirection type="doublearray">0,0,-1</lookAtDirection>
+		<upDirection type="doublearray">0,1,0</upDirection>
 		<fieldOfViewY type="double">72.0</fieldOfViewY>
 		<nearClip type="double">0.01</nearClip>
 		<farClip type="double">100.0</farClip>
 		
-		<SideBySideStereo2>
+		<SideBySideStereo>
 			<interOcularDistance type="double">0.2083</interOcularDistance>
 			<Desktop>
 				<displayType type="string">window</displayType>
@@ -33,6 +33,43 @@
 				<yOffset type="double">0</yOffset>
 				<width type="double">800</width>
 				<height type="double">400</height>
+			</Desktop>
+		</SideBySideStereo>
+		
+	</CameraNode-->
+	
+	<CameraNode>
+		<displayType type="string">offAxisCamera</displayType>
+		<defaultFrame type="doublearray">1,0,0,0,0,1,0,0,0,0,1,0,0,0,1,1</defaultFrame>
+		<nearClip type="double">0.01</nearClip>
+		<farClip type="double">100.0</farClip>
+			<viewport>
+				<xOffset type="double">0</xOffset>
+				<yOffset type="double">0</yOffset>
+				<width type="double">1366</width>
+				<height type="double">768</height>
+			</viewport>
+				<tile>
+					<topLeft type="doublearray">-0.5,0.5,0</topLeft>
+					<topRight type="doublearray">0.5,0.5,0</topRight>
+					<bottomLeft type="doublearray">-0.5,-0.5,0</bottomLeft>
+					<bottomRight type="doublearray">0.5,-0.5,0</bottomRight>
+				</tile>
+		<SideBySideStereo2>
+			<interOcularDistance type="double">0.2083</interOcularDistance>
+			<Desktop>
+				<displayType type="string">window</displayType>
+				<windowType type="string">GLFW</windowType>
+				<xOffset type="double">483</xOffset>
+				<yOffset type="double">200</yOffset>
+				<width type="double">400</width>
+				<height type="double">400</height>
+				<tile2>
+					<topLeft type="doublearray">-0.5,0.5,0</topLeft>
+					<topRight type="doublearray">0.5,0.5,0</topRight>
+					<bottomLeft type="doublearray">-0.5,-0.5,0</bottomLeft>
+					<bottomRight type="doublearray">0.5,-0.5,0</bottomRight>
+				</tile2>
 			</Desktop>
 		</SideBySideStereo2>
 		
