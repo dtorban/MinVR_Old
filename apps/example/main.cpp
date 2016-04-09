@@ -146,7 +146,7 @@ void render(VRRenderState& state) {
 	VRGraphicsState graphicsState(state);
 
 	std::string contextType = graphicsState.getContextType();
-	cout << "test " << state.getNameSpace() << " " << isConsole << " " << contextType << " (Frame: " << frame << ")" << std::endl;
+	//cout << "test " << state.getNameSpace() << " " << isConsole << " " << contextType << " (Frame: " << frame << ")" << std::endl;
 
 	if (isConsole)
 	{
@@ -158,7 +158,7 @@ void render(VRRenderState& state) {
 	glEnable(GL_SCISSOR_TEST);
 	VRRect viewport = graphicsState.getViewport();
 
-	std::cout << viewport.getXOffset() << " " << viewport.getYOffset() << " " << viewport.getWidth() << " " << viewport.getHeight() << std::endl;
+	//std::cout << viewport.getXOffset() << " " << viewport.getYOffset() << " " << viewport.getWidth() << " " << viewport.getHeight() << std::endl;
 	glScissor(viewport.getXOffset(), viewport.getYOffset(), viewport.getWidth(), viewport.getHeight());
 	glViewport(viewport.getXOffset(), viewport.getYOffset(), viewport.getWidth(), viewport.getHeight());
 
@@ -200,10 +200,10 @@ void render(VRRenderState& state) {
 	VRVector3 pos(frame(0,3), frame(1,3), frame(2,3));// = graphicsState.getCameraPosition();
 
 	VRMatrix4 four = graphicsState.getViewMatrix();
-	 for (int c = 0; c < 16; ++c) {
+	/* for (int c = 0; c < 16; ++c) {
 				std::cout << " " << four.getArray()[c];
 	    }
-	 std::cout << std::endl;
+	 std::cout << std::endl;*/
 	//four = VRMatrix4::translation(pos*-1.0);
 	four = four*VRMatrix4::scale(VRVector3(1, 1, 1)*1.0/15.0);
 	four = four*VRMatrix4::rotationX(-vertAngle);
@@ -215,8 +215,8 @@ void render(VRRenderState& state) {
 	glLoadMatrixf(matrix);
 	// The stuff that used to be here has moved to the event handler.
 
-	std::cout << cameraPos[0] << " " << cameraPos[1] << " " << cameraPos[2] << std::endl;
-	std::cout << pos.x << " " << pos.y << " " << pos.z << std::endl;
+	//std::cout << cameraPos[0] << " " << cameraPos[1] << " " << cameraPos[2] << std::endl;
+	//std::cout << pos.x << " " << pos.y << " " << pos.z << std::endl;
 	//gluLookAt (pos.x, pos.y, pos.z,
 	/*gluLookAt (cameraPos[0], cameraPos[1], cameraPos[2],
 			targetPos[0], targetPos[1], targetPos[2],

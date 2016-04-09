@@ -53,8 +53,6 @@ VRTile VRTile::modifyWithRect(const VRRect& oldRect,
 	double xOffsetRatio = (newRect.getXOffset()-oldRect.getXOffset())/oldRect.getWidth();
 	double yOffsetRatio = (newRect.getYOffset()-oldRect.getYOffset())/oldRect.getHeight();
 
-	std::cout << xOffsetRatio << " " << yOffsetRatio << " " << widthRatio << " " << heightRatio << std::endl;
-
 	double width = (m_topRight - m_topLeft).length();
 	double height = (m_topLeft - m_bottomLeft).length();
 
@@ -65,16 +63,6 @@ VRTile VRTile::modifyWithRect(const VRRect& oldRect,
 	m_topRight = m_topLeft + u*newWidth;
 	m_bottomLeft = m_topLeft - v*newHeight;
 	m_bottomRight = m_bottomLeft + u*newWidth;
-
-	/*
-	m_bottomLeft = m_bottomLeft + u*xOffsetRatio + v*yOffsetRatio;
-
-	m_bottomRight = m_bottomLeft + u*widthRatio;
-	m_topLeft = m_bottomLeft + v*heightRatio;
-	m_topRight = m_bottomRight + v*heightRatio;*/
-
-	std::cout << m_topLeft.x << " " << m_topLeft.y << std::endl;
-	std::cout << m_bottomRight.x << " " << m_bottomRight.y << std::endl;
 
 	return *this;
 }
