@@ -50,6 +50,10 @@ static void glfw_size_callback(GLFWwindow* window, int width, int height) {
 	((GlfwInputDevice*)(glfwGetWindowUserPointer(window)))->sizeCallback(window, width, height);
 }
 
+static void glfw_position_callback(GLFWwindow* window, int xpos, int ypos) {
+	((GlfwInputDevice*)(glfwGetWindowUserPointer(window)))->positionCallback(window, xpos, ypos);
+}
+
 std::vector<VRInputDevice*> GlfwInputDeviceFactory::create(
 		VRDataIndex& dataIndex) {
 	std::vector<VRInputDevice*> devices;
@@ -62,6 +66,7 @@ void GlfwInputDevice::registerGlfwWindow(GlfwWindow* window) {
 	glfwSetWindowUserPointer(window->getWindow(), this);
 	glfwSetKeyCallback(window->getWindow(), glfw_key_callback);
 	glfwSetWindowSizeCallback(window->getWindow(), glfw_size_callback);
+	glfwSetWindowPosCallback(window->getWindow(), glfw_position_callback);
 }
 
 std::string getGlfwKeyName(int key)
@@ -311,6 +316,13 @@ void GlfwInputDevice::sizeCallback(GLFWwindow* window, int width, int height) {
 	VRRect r = windowMap[window]->getRect();
 	r.setWidth(width);
 	r.setHeight(height);
+	windowMap[window]->setRect(r);
+}
+
+void GlfwInputDevice::positionCallback(GLFWwindow* window, int xpos, int ypos) {
+	VRRect r = windowMap[window]->getRect();
+	r.setXOffset(xpos);
+	r.setYOffset(ypos);
 	windowMap[window]->setRect(r);
 }
 

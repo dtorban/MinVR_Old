@@ -28,6 +28,7 @@ public:
 
 	PLUGIN_API void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 	PLUGIN_API void sizeCallback(GLFWwindow* window, int width, int height);
+	PLUGIN_API void positionCallback(GLFWwindow* window, int xpos, int ypos);
 
 private:
 	std::vector<std::string> events;

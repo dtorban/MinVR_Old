@@ -61,12 +61,12 @@ void VROffAxisCameraNode::renderSceneAtLeaf(VRRenderer& renderer) {
 
 	VRMatrix4 view = VRMatrix4::translation(-cameraPos) *room2tile;
 
-	static VRMatrix4 invertYMat(1,  0, 0, 0,
+	static VRMatrix4 invertXYMat(-1,  0, 0, 0,
 						  0, -1, 0, 0,
 						  0,  0, 1, 0,
 						  0,  0, 0, 1);
 
-	VRMatrix4 projection = invertYMat * VRMatrix4::projection(lcamera*k, rcamera*k, b*k, t*k, m_nearClip, m_farClip);
+	VRMatrix4 projection = invertXYMat * VRMatrix4::projection(lcamera*k, rcamera*k, b*k, t*k, m_nearClip, m_farClip);
 
 	state.setProjectionMatrix(projection);
 	state.setViewMatrix(view);
