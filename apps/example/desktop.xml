@@ -20,11 +20,11 @@
 		<position type="doublearray">0,0,1</cameraPosition>
 		<lookAtDirection type="doublearray">0,0,-1</cameraLookAtDirection>
 		<upDirection type="doublearray">0,1,0</cameraUpDirection>
-		<fieldOfView type="double">90.0</fieldOfView>
+		<fieldOfViewY type="double">72.0</fieldOfViewY>
 		<nearClip type="double">0.01</nearClip>
 		<farClip type="double">100.0</farClip>
 		
-		<SideBySideStereo>
+		<SideBySideStereo2>
 			<interOcularDistance type="double">0.2083</interOcularDistance>
 			<Desktop>
 				<displayType type="string">window</displayType>
@@ -34,7 +34,7 @@
 				<width type="double">800</width>
 				<height type="double">400</height>
 			</Desktop>
-		</SideBySideStereo>
+		</SideBySideStereo2>
 		
 	</CameraNode>
 </VRDisplayDevices>

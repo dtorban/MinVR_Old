@@ -31,7 +31,7 @@ private:
 	VRVector3 m_position;
 	VRVector3 m_lookAtDirection;
 	VRVector3 m_upDirection;
-	double m_fieldOfView;
+	double m_fieldOfViewY;
 	double m_nearClip;
 	double m_farClip;
 };

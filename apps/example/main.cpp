@@ -181,8 +181,15 @@ void render(VRRenderState& state) {
 	glMatrixMode(GL_PROJECTION);  // To operate on the Projection matrix
 	glLoadIdentity();             // Reset
 
+	VRMatrix4 proj = graphicsState.getProjectionMatrix();
+	GLfloat proj_matrix[16];
+	for (int c = 0; c < 16; ++c) {
+		proj_matrix[c] = (float)(proj.getArray()[c]);
+	}
+	glLoadMatrixf(proj_matrix);
+
 	// Enable perspective projection with fovy, aspect, zNear and zFar
-	gluPerspective(1.6*45.0f, aspect, 0.1f, 100.0f);
+	//gluPerspective(1.6*45.0f, aspect, 0.1f, 100.0f);
 
 	glMatrixMode(GL_MODELVIEW);     // To operate on model-view matrix
 

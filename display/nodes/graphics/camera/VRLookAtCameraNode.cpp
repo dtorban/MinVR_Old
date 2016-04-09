@@ -8,6 +8,7 @@
 
 #include <display/nodes/graphics/camera/VRLookAtCameraNode.h>
 #include "display/renderers/state/VRGraphicsState.h"
+#include <cmath>
 
 namespace MinVR {
 
@@ -15,7 +16,7 @@ VRLookAtCameraNode::VRLookAtCameraNode(VRDataIndex& index, std::string cameraNam
 	m_position = index.getValue("position", cameraName);
 	m_lookAtDirection = index.getValue("lookAtDirection", cameraName);
 	m_upDirection = index.getValue("upDirection", cameraName);
-	m_fieldOfView = index.getValue("fieldOfView", cameraName);
+	m_fieldOfViewY = index.getValue("fieldOfViewY", cameraName);
 	m_nearClip = index.getValue("nearClip", cameraName);
 	m_farClip = index.getValue("farClip", cameraName);
 }
@@ -35,6 +36,17 @@ void VRLookAtCameraNode::render(VRRenderer& renderer) {
 void VRLookAtCameraNode::renderSceneAtLeaf(VRRenderer& renderer) {
 	VRGraphicsState state(renderer.getState());
 	state.setViewMatrix(calculateViewMatrix(state.getCameraPosition(), m_lookAtDirection, m_upDirection));
+
+	double height = 2.0*m_nearClip*std::atan(m_fieldOfViewY*3.14159*2.0/360.0/2.0);
+	VRRect viewport = state.getViewport();
+	double aspect = viewport.getWidth()/viewport.getHeight();
+	double width = aspect*height;
+	double right = width/2.0;
+	double left = -right;
+	double top = height/2.0;
+	double bottom = -top;
+
+	state.setProjectionMatrix(VRMatrix4::projection(right, left, top, bottom, m_nearClip, m_farClip));
 	VRLeafRenderedNode::renderSceneAtLeaf(renderer);
 }
 
