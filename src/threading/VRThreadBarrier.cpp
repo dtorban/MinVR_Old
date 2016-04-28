@@ -36,6 +36,7 @@ bool VRThreadBarrier::wait() {
         m_cond->wait(lock);
     }
 
+    lock->unlock();
     delete lock;
 
     return false;

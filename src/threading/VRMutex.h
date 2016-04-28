@@ -14,6 +14,8 @@ namespace MinVR {
 class VRUniqueMutexLock {
 public:
 	~VRUniqueMutexLock() {}
+
+	virtual void unlock() = 0;
 };
 
 class VRMutex {
