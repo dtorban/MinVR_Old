@@ -144,6 +144,19 @@ set(vr_plugin_h
   ${vr_src_dir}/plugin/VRSharedLibrary.h
 )
 
+set(vr_threading_cpp
+  ${vr_src_dir}/threading/VRThreadBarrier.cpp
+)
+
+set(vr_threading_h
+  ${vr_src_dir}/threading/VRConditionVariable.h
+  ${vr_src_dir}/threading/VRMutex.h
+  ${vr_src_dir}/threading/VRThread.h
+  ${vr_src_dir}/threading/VRThreadBarrier.h
+  ${vr_src_dir}/threading/VRThreadHandler.h
+  ${vr_src_dir}/threading/VRThreadToolkit.h
+)
+
 set(vr_sources 
   ${vr_config_cpp} ${vr_config_h}
   ${vr_display_cpp} ${vr_display_h}
@@ -152,6 +165,7 @@ set(vr_sources
   ${vr_math_cpp} ${vr_math_h}
   ${vr_net_cpp} ${vr_net_h}
   ${vr_plugin_cpp} ${vr_plugin_h}
+  ${vr_threading_cpp} ${vr_threading_h}
 )
 
 source_group("config\\Header Files" FILES ${vr_config_h})
@@ -168,6 +182,8 @@ source_group("net\\Header Files" FILES ${vr_net_h})
 source_group("net\\Source Files" FILES ${vr_net_cpp})
 source_group("plugin\\Header Files" FILES ${vr_plugin_h})
 source_group("plugin\\Source Files" FILES ${vr_plugin_cpp})
+source_group("threading\\Header Files" FILES ${vr_threading_h})
+source_group("threading\\Source Files" FILES ${vr_threading_cpp})
 
 
 add_library(MinVR ${vr_sources})
