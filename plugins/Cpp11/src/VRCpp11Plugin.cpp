@@ -8,7 +8,6 @@
 
 #include <iostream>
 #include <plugin/VRPlugin.h>
-//#include "VROpenGLGraphicsToolkit.h"
 #include "VRCpp11ThreadToolkit.h"
 
 // special: include this only once in one .cpp file per plugin
@@ -32,9 +31,6 @@ public:
 	PLUGIN_API void unregisterWithMinVR(VRMainInterface *vrMain)
 	{
 	}
-
-private:
-	VRCpp11ThreadToolkit tk;
 };
 
 } // end namespace

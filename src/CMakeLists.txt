@@ -149,8 +149,6 @@ set(vr_threading_cpp
 )
 
 set(vr_threading_h
-  ${vr_src_dir}/threading/VRConditionVariable.h
-  ${vr_src_dir}/threading/VRMutex.h
   ${vr_src_dir}/threading/VRThread.h
   ${vr_src_dir}/threading/VRThreadBarrier.h
   ${vr_src_dir}/threading/VRThreadHandler.h

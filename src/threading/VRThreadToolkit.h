@@ -10,8 +10,6 @@
 #define VRTHREADTOOLKIT_H_
 
 #include "VRThread.h"
-#include "VRMutex.h"
-#include "VRConditionVariable.h"
 
 namespace MinVR {
 

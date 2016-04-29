@@ -20,6 +20,31 @@ public:
 	virtual void join() = 0;
 };
 
+class VRUniqueMutexLock {
+public:
+	virtual ~VRUniqueMutexLock() {}
+
+	virtual void unlock() = 0;
+};
+
+class VRMutex {
+public:
+	virtual ~VRMutex() {}
+
+	virtual void lock() = 0;
+	virtual void unlock() = 0;
+
+	virtual VRUniqueMutexLock* createUniqueLock() = 0;
+};
+
+class VRConditionVariable {
+public:
+	virtual ~VRConditionVariable() {}
+
+	virtual void notifyAll() = 0;
+	virtual void wait(VRUniqueMutexLock* lock) = 0;
+};
+
 } /* namespace MinVR */
 
 #endif /* VRTHREAD_H_ */
