@@ -12,6 +12,7 @@ using namespace MinVR;
 
 extern "C" {
 	typedef int (*eventcallback_type)(const char* eventName);
+	typedef int (*rendercallback_type)();
 }
 
 class VRPythonEventCallbackHandler : public VREventHandler {
@@ -27,6 +28,17 @@ private:
 	eventcallback_type eventCallback;
 };
 
+class VRPythonRenderCallbackHandler : public VRRenderHandler {
+public:
+	VRPythonRenderCallbackHandler(rendercallback_type renderCallback) : renderCallback(renderCallback) {}
+	virtual ~VRPythonRenderCallbackHandler() {}
+	virtual void onVRRenderScene(VRDataIndex *renderState, VRDisplayNode *callingNode) { renderCallback(); }
+	virtual void onVRRenderContext(VRDataIndex *renderState, VRDisplayNode *callingNode) {}
+
+private:
+	rendercallback_type renderCallback;
+};
+
 extern "C" {
 	VRMain* VRMain_init(char* config) {
 		VRMain* vrmain = new VRMain();
@@ -37,11 +49,26 @@ extern "C" {
 		return vrmain;
 	}
 
+	void VRMain_shutdown(VRMain* vrmain, VREventHandler* eventHandler, VRRenderHandler* renderHandler) {
+		vrmain->shutdown();
+		delete eventHandler;
+		delete renderHandler;
+		delete vrmain;
+	}
+
 	VREventHandler* VRMain_registerEventCallback(VRMain* vrmain, eventcallback_type eventCallback) {
 		VREventHandler* handler = new VRPythonEventCallbackHandler(eventCallback);
-		std::cout << "callback registered" << std::endl;
 		vrmain->addEventHandler(handler);
-//		handler->onVREvent("hit", NULL);
 		return handler;
+	}
+
+	VRRenderHandler* VRMain_registerRenderCallback(VRMain* vrmain, rendercallback_type renderCallback) {
+		VRRenderHandler* handler = new VRPythonRenderCallbackHandler(renderCallback);
+		vrmain->addRenderHandler(handler);
+		return handler;
+	}
+
+	void VRMain_mainloop(VRMain* vrmain) {
+		vrmain->mainloop();
 	}
 }
