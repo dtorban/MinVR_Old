@@ -1,3 +1,5 @@
+import sys
+
 from ctypes import cdll
 import ctypes
 import xml.etree.ElementTree
@@ -29,6 +31,10 @@ class VRMain(object):
 		self.eventhandler = lib.VRMain_registerEventCallback(self.obj, self.eventCB)
 		self.renderCB = self.getRenderCallbackFunc()
 		self.renderhandler = lib.VRMain_registerRenderCallback(self.obj, self.renderCB)
+		pluginList = ctypes.create_string_buffer(500)
+		lib.setPluginList(self.obj, pluginList)
+		sys.path.append(pluginpath + '/' + pluginList.value + '/python')
+		__import__(pluginList.value)
 	def shutdown(self):
 		lib.VRMain_shutdown(self.obj, self.eventhandler, self.renderhandler)
 	def addEventHandler(self, handler):
@@ -80,6 +86,5 @@ class VRDataIndex(object):
 		if datumType == 1:
 			return getIntValue(self.index, valName, nameSpace)
 		return None
-
 
 
