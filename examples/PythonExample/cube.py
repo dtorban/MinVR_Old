@@ -1,31 +1,17 @@
 #!/usr/bin/python
 
+# Use file's current directory and append path to MinVR Module
 import sys, os, inspect
-
 fileDir = os.path.dirname(os.path.abspath(inspect.getsourcefile(lambda:0)))
 os.chdir(fileDir)
-
 sys.path.append("../../plugins/Python/src/python")
 
+# --------- MinVR Implementation -----------------
+
+# Import MinVR and OpenGL Dependencies
 from MinVR import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
-
-loop = True
-rot = 0.0
-
-class AppEventHandler(VREventHandler):
-	def onVREvent(self, eventName):
-		print eventName
-		if eventName == "/KbdEsc_Down":
-			global loop
-			loop = False
-		elif eventName == "/KbdRight_Down" or eventName == "/KbdRight_Repeat":
-			global rot
-			rot += 0.1
-		elif eventName == "/KbdLeft_Down" or eventName == "/KbdLeft_Repeat":
-			global rot
-			rot -= 0.1
 
 
 verticies = (
@@ -62,19 +48,24 @@ def Cube():
             glVertex3fv(verticies[vertex])
     glEnd()
 
-a = 3
 
-class AppRenderHandler(VRRenderHandler):
+# Application class which handles events and rendering
+class App(VREventHandler, VRRenderHandler):
+	def __init__(self):
+		self.loop = True
+		self.a = 3
+
+	# Called when an event is passed from MinVR
+	def onVREvent(self, eventName):
+		print eventName
+		if eventName == "/KbdEsc_Down":
+			self.loop = False
+
+	# Renders the scene
 	def onVRRenderScene(self, renderState):
-
-
-		#glClearColor(1, 1, 1, 1)
 		glClear(GL_COLOR_BUFFER_BIT)
-		#float ratio;
-		#int width, height;
 		width = renderState.getValue("WindowWidth","/")
 		height = renderState.getValue("WindowHeight","/")
-		#glfwGetFramebufferSize(window, &width, &height);
 		ratio = width / height;
 		glViewport(0, 0, width, height);
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -89,24 +80,32 @@ class AppRenderHandler(VRRenderHandler):
 		glColor3f(0.0, 0.0, 1.0);
 		glVertex3f(0.0, 0.60, 0.0);
 		glEnd();
-
                 glMatrixMode(GL_MODELVIEW);
                 glLoadIdentity();
                 glMatrixMode(GL_MODELVIEW);
                 glTranslatef(0.0,0.0, -5)
-                glRotatef(a/3, a, a/3, a/3)
-
+                glRotatef(self.a/3, self.a, self.a/3, self.a/3)
                 Cube()
 
+# ----------- Main program ------------------
 
-vrmain = VRMain("desktop.xml")
-vrmain.addRenderHandler(AppRenderHandler())
-vrmain.addEventHandler(AppEventHandler())
-glTranslatef(0.0,0.0, -5)
+# Create application
+app = App()
 
+# Create VRMain instance passing in vrsetup configuration
+config = sys.argv[1]
+vrmain = VRMain(config)
 
-while loop:
-        a += 3
+# Add event handler and render handler
+vrmain.addEventHandler(app)
+vrmain.addRenderHandler(app)
+
+# Main loop
+while app.loop:
+        app.a += 3
 	vrmain.mainloop()
+
+# Shutdown MinVR
 vrmain.shutdown()
+
 

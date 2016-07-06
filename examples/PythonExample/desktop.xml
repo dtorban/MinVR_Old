@@ -1,5 +1,5 @@
 <MinVR>
-  	<PluginPath>../../build/Release/plugins</PluginPath>
+  	<PluginPath>../../build/plugins</PluginPath>
 	
 	<GLFWPlugin pluginType="MinVR_GLFW"/>
 	<OpenGLPlugin pluginType="MinVR_OpenGL"/>

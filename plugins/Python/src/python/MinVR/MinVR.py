@@ -14,16 +14,22 @@ elif _platform == "darwin":
 elif _platform == "win32":
     libFilePath = 'bin/' + libName + '.dll'
 
-e = xml.etree.ElementTree.parse('desktop.xml').getroot()
-pluginpath = e.findall('PluginPath')[0].text
+lib = None
 
-lib = cdll.LoadLibrary(pluginpath + '/' + libName + '/' + libFilePath)
+def openLibrary(config):
+	e = xml.etree.ElementTree.parse(config).getroot()
+	pluginpath = e.findall('PluginPath')[0].text
+	global lib
+	lib = cdll.LoadLibrary(pluginpath + '/' + libName + '/' + libFilePath)
+
+
 
 eventcallback_type = ctypes.CFUNCTYPE(None, ctypes.c_char_p)
 rendercallback_type = ctypes.CFUNCTYPE(None, ctypes.c_void_p)
 
 class VRMain(object):
 	def __init__(self, config):
+		openLibrary(config)
 		self.obj = lib.VRMain_init(config)
 		self.eventHandlers = []
 		self.renderHandlers = []
@@ -77,18 +83,17 @@ class VRRenderHandler(object):
 	def onVRRenderContext(self):
 		print "Rendering Context"
 
-getDatumType = lib.VRDataIndex_getType
-getDatumType.argtypes = (ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p)
-getIntValue = lib.VRDataIndex_getIntValue
-getIntValue.argtypes = (ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p)
-
 class VRDataIndex(object):
 	def __init__(self, index):
+		self.getDatumType = lib.VRDataIndex_getType
+		self.getDatumType.argtypes = (ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p)
+		self.getIntValue = lib.VRDataIndex_getIntValue
+		self.getIntValue.argtypes = (ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p)
 		self.index = index
 	def getValue(self, valName, nameSpace):
-		datumType = getDatumType(self.index, valName, nameSpace)
+		datumType = self.getDatumType(self.index, valName, nameSpace)
 		if datumType == 1:
-			return getIntValue(self.index, valName, nameSpace)
+			return self.getIntValue(self.index, valName, nameSpace)
 		return None
 
 

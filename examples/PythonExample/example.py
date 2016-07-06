@@ -1,30 +1,34 @@
 #!/usr/bin/python
 
+# Use file's current directory and append path to MinVR Module
 import sys, os, inspect
-
 fileDir = os.path.dirname(os.path.abspath(inspect.getsourcefile(lambda:0)))
 os.chdir(fileDir)
-
 sys.path.append("../../plugins/Python/src/python")
 
+# --------- MinVR Implementation -----------------
+
+# Import MinVR and OpenGL Dependencies
 from MinVR import *
 from OpenGL.GL import *
 
-loop = True
-rotateAngle = 0.0
-
+# Application class which handles events and rendering
 class App(VREventHandler, VRRenderHandler):
+	def __init__(self):
+		self.loop = True
+		self.rotateAngle = 0.0
+
+	# Called when an event is passed from MinVR
 	def onVREvent(self, eventName):
 		print eventName
-		global rotateAngle
 		if eventName == "/KbdEsc_Down":
-			global loop
-			loop = False
+			self.loop = False
 		elif eventName == "/KbdRight_Down" or eventName == "/KbdRight_Repeat":
-			rotateAngle += 0.1
+			self.rotateAngle += 0.1
 		elif eventName == "/KbdLeft_Down" or eventName == "/KbdLeft_Repeat":
-			rotateAngle -= 0.1
+			self.rotateAngle -= 0.1
 
+	# Renders the scene
 	def onVRRenderScene(self, renderState):
 		glClear(GL_COLOR_BUFFER_BIT)
 		width = renderState.getValue("WindowWidth","/")
@@ -36,7 +40,7 @@ class App(VREventHandler, VRRenderHandler):
 		glOrtho(-ratio, ratio, -1.0, 1.0, 1.0, -1.0);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
-		glRotatef(rotateAngle*50.0, 0.0, 0.0, 1.0);
+		glRotatef(self.rotateAngle*50.0, 0.0, 0.0, 1.0);
 		glBegin(GL_TRIANGLES);
 		glColor3f(1, 0, 0);
 		glVertex3f(-0.6, -0.4, 0.0);
@@ -46,11 +50,23 @@ class App(VREventHandler, VRRenderHandler):
 		glVertex3f(0.0, 0.60, 0.0);
 		glEnd();
 
+# ----------- Main program ------------------
+
+# Create application
 app = App()
-vrmain = VRMain("desktop.xml")
-vrmain.addRenderHandler(app)
+
+# Create VRMain instance passing in vrsetup configuration
+config = sys.argv[1]
+vrmain = VRMain(config)
+
+# Add event handler and render handler
 vrmain.addEventHandler(app)
-while loop:
+vrmain.addRenderHandler(app)
+
+# Main loop
+while app.loop:
 	vrmain.mainloop()
+
+# Shutdown MinVR
 vrmain.shutdown()
 
