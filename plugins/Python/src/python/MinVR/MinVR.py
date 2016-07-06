@@ -32,9 +32,16 @@ class VRMain(object):
 		self.renderCB = self.getRenderCallbackFunc()
 		self.renderhandler = lib.VRMain_registerRenderCallback(self.obj, self.renderCB)
 		pluginList = ctypes.create_string_buffer(500)
-		lib.setPluginList(self.obj, pluginList)
-		sys.path.append(pluginpath + '/' + pluginList.value + '/python')
-		__import__(pluginList.value)
+		lib.setPluginList.restype = ctypes.c_bool
+		hasPlugins = lib.setPluginList(self.obj, pluginList)
+		print (hasPlugins)
+		print(pluginList.value)
+		if (hasPlugins):
+			for plugin in pluginList.value.split(","):
+				sys.path.append(pluginpath + '/' + plugin + '/python')
+				print plugin
+				a = __import__(plugin)
+				a.registerWithMinVR(self)
 	def shutdown(self):
 		lib.VRMain_shutdown(self.obj, self.eventhandler, self.renderhandler)
 	def addEventHandler(self, handler):

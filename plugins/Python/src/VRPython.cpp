@@ -49,7 +49,6 @@ extern "C" {
 		input[1] = config;
 		vrmain->initialize(2, input);
 		delete[] input;
-		//std::string py = vrmain->getConfig()->getValue("PythonPlugins","/");
 		return vrmain;
 	}
 
@@ -72,9 +71,15 @@ extern "C" {
 		return handler;
 	}
 
-	PLUGIN_API void setPluginList(VRMain* vrmain, char* pluginList) {
-		std::string py = vrmain->getConfig()->getValue("PythonPlugins","/");
-		strcpy(pluginList, py.c_str());
+	PLUGIN_API bool setPluginList(VRMain* vrmain, char* pluginList) {
+		if (vrmain->getConfig()->exists("PythonPlugins","/")) {
+			std::string py = vrmain->getConfig()->getValue("PythonPlugins","/");
+			strcpy(pluginList, py.c_str());
+
+			return true;
+		}
+
+		return false;
 	}
 
 	PLUGIN_API void VRMain_mainloop(VRMain* vrmain) {

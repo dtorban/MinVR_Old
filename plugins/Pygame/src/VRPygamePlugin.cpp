@@ -21,7 +21,6 @@ public:
 	PLUGIN_API virtual ~VRPygamePlugin() {
 	}
 	PLUGIN_API void registerWithMinVR(VRMainInterface *vrMain) {
-		std::cout << "Register pygame plugin." << std::endl;
 		vrMain->getConfig()->addData("/PythonPlugins/MinVR_Pygame", "MinVR_Pygame");
 	}
 	PLUGIN_API void unregisterWithMinVR(VRMainInterface *vrMain) {

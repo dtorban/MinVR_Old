@@ -13,7 +13,7 @@ from OpenGL.GL import *
 loop = True
 rot = 0.0
 
-class AppEventHandler(VREventHandler):
+class App(VREventHandler, VRRenderHandler):
 	def onVREvent(self, eventName):
 		print eventName
 		if eventName == "/KbdEsc_Down":
@@ -26,17 +26,11 @@ class AppEventHandler(VREventHandler):
 			global rot
 			rot -= 0.1
 
-class AppRenderHandler(VRRenderHandler):
 	def onVRRenderScene(self, renderState):
-		#glClearColor(1, 1, 1, 1)
 		glClear(GL_COLOR_BUFFER_BIT)
-		#float ratio;
-		#int width, height;
 		width = renderState.getValue("WindowWidth","/")
 		height = renderState.getValue("WindowHeight","/")
-		#glfwGetFramebufferSize(window, &width, &height);
 		ratio = width / height;
-		glViewport(0, 0, width, height);
 		glClear(GL_COLOR_BUFFER_BIT);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
@@ -53,10 +47,10 @@ class AppRenderHandler(VRRenderHandler):
 		glVertex3f(0.0, 0.60, 0.0);
 		glEnd();
 
-
+app = App()
 vrmain = VRMain("desktop.xml")
-vrmain.addRenderHandler(AppRenderHandler())
-vrmain.addEventHandler(AppEventHandler())
+vrmain.addRenderHandler(app)
+vrmain.addEventHandler(app)
 while loop:
 	vrmain.mainloop()
 vrmain.shutdown()
