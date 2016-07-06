@@ -2,7 +2,7 @@ project(MinVR_Python)
 
 set (SOURCEFILES 
   src/VRPythonPlugin.cpp
-  src/VRPython.cpp
+  src/VRMainPython.cpp
   src/VRDataIndexPython.cpp
 )
 
@@ -109,6 +109,10 @@ SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 add_library ( ${PROJECT_NAME} SHARED ${HEADERFILES} ${SOURCEFILES} )
 target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} MinVR ${LIBS_ALL})
+
+add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD
+                   COMMAND ${CMAKE_COMMAND} -E copy_directory
+                       ${PROJECT_SOURCE_DIR}/src/python ${CMAKE_BINARY_DIR}/plugins/${PROJECT_NAME}/python)
 
 #------------------------------------------
 # Install Target

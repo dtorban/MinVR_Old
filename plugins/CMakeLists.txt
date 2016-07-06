@@ -43,11 +43,6 @@ if (MINVR_PYTHON_PLUGIN)
 	add_subdirectory (Python)
 endif()
 
-#------------------Python-----------------------------
-option(MINVR_PYGAME_PLUGIN "If enabled, Pygame plugin will be installed" OFF)
-if (MINVR_PYGAME_PLUGIN)
-	add_subdirectory (Pygame)
-endif()
 
 if(false)
 

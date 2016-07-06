@@ -3,7 +3,6 @@
 	
 	<GLFWPlugin pluginType="MinVR_GLFW"/>
 	<OpenGLPlugin pluginType="MinVR_OpenGL"/>
-	<PygamePlugin pluginType="MinVR_Pygame"/>
 	
 	<GLFWToolkit windowtoolkitType="VRGLFWWindowToolkit"/>
 	<OpenGLToolkit graphicstoolkitType="VROpenGLGraphicsToolkit"/>
