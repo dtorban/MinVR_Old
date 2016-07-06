@@ -1,6 +1,6 @@
 from ctypes import cdll
 import ctypes
-lib = cdll.LoadLibrary('../../../../build/Release/plugins/MinVR_Python/lib/libMinVR_Python.so')
+lib = cdll.LoadLibrary('../../build/Release/plugins/MinVR_Python/lib/libMinVR_Python.so')
 
 eventcallback_type = ctypes.CFUNCTYPE(None, ctypes.c_char_p)
 rendercallback_type = ctypes.CFUNCTYPE(None)
@@ -25,7 +25,9 @@ class VRMain(object):
 			self.handleEvent(eventName)
 		return eventcallback_type(func)
 	def handleEvent(self, eventName):
-		print eventName
+		eName = eventName
+		for handler in self.eventHandlers:
+			handler.onVREvent(eName)
 	def getRenderCallbackFunc(self):
 		def func():
 			self.handleRender()
@@ -33,7 +35,6 @@ class VRMain(object):
 	def handleRender(self):
 		for handler in self.renderHandlers:
 			handler.onVRRenderScene()
-		print "render"
 	def mainloop(self):
 		lib.VRMain_mainloop(self.obj)
 
@@ -51,9 +52,10 @@ class VRRenderHandler(object):
 	def onVRRenderContext(self):
 		print "Rendering Context"
 
-#vrmain = VRMain("desktop2-local.xml")
-#vrmain.addRenderHandler(VRRenderHandler())
-#while True:
-#	vrmain.mainloop()
-#vrmain.shutdown()
+
+
+
+
+
+
 
