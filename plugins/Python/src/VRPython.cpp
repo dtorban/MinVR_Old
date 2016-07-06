@@ -13,7 +13,7 @@ using namespace MinVR;
 
 extern "C" {
 	PLUGIN_API typedef int (*eventcallback_type)(const char* eventName);
-	PLUGIN_API typedef int (*rendercallback_type)();
+	PLUGIN_API typedef int (*rendercallback_type)(void* renderState);
 }
 
 class VRPythonEventCallbackHandler : public VREventHandler {
@@ -33,7 +33,9 @@ class VRPythonRenderCallbackHandler : public VRRenderHandler {
 public:
 	PLUGIN_API VRPythonRenderCallbackHandler(rendercallback_type renderCallback) : renderCallback(renderCallback) {}
 	PLUGIN_API virtual ~VRPythonRenderCallbackHandler() {}
-	PLUGIN_API virtual void onVRRenderScene(VRDataIndex *renderState, VRDisplayNode *callingNode) { renderCallback(); }
+	PLUGIN_API virtual void onVRRenderScene(VRDataIndex *renderState, VRDisplayNode *callingNode) {
+		renderCallback(renderState);
+	}
 	PLUGIN_API virtual void onVRRenderContext(VRDataIndex *renderState, VRDisplayNode *callingNode) {}
 
 private:

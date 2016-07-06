@@ -14,12 +14,11 @@ elif _platform == "win32":
 
 e = xml.etree.ElementTree.parse('desktop.xml').getroot()
 pluginpath = e.findall('PluginPath')[0].text
-print pluginpath
 
 lib = cdll.LoadLibrary(pluginpath + '/' + libName + '/' + libFilePath)
 
 eventcallback_type = ctypes.CFUNCTYPE(None, ctypes.c_char_p)
-rendercallback_type = ctypes.CFUNCTYPE(None)
+rendercallback_type = ctypes.CFUNCTYPE(None, ctypes.c_void_p)
 
 class VRMain(object):
 	def __init__(self, config):
@@ -45,12 +44,12 @@ class VRMain(object):
 		for handler in self.eventHandlers:
 			handler.onVREvent(eName)
 	def getRenderCallbackFunc(self):
-		def func():
-			self.handleRender()
+		def func(renderState):
+			self.handleRender(renderState)
 		return rendercallback_type(func)
-	def handleRender(self):
+	def handleRender(self, renderState):
 		for handler in self.renderHandlers:
-			handler.onVRRenderScene()
+			handler.onVRRenderScene(VRDataIndex(renderState))
 	def mainloop(self):
 		lib.VRMain_mainloop(self.obj)
 
@@ -63,15 +62,24 @@ class VREventHandler(object):
 class VRRenderHandler(object):
 	def __init__(self):
 		pass
-	def onVRRenderScene(self):
+	def onVRRenderScene(self, renderState):
 		print "Rendering Scene"
 	def onVRRenderContext(self):
 		print "Rendering Context"
 
+getDatumType = lib.VRDataIndex_getType
+getDatumType.argtypes = (ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p)
+getIntValue = lib.VRDataIndex_getIntValue
+getIntValue.argtypes = (ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p)
 
-
-
-
+class VRDataIndex(object):
+	def __init__(self, index):
+		self.index = index
+	def getValue(self, valName, nameSpace):
+		datumType = getDatumType(self.index, valName, nameSpace)
+		if datumType == 1:
+			return getIntValue(self.index, valName, nameSpace)
+		return None
 
 
 

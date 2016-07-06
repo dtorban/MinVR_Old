@@ -3,6 +3,7 @@ project(MinVR_Python)
 set (SOURCEFILES 
   src/VRPythonPlugin.cpp
   src/VRPython.cpp
+  src/VRDataIndexPython.cpp
 )
 
 set (HEADERFILES
