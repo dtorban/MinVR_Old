@@ -7,20 +7,21 @@
  */
 
 #include "main/VRMain.h"
+#include <plugin/VRPlugin.h>
 
 using namespace MinVR;
 
 extern "C" {
-	typedef int (*eventcallback_type)(const char* eventName);
-	typedef int (*rendercallback_type)();
+	PLUGIN_API typedef int (*eventcallback_type)(const char* eventName);
+	PLUGIN_API typedef int (*rendercallback_type)();
 }
 
 class VRPythonEventCallbackHandler : public VREventHandler {
 public:
-	VRPythonEventCallbackHandler(eventcallback_type eventCallback) : eventCallback(eventCallback) {}
-	virtual ~VRPythonEventCallbackHandler() {}
+	PLUGIN_API VRPythonEventCallbackHandler(eventcallback_type eventCallback) : eventCallback(eventCallback) {}
+	PLUGIN_API virtual ~VRPythonEventCallbackHandler() {}
 
-	void onVREvent(const std::string &eventName, VRDataIndex *eventData) {
+	PLUGIN_API void onVREvent(const std::string &eventName, VRDataIndex *eventData) {
 		eventCallback(eventName.c_str());
 	}
 
@@ -30,17 +31,17 @@ private:
 
 class VRPythonRenderCallbackHandler : public VRRenderHandler {
 public:
-	VRPythonRenderCallbackHandler(rendercallback_type renderCallback) : renderCallback(renderCallback) {}
-	virtual ~VRPythonRenderCallbackHandler() {}
-	virtual void onVRRenderScene(VRDataIndex *renderState, VRDisplayNode *callingNode) { renderCallback(); }
-	virtual void onVRRenderContext(VRDataIndex *renderState, VRDisplayNode *callingNode) {}
+	PLUGIN_API VRPythonRenderCallbackHandler(rendercallback_type renderCallback) : renderCallback(renderCallback) {}
+	PLUGIN_API virtual ~VRPythonRenderCallbackHandler() {}
+	PLUGIN_API virtual void onVRRenderScene(VRDataIndex *renderState, VRDisplayNode *callingNode) { renderCallback(); }
+	PLUGIN_API virtual void onVRRenderContext(VRDataIndex *renderState, VRDisplayNode *callingNode) {}
 
 private:
 	rendercallback_type renderCallback;
 };
 
 extern "C" {
-	VRMain* VRMain_init(char* config) {
+	PLUGIN_API VRMain* VRMain_init(char* config) {
 		VRMain* vrmain = new VRMain();
 		char** input = new char*[2];
 		input[1] = config;
@@ -49,26 +50,26 @@ extern "C" {
 		return vrmain;
 	}
 
-	void VRMain_shutdown(VRMain* vrmain, VREventHandler* eventHandler, VRRenderHandler* renderHandler) {
+	PLUGIN_API void VRMain_shutdown(VRMain* vrmain, VREventHandler* eventHandler, VRRenderHandler* renderHandler) {
 		vrmain->shutdown();
 		delete eventHandler;
 		delete renderHandler;
 		delete vrmain;
 	}
 
-	VREventHandler* VRMain_registerEventCallback(VRMain* vrmain, eventcallback_type eventCallback) {
+	PLUGIN_API VREventHandler* VRMain_registerEventCallback(VRMain* vrmain, eventcallback_type eventCallback) {
 		VREventHandler* handler = new VRPythonEventCallbackHandler(eventCallback);
 		vrmain->addEventHandler(handler);
 		return handler;
 	}
 
-	VRRenderHandler* VRMain_registerRenderCallback(VRMain* vrmain, rendercallback_type renderCallback) {
+	PLUGIN_API VRRenderHandler* VRMain_registerRenderCallback(VRMain* vrmain, rendercallback_type renderCallback) {
 		VRRenderHandler* handler = new VRPythonRenderCallbackHandler(renderCallback);
 		vrmain->addRenderHandler(handler);
 		return handler;
 	}
 
-	void VRMain_mainloop(VRMain* vrmain) {
+	PLUGIN_API void VRMain_mainloop(VRMain* vrmain) {
 		vrmain->mainloop();
 	}
 }

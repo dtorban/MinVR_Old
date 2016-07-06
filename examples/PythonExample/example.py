@@ -41,6 +41,7 @@ class AppRenderHandler(VRRenderHandler):
 		glEnd();
 
 
+
 vrmain = VRMain("desktop.xml")
 vrmain.addRenderHandler(AppRenderHandler())
 vrmain.addEventHandler(AppEventHandler())

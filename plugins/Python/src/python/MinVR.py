@@ -1,6 +1,22 @@
 from ctypes import cdll
 import ctypes
-lib = cdll.LoadLibrary('../../build/Release/plugins/MinVR_Python/lib/libMinVR_Python.so')
+import xml.etree.ElementTree
+
+libName = 'MinVR_Python'
+
+from sys import platform as _platform
+if _platform == "linux" or _platform == "linux2":
+    libFilePath = 'lib/lib' + libName + '.so'
+elif _platform == "darwin":
+    libFilePath = 'lib/lib' + libName + '.dylib'
+elif _platform == "win32":
+    libFilePath = 'bin/' + libName + '.dll'
+
+e = xml.etree.ElementTree.parse('desktop.xml').getroot()
+pluginpath = e.findall('PluginPath')[0].text
+print pluginpath
+
+lib = cdll.LoadLibrary(pluginpath + '/' + libName + '/' + libFilePath)
 
 eventcallback_type = ctypes.CFUNCTYPE(None, ctypes.c_char_p)
 rendercallback_type = ctypes.CFUNCTYPE(None)
