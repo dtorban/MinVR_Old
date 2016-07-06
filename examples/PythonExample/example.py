@@ -2,7 +2,8 @@
 
 import sys, os, inspect
 
-#a = os.path.dirname(os.path.abspath(inspect.getsourcefile(lambda:0)))
+fileDir = os.path.dirname(os.path.abspath(inspect.getsourcefile(lambda:0)))
+os.chdir(fileDir)
 
 sys.path.append("../../plugins/Python/src/python")
 
