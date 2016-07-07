@@ -11,11 +11,13 @@
 
 using namespace MinVR;
 
+// Event and Render python callback functions
 extern "C" {
 	PLUGIN_API typedef int (*eventcallback_type)(const char* eventName);
 	PLUGIN_API typedef int (*rendercallback_type)(void* renderState);
 }
 
+// Event handler callback wrapper
 class VRPythonEventCallbackHandler : public VREventHandler {
 public:
 	PLUGIN_API VRPythonEventCallbackHandler(eventcallback_type eventCallback) : eventCallback(eventCallback) {}
@@ -29,6 +31,7 @@ private:
 	eventcallback_type eventCallback;
 };
 
+// Render handler callback wrapper
 class VRPythonRenderCallbackHandler : public VRRenderHandler {
 public:
 	PLUGIN_API VRPythonRenderCallbackHandler(rendercallback_type renderCallback) : renderCallback(renderCallback) {}
@@ -42,7 +45,10 @@ private:
 	rendercallback_type renderCallback;
 };
 
+// Python hooks
 extern "C" {
+
+	// Create VRMain
 	PLUGIN_API VRMain* VRMain_init(char* config) {
 		VRMain* vrmain = new VRMain();
 		char** input = new char*[2];
@@ -52,6 +58,7 @@ extern "C" {
 		return vrmain;
 	}
 
+	// Shutdown VRMain
 	PLUGIN_API void VRMain_shutdown(VRMain* vrmain, VREventHandler* eventHandler, VRRenderHandler* renderHandler) {
 		vrmain->shutdown();
 		delete eventHandler;
@@ -59,18 +66,21 @@ extern "C" {
 		delete vrmain;
 	}
 
+	// Register event callback
 	PLUGIN_API VREventHandler* VRMain_registerEventCallback(VRMain* vrmain, eventcallback_type eventCallback) {
 		VREventHandler* handler = new VRPythonEventCallbackHandler(eventCallback);
 		vrmain->addEventHandler(handler);
 		return handler;
 	}
 
+	// Register render callback
 	PLUGIN_API VRRenderHandler* VRMain_registerRenderCallback(VRMain* vrmain, rendercallback_type renderCallback) {
 		VRRenderHandler* handler = new VRPythonRenderCallbackHandler(renderCallback);
 		vrmain->addRenderHandler(handler);
 		return handler;
 	}
 
+	// Allow python specific plugins which calls the python modules specified
 	PLUGIN_API bool setPluginList(VRMain* vrmain, char* pluginList) {
 		if (vrmain->getConfig()->exists("PythonPlugins","/")) {
 			std::string py = vrmain->getConfig()->getValue("PythonPlugins","/");
@@ -82,6 +92,7 @@ extern "C" {
 		return false;
 	}
 
+	// Runs main loop
 	PLUGIN_API void VRMain_mainloop(VRMain* vrmain) {
 		vrmain->mainloop();
 	}
