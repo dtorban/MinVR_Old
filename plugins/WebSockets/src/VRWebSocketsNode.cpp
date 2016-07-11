@@ -51,9 +51,13 @@ static int callback_display(struct lws *wsi,
 		VRWebSocketsNode* node = (VRWebSocketsNode*)(lws_context_user(lws_get_context(wsi)));
 
 		std::stringstream ss;
+
+		//std::cout << node->getCurrentRenderState()->serializeJSON("/") << std::endl;
+
 		ss << "{\"name\": \"James Devilson\", \"message\": \"" << node->getFrame() << "\"}";
 
-		std::string output = ss.str();
+		//std::string output = ss.str();
+		std::string output = "{\"renderState\":" + node->getCurrentRenderState()->serializeJSON("/") + "}";
 		int newLen = output.length();
 		unsigned char *buf = (unsigned char*) malloc(LWS_SEND_BUFFER_PRE_PADDING + newLen +
 				LWS_SEND_BUFFER_POST_PADDING);
@@ -128,6 +132,9 @@ void VRWebSocketsNode::render(VRDataIndex* renderState,
 		VRRenderHandler* renderHandler) {
 	//std::cout << "render web sockets" << std::endl;
 	frame++;
+	renderState->addData("/test",(int)21);
+	currentRenderState = renderState;
+	currentRenderHanlder = renderHandler;
 	lws_callback_on_writable_all_protocol(context, &protocols[1]);
 	lws_service(context, 0);
 	//std::cout << "finish render web sockets" << std::endl;

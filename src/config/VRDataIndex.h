@@ -402,6 +402,12 @@ public:
                         const std::string nameSpace);
   std::string serialize(const std::string name, VRDatumPtr pdata);
 
+  // Serialize item as JSON
+  std::string serializeJSON(const std::string valName);
+  std::string serializeJSON(const std::string valName,
+                        const std::string nameSpace);
+  std::string serializeJSON(const std::string name, VRDatumPtr pdata);
+
   // Takes a serialized bit of data and incorporates it into the data
   // index.
   std::string addSerializedValue(const std::string serializedData);

@@ -71,6 +71,52 @@ std::string VRDataIndex::serialize(const std::string name,
   }
 }
 
+std::string VRDataIndex::serializeJSON(const std::string name,
+                                   VRDatumPtr pdata ) {
+
+  std::string trimName = getTrimName(name);
+
+  // If this is not a container, just spell out the XML with the serialized
+  // data inside.
+  if (pdata->getType() != VRCORETYPE_CONTAINER) {
+
+    return ("{\"name\":\"" + trimName +
+            "\",\"type\":\"" + pdata->getDescription() + "\",\"value\":\"" +
+            pdata->getValueString() +
+            "\"}");
+
+  } else {
+    // If this is a container...
+
+    std::string serialized;
+    //                      ... open the XML tag, with the type ...
+    serialized = "{\"name\":\"" + trimName +
+            "\",\"type\":\"" + pdata->getDescription() + "\"";
+
+    VRContainer nameList = pdata->getValue();//,\"value\":\"
+    if (nameList.empty()) {
+
+      serialized += "}";
+
+    } else {
+
+      serialized += ",\"value\":[";
+
+      // ... loop through the children (recursively) ...
+      for (VRContainer::iterator lt = nameList.begin();
+           lt != nameList.end(); lt++) {
+
+        // ... recurse, and get the serialization of the member data value.
+        serialized += serializeJSON(name + "/" + *lt);
+      };
+
+      serialized += "]}";
+
+    }
+    return serialized;
+  }
+}
+
 VRInt VRDataIndex::deserializeInt(const char* valueString) {
   int iVal;
   sscanf(valueString, "%d", &iVal);
@@ -790,6 +836,64 @@ std::string VRDataIndex::serialize(const std::string valName,
   if (it != mindex.end()) {
 
     return serialize(it->first, it->second);
+
+  } else {
+
+    throw std::runtime_error("Never heard of " + valName + " in the namespace: " + nameSpace);
+
+  }
+}
+
+std::string VRDataIndex::serializeJSON(const std::string valName) {
+
+  if (valName == "/")
+  {
+	  std::string serializedVal = "[";
+		std::list<std::string> names = getNames();
+		for (std::list<std::string>::iterator f = names.begin(); f != names.end(); f++)
+		{
+			if ((*f).find_last_of('/') == 0)
+			{
+				VRDataMap::iterator it = getEntry(*f);
+				if (it != mindex.end()) {
+
+					serializedVal += serializeJSON(it->first, it->second);
+
+				} else {
+
+					throw std::runtime_error(std::string("Never heard of ") + *f);
+
+				}
+			}
+		}
+		serializedVal += "]";
+		return serializedVal;
+  }
+
+  else {
+	  VRDataMap::iterator it = getEntry(valName, "");
+
+	  if (it != mindex.end()) {
+
+	    return serializeJSON(it->first, it->second);
+
+	  } else {
+
+	    throw std::runtime_error(std::string("Never heard of ") + valName);
+
+	  }
+  }
+
+}
+
+std::string VRDataIndex::serializeJSON(const std::string valName,
+                                   const std::string nameSpace) {
+
+  VRDataMap::iterator it = getEntry(valName, nameSpace);
+
+  if (it != mindex.end()) {
+
+    return serializeJSON(it->first, it->second);
 
   } else {
 

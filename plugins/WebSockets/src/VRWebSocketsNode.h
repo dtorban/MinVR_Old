@@ -29,11 +29,11 @@ public:
 
 	int getFrame() { return frame; }
 
-	const VRRenderHandler* getCurrentRenderHanlder() const {
+	VRRenderHandler* getCurrentRenderHanlder() {
 		return currentRenderHanlder;
 	}
 
-	const VRDataIndex* getCurrentRenderState() const {
+	VRDataIndex* getCurrentRenderState() {
 		return currentRenderState;
 	}
 
