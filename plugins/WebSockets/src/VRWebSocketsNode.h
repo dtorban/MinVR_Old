@@ -27,8 +27,21 @@ public:
 
 	static VRDisplayNode* create(VRMainInterface *vrMain, VRDataIndex *config, const std::string &nameSpace);
 
+	int getFrame() { return frame; }
+
+	const VRRenderHandler* getCurrentRenderHanlder() const {
+		return currentRenderHanlder;
+	}
+
+	const VRDataIndex* getCurrentRenderState() const {
+		return currentRenderState;
+	}
+
 private:
 	lws_context *context;
+	int frame;
+	VRDataIndex* currentRenderState;
+	VRRenderHandler* currentRenderHanlder;
 };
 
 } /* namespace MinVR */
