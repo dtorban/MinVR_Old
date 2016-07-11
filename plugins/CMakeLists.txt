@@ -54,6 +54,12 @@ if (MINVR_THREADING_PLUGIN OR BASE_PLUGINS)
 	add_subdirectory (Threading)
 endif()
 
+#------------------WebSockets-----------------------------
+option(MINVR_WEBSOCKETS_PLUGIN "If enabled, Threading plugin will be installed" OFF)
+if (MINVR_WEBSOCKETS_PLUGIN OR BASE_PLUGINS)
+	add_subdirectory (WebSockets)
+endif()
+
 #------------------OpenVR-----------------------------
 option(MINVR_OPENVR_PLUGIN "If enabled, OpenVR plugin will be installed" OFF)
 if (MINVR_OPENVR_PLUGIN)
