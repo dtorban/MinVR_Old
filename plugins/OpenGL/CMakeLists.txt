@@ -1,14 +1,12 @@
 project(MinVR_OpenGL)
 
 set (SOURCEFILES 
-  src/base64/base64.cpp
   src/VROpenGLGraphicsToolkit.cpp
   src/VRReadPixelsNode.cpp
   src/VROpenGLPlugin.cpp
 )
 
 set (HEADERFILES
-  src/base64/base64.h
   src/VROpenGLGraphicsToolkit.h
   src/VRReadPixelsNode.h
   src/VROpenGLHeaders.h

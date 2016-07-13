@@ -8,7 +8,7 @@
 
 #include <VRReadPixelsNode.h>
 #include "VROpenGLHeaders.h"
-#include "base64/base64.h"
+#include "config/base64/base64.h"
 
 namespace MinVR {
 
@@ -25,18 +25,23 @@ void VRReadPixelsNode::render(VRDataIndex* renderState,
 	int width = renderState->getValue("WindowWidth","/");
 	int height = renderState->getValue("WindowHeight","/");
 
+	VRDisplayNode::render(renderState, renderHandler);
+
 	GLubyte* pixels = (GLubyte*) malloc(width * height * sizeof(GLubyte) * 4);
+	glFinish();
+	glReadBuffer(GL_BACK);
 	glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 	unsigned char* p = (reinterpret_cast<unsigned char *>(pixels));
 
-	std::string pixels64 = base64_encode(p, width*height);
+	std::string pixels64 = base64_encode(p, width*height*4);
 	free(pixels);
 
 	renderState->addData("pixels", pixels64);
 
-	VRDisplayNode::render(renderState, renderHandler);
-
 	renderState->popState();
+}
+
+void VRReadPixelsNode::waitForRenderToComplete(VRDataIndex* renderState) {
 }
 
 VRDisplayNode* VRReadPixelsNode::create(VRMainInterface* vrMain,

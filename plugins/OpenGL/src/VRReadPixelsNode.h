@@ -21,6 +21,7 @@ public:
 	std::string getType() { return "VRReadPixelsNode"; }
 
 	void render(VRDataIndex *renderState, VRRenderHandler *renderHandler);
+	void waitForRenderToComplete(VRDataIndex *renderState);
 	/*GLubyte* pixels = (GLubyte*) malloc(60 * 60 * sizeof(GLubyte) * 4);
 
 void WebDisplay::drawGraphics(AbstractMVRAppRef app, int threadId,

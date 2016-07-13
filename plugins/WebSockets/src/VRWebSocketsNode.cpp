@@ -10,6 +10,7 @@
 #include <sstream>      // std::stringstream
 #include <string>
 #include "lws_config.h"
+#include "config/base64/base64.h"
 
 namespace MinVR {
 
@@ -58,7 +59,7 @@ static int callback_display(struct lws *wsi,
 
 		free(buf);*/
 		node->numClientsCompleted++;
-		std::cout << node->numClientsCompleted << " " << node->numClients << std::endl;
+		//std::cout << node->numClientsCompleted << " " << node->numClients << std::endl;
 		if (node->numClientsCompleted >= node->numClientsStarted)
 		{
 			node->setCurrentRenderMethod(VRWS_none);
@@ -74,13 +75,25 @@ static int callback_display(struct lws *wsi,
 		ss << "{\"renderMethod\":\"" << node->getCurrentRenderMethod() << "\",\"renderState\":" << node->getCurrentRenderState()->serializeJSON("/") << "}";
 
 		std::string output = ss.str();
+
+		if (node->getCurrentRenderMethod() == VRWS_render) {
+			output = (std::string)node->getCurrentRenderState()->getValue("pixels","/");
+			output = base64_decode(output);
+		}
+		std::cout << node->getCurrentRenderMethod() << output.length() << std::endl;
+
 		int newLen = output.length();
 		unsigned char *buf = (unsigned char*) malloc(LWS_SEND_BUFFER_PRE_PADDING + newLen +
 				LWS_SEND_BUFFER_POST_PADDING);
 		memcpy(&buf[LWS_SEND_BUFFER_PRE_PADDING], output.c_str(), newLen);
-		lws_write(wsi, &buf[LWS_SEND_BUFFER_PRE_PADDING], newLen, LWS_WRITE_TEXT);
-		//lws_write(wsi, &buf[LWS_SEND_BUFFER_PRE_PADDING], newLen, LWS_WRITE_BINARY);
-		std::cout << node->getFrame() << std::endl;
+
+		if (node->getCurrentRenderMethod() == VRWS_render) {
+			lws_write(wsi, &buf[LWS_SEND_BUFFER_PRE_PADDING], newLen, LWS_WRITE_BINARY);
+		}
+		else {
+			lws_write(wsi, &buf[LWS_SEND_BUFFER_PRE_PADDING], newLen, LWS_WRITE_TEXT);
+		}
+		//std::cout << node->getFrame() << std::endl;
 		//std::cout << output << std::endl;
 		//std::cout << output.size() << std::endl;
 
@@ -160,15 +173,13 @@ void VRWebSocketsNode::render(VRDataIndex* renderState,
 	currentRenderState = renderState;
 	currentRenderHanlder = renderHandler;
 	currentRenderMethod = VRWS_render;
-	numClientsCompleted = 0;
-	lws_callback_on_writable_all_protocol(context, &protocols[1]);
 
 	numClientsCompleted = 0;
 	lws_callback_on_writable_all_protocol(context, &protocols[1]);
 	numClientsStarted = numClients;
 	if (numClientsStarted > 0) {
 		while (currentRenderMethod != VRWS_none) {
-			lws_service(context, 10);
+			lws_service(context, 0);
 		}
 	}
 	//std::cout << "finish render web sockets" << std::endl;
@@ -186,7 +197,7 @@ void VRWebSocketsNode::waitForRenderToComplete(VRDataIndex* renderState) {
 	numClientsStarted = numClients;
 	if (numClientsStarted > 0) {
 		while (currentRenderMethod != VRWS_none) {
-			lws_service(context, 10);
+			lws_service(context, 0);
 		}
 	}
 }
@@ -203,7 +214,7 @@ void VRWebSocketsNode::displayFinishedRendering(VRDataIndex* renderState) {
 	numClientsStarted = numClients;
 	if (numClientsStarted > 0) {
 		while (currentRenderMethod != VRWS_none) {
-			lws_service(context, 10);
+			lws_service(context, 0);
 		}
 	}
 }

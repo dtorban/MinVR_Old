@@ -53,6 +53,7 @@ set(vr_config_cpp
   ${vr_src_dir}/config/Cxml/element.cpp
   ${vr_src_dir}/config/Cxml/utils.cpp
   ${vr_src_dir}/config/Cxml/XML.cpp
+  ${vr_src_dir}/config/base64/base64.cpp
 )
 
 set(vr_config_h
@@ -66,6 +67,7 @@ set(vr_config_h
   ${vr_src_dir}/config/Cxml/element.h
   ${vr_src_dir}/config/Cxml/utils.h
   ${vr_src_dir}/config/Cxml/XML.h
+  ${vr_src_dir}/config/base64/base64.h
 )
 
 set(vr_display_cpp
