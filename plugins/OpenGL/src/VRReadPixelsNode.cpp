@@ -20,7 +20,6 @@ VRReadPixelsNode::~VRReadPixelsNode() {
 
 void VRReadPixelsNode::render(VRDataIndex* renderState,
 		VRRenderHandler* renderHandler) {
-	renderState->pushState();
 
 	int width = renderState->getValue("WindowWidth","/");
 	int height = renderState->getValue("WindowHeight","/");
@@ -38,7 +37,6 @@ void VRReadPixelsNode::render(VRDataIndex* renderState,
 
 	renderState->addData("pixels", pixels64);
 
-	renderState->popState();
 }
 
 void VRReadPixelsNode::waitForRenderToComplete(VRDataIndex* renderState) {
