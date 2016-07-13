@@ -48,12 +48,21 @@ public:
 		return currentRenderMethod;
 	}
 
+	void setCurrentRenderMethod(VRWSRenderMethod currentRenderMethod) {
+		this->currentRenderMethod = currentRenderMethod;
+	}
+
+	int numClients;
+	int numClientsStarted;
+	int numClientsCompleted;
+
 private:
 	lws_context *context;
 	int frame;
 	VRDataIndex* currentRenderState;
 	VRRenderHandler* currentRenderHanlder;
 	VRWSRenderMethod currentRenderMethod;
+
 };
 
 } /* namespace MinVR */
