@@ -63,7 +63,8 @@ static int callback_display(struct lws *wsi,
 		memcpy(&buf[LWS_SEND_BUFFER_PRE_PADDING], output.c_str(), newLen);
 		lws_write(wsi, &buf[LWS_SEND_BUFFER_PRE_PADDING], newLen, LWS_WRITE_TEXT);
 
-		std::cout << output << std::endl;
+		//std::cout << output << std::endl;
+		//std::cout << output.size() << std::endl;
 
 		free(buf);
 		break;
@@ -114,6 +115,9 @@ VRWebSocketsNode::VRWebSocketsNode(const std::string &name, int port) : VRDispla
 	info.ka_probes = 0;
 	info.ka_interval = 0;
 	info.user = this;
+
+	protocols[1].rx_buffer_size = 1024*1024;
+	std::cout << "Buffer Size" << protocols[1].rx_buffer_size << std::endl;
 
 	context = lws_create_context(&info);
 
