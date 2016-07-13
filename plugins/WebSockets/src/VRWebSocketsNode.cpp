@@ -54,17 +54,16 @@ static int callback_display(struct lws *wsi,
 
 		//std::cout << node->getCurrentRenderState()->serializeJSON("/") << std::endl;
 
-		ss << "{\"name\": \"James Devilson\", \"message\": \"" << node->getFrame() << "\"}";
+		ss << "{\"renderMethod\":\"" << node->getCurrentRenderMethod() << "\",\"renderState\":" << node->getCurrentRenderState()->serializeJSON("/") << "}";
 
-		//std::string output = ss.str();
-		std::string output = "{\"renderState\":" + node->getCurrentRenderState()->serializeJSON("/") + "}";
+		std::string output = ss.str();
 		int newLen = output.length();
 		unsigned char *buf = (unsigned char*) malloc(LWS_SEND_BUFFER_PRE_PADDING + newLen +
 				LWS_SEND_BUFFER_POST_PADDING);
 		memcpy(&buf[LWS_SEND_BUFFER_PRE_PADDING], output.c_str(), newLen);
 		lws_write(wsi, &buf[LWS_SEND_BUFFER_PRE_PADDING], newLen, LWS_WRITE_TEXT);
 
-		//std::cout << node->getFrame() << std::endl;
+		std::cout << output << std::endl;
 
 		free(buf);
 		break;
@@ -132,9 +131,10 @@ void VRWebSocketsNode::render(VRDataIndex* renderState,
 		VRRenderHandler* renderHandler) {
 	//std::cout << "render web sockets" << std::endl;
 	frame++;
-	renderState->addData("/test",(int)21);
+	renderState->addData("frame",(int)frame);
 	currentRenderState = renderState;
 	currentRenderHanlder = renderHandler;
+	currentRenderMethod = VRWS_render;
 	lws_callback_on_writable_all_protocol(context, &protocols[1]);
 	lws_service(context, 0);
 	//std::cout << "finish render web sockets" << std::endl;
@@ -143,11 +143,21 @@ void VRWebSocketsNode::render(VRDataIndex* renderState,
 
 void VRWebSocketsNode::waitForRenderToComplete(VRDataIndex* renderState) {
 	//std::cout << "waitForRenderToComplete web sockets" << std::endl;
+	renderState->addData("/frame",(int)frame);
+	currentRenderState = renderState;
+	currentRenderMethod = VRWS_waitForRenderToComplete;
+	lws_callback_on_writable_all_protocol(context, &protocols[1]);
+	lws_service(context, 0);
 	VRDisplayNode::waitForRenderToComplete(renderState);
 }
 
 void VRWebSocketsNode::displayFinishedRendering(VRDataIndex* renderState) {
 	//std::cout << "displayFinishedRendering web sockets" << std::endl;
+	renderState->addData("/frame",(int)frame);
+	currentRenderState = renderState;
+	currentRenderMethod = VRWS_displayFinishedRendering;
+	lws_callback_on_writable_all_protocol(context, &protocols[1]);
+	lws_service(context, 0);
 	VRDisplayNode::displayFinishedRendering(renderState);
 }
 

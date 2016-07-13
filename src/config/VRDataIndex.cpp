@@ -852,9 +852,10 @@ std::string VRDataIndex::serializeJSON(const std::string valName) {
 		std::list<std::string> names = getNames();
 		for (std::list<std::string>::iterator f = names.begin(); f != names.end(); f++)
 		{
-			if ((*f).find_last_of('/') == 0)
+			size_t pos = (*f).find_last_of('/');
+			if (pos == std::string::npos || pos == 0)
 			{
-				VRDataMap::iterator it = getEntry(*f);
+				VRDataMap::iterator it = getEntry(*f, "/");
 				if (it != mindex.end()) {
 
 					serializedVal += serializeJSON(it->first, it->second);

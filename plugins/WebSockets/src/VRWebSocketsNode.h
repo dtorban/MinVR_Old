@@ -14,6 +14,13 @@
 
 namespace MinVR {
 
+enum VRWSRenderMethod {
+	VRWS_none,
+	VRWS_render,
+	VRWS_waitForRenderToComplete,
+	VRWS_displayFinishedRendering
+};
+
 class VRWebSocketsNode : public VRDisplayNode {
 public:
 	VRWebSocketsNode(const std::string &name, int port);
@@ -37,11 +44,16 @@ public:
 		return currentRenderState;
 	}
 
+	VRWSRenderMethod getCurrentRenderMethod() const {
+		return currentRenderMethod;
+	}
+
 private:
 	lws_context *context;
 	int frame;
 	VRDataIndex* currentRenderState;
 	VRRenderHandler* currentRenderHanlder;
+	VRWSRenderMethod currentRenderMethod;
 };
 
 } /* namespace MinVR */
