@@ -24,6 +24,9 @@ set(OPENGL_LIBRARIES ${OPENGL_gl_LIBRARY} ${OPENGL_glu_LIBRARY})
 set(OPENGL_INCLUDE_DIRS ${OPENGL_INCLUDE_DIR})
 include_directories(${OPENGL_INCLUDE_DIRS})
 
+find_package(JPEG REQUIRED)
+include_directories(${JPEG_INCLUDE_DIR})
+
 #------------------------------------------
 # MinVR Dependencies
 #------------------------------------------
@@ -122,7 +125,7 @@ SET(CMAKE_INSTALL_RPATH "${VRPlugins_install_dir}/${PROJECT_NAME}/lib")
 SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 add_library ( ${PROJECT_NAME} SHARED ${HEADERFILES} ${SOURCEFILES} )
-target_link_libraries(${PROJECT_NAME} ${OPENGL_LIBRARIES} MinVR ${LIBS_ALL})
+target_link_libraries(${PROJECT_NAME} ${JPEG_LIBRARIES} ${OPENGL_LIBRARIES} MinVR ${LIBS_ALL})
 
 #------------------------------------------
 # Install Target
