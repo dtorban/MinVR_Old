@@ -123,31 +123,33 @@ int compressImage(uint8_t * in_buffer, JOCTET * out_buffer, int width, int heigh
 	jpeg_start_compress(&cinfo, true);
 
 	JSAMPROW row_pointer;
-	/*uint8_t *buffer    = new uint8_t[width * height*3];
+	uint8_t *buffer    = new uint8_t[width * height*3];
 
-	for (int x = 0; x < width; x++) {
-		for (int y = 0; y < height; y++) {
-			buffer[3*(x*height+y) + 0] = 255*(1.0f*x/512.0);
-			buffer[3*(x*height+y) + 1] = 0;
-			buffer[3*(x*height+y) + 2] = 0;
+	for (int y = 0; y < height; y++) {
+		for (int x = 0; x < width; x++) {
+			int idindex = 3*((height-y-1)*width+x);
+			int index = 3*(y*width+x);
+			buffer[idindex+0]=in_buffer[index+0];
+			buffer[idindex+1]=in_buffer[index+1];
+			buffer[idindex+2]=in_buffer[index+2];
 		}
-	}*/
+	}
 
 	/* main code to write jpeg data */
 	while (cinfo.next_scanline < cinfo.image_height) {
-		row_pointer = (JSAMPROW) &in_buffer[cinfo.next_scanline * width*3];
+		row_pointer = (JSAMPROW) &buffer[cinfo.next_scanline * width*3];
 		jpeg_write_scanlines(&cinfo, &row_pointer, 1);
 	}
 	jpeg_finish_compress(&cinfo);
 
 	/* write the buffer to disk so you can see the image */
 	//fwrite(out_buffer, cinfo.dest->next_output_byte - out_buffer,1 ,outfile);
-	std::cout << (cinfo.dest->next_output_byte - out_buffer) << std::endl;
+	//std::cout << (cinfo.dest->next_output_byte - out_buffer) << std::endl;
 
 	//std::string ebuffer = base64_encode(out_buffer, cinfo.dest->next_output_byte - out_buffer);
 	//std::cout << ebuffer << std::endl;
 
-	//delete[] buffer;
+	delete[] buffer;
 
 	return  cinfo.dest->next_output_byte - out_buffer;
 
