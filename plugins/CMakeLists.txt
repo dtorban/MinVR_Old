@@ -54,6 +54,12 @@ if (MINVR_THREADING_PLUGIN OR BASE_PLUGINS)
 	add_subdirectory (Threading)
 endif()
 
+#------------------spdlog-----------------------------
+option(MINVR_sbdlog_PLUGIN "If enabled, spdlog plugin will be installed" OFF)
+if (MINVR_sbdlog_PLUGIN OR BASE_PLUGINS)
+	add_subdirectory (sbdlog)
+endif()
+
 #------------------OpenVR-----------------------------
 option(MINVR_OPENVR_PLUGIN "If enabled, OpenVR plugin will be installed" OFF)
 if (MINVR_OPENVR_PLUGIN)

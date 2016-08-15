@@ -27,12 +27,22 @@ typedef enum
 } VRLogLevel;
 }
 
+class VRLogger;
+
+class VRLoggerImpl {
+public:
+	virtual ~VRLoggerImpl() {}
+	virtual VRLogger* get(const std::string& key) = 0;
+};
+
+class VRBasicLoggerImpl;
+
 class VRLogger {
 public:
 	virtual ~VRLogger() {}
 
-	void log(level::VRLogLevel lvl, const std::string& msg) = 0;
-	void setLevel(level::VRLogLevel lvl) = 0;
+	virtual void log(level::VRLogLevel lvl, const std::string& msg) = 0;
+	virtual void setLevel(level::VRLogLevel lvl) = 0;
 
 	void trace(const std::string& msg) { log(level::trace, msg); }
 	void debug(const std::string& msg) { log(level::debug, msg); }
@@ -41,25 +51,28 @@ public:
 	void error(const std::string& msg) { log(level::err, msg); }
 	void critical(const std::string& msg) { log(level::critical, msg); }
 
-	static VRLogger* get(const std::string& key) {
-		return loggers[key];
+	static void setImpl(VRLoggerImpl* implementation) {
+		impl = implementation;
 	}
 
-	static void set(const std::string& key, VRLogger* logger) {
-		std::map<std::string, VRLogger*>::iterator it = loggers.find(key);
-		if (it != loggers.end()) {
-			delete it->second;
+	static VRLogger* get(const std::string& key) {
+		if (impl == NULL) {
+			impl = reinterpret_cast<VRLoggerImpl*>(&basicImpl);
 		}
 
-		loggers[key] = logger;
+		return impl->get(key);
 	}
 
-	static VRLogger* get() { return get("default"); }
-	static void set(VRLogger* logger) { set("default", logger); }
+	static VRLogger* get() {
+		return get("default");
+	}
 
 private:
-	std::map<std::string, VRLogger*> loggers;
+
+	static VRLoggerImpl* impl;
+	static VRBasicLoggerImpl basicImpl;
 };
+
 
 } /* namespace DSP */
 

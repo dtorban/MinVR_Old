@@ -7,6 +7,7 @@
 #include <main/VREventHandler.h>
 #include <main/VRRenderHandler.h>
 #include <math/VRMath.h>
+#include <log/VRLogger.h>
 
 
 #if defined(WIN32)
@@ -29,6 +30,8 @@ using namespace MinVR;
 class MyVRApp : public VREventHandler, public VRRenderHandler {
 public:
   MyVRApp(int argc, char** argv) : _vrMain(NULL), _quit(false) {
+	  VRLogger::get()->setLevel(level::off);
+	  VRLogger::get()->debug("Program started.");
 		_vrMain = new VRMain();
         _vrMain->initialize(argc, argv);
       	_vrMain->addEventHandler(this);

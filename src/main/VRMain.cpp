@@ -18,6 +18,7 @@
 #include <net/VRNetClient.h>
 #include <net/VRNetServer.h>
 #include <plugin/VRPluginManager.h>
+#include "log/VRLogger.h"
 
 namespace MinVR {
 
@@ -138,7 +139,9 @@ VRMain::initialize(int argc, char** argv)
     exit(0);
   }
   
+
   std::string configFile = argv[1];
+  VRLogger::get()->info(std::string("Initializing VRMain with file: ") + std::string(configFile));
 
   
   _config = new VRDataIndex();

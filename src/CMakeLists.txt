@@ -101,6 +101,16 @@ set(vr_input_h
   ${vr_src_dir}/input/VRInputDevice.h
 )
 
+set(vr_log_cpp
+  ${vr_src_dir}/log/VRLogger.cpp
+  ${vr_src_dir}/log/impl/VRBasicLogger.cpp
+)
+
+set(vr_log_h
+  ${vr_src_dir}/log/VRLogger.h
+  ${vr_src_dir}/log/impl/VRBasicLogger.h
+)
+
 set(vr_main_cpp
   ${vr_src_dir}/main/VRFactory.cpp
   ${vr_src_dir}/main/VRMain.cpp
@@ -153,6 +163,7 @@ set(vr_sources
   ${vr_config_cpp} ${vr_config_h}
   ${vr_display_cpp} ${vr_display_h}
   ${vr_input_h}
+  ${vr_log_cpp} ${vr_log_h}
   ${vr_main_cpp} ${vr_main_h}
   ${vr_math_cpp} ${vr_math_h}
   ${vr_net_cpp} ${vr_net_h}
@@ -165,6 +176,8 @@ source_group("display\\Header Files" FILES ${vr_display_h})
 source_group("display\\Source Files" FILES ${vr_display_cpp})
 source_group("input\\Header Files" FILES ${vr_input_h})
 source_group("input\\Source Files" FILES ${vr_input_cpp})
+source_group("input\\Header Files" FILES ${vr_log_h})
+source_group("input\\Source Files" FILES ${vr_log_cpp})
 source_group("main\\Header Files" FILES ${vr_main_h})
 source_group("main\\Source Files" FILES ${vr_main_cpp})
 source_group("math\\Header Files" FILES ${vr_math_h})
