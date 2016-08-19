@@ -18,10 +18,5 @@ VRLogger::VRLoggerMap::VRLoggerMap() {
 	loggers["Default"] = currentLogger;
 }
 
-VRLoggerStream& VRLogger::getStream(level::VRLogLevel lvl) {
-	static VRLoggerStream defaultStream;
-	return defaultStream;
-}
-
 } /* namespace MinVR */
 

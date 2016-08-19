@@ -19,22 +19,9 @@ public:
 	VRBasicLogger();
 	virtual ~VRBasicLogger();
 
-	void log(level::VRLogLevel lvl, const std::string& msg);
-	VRLoggerStream& getStream(level::VRLogLevel lvl);
+	void logMessage(level::VRLogLevel lvl, const std::string& msg);
 
 	static VRBasicLogger* create(VRMainInterface *vrMain, VRDataIndex *config, const std::string &nameSpace);
-
-private:
-	class VRBasicLoggerStream : public VRLoggerStream {
-	public:
-		virtual ~VRBasicLoggerStream();
-		virtual void flush();
-
-	protected:
-		virtual std::ostream* getStream();
-	};
-
-	VRBasicLoggerStream stream;
 };
 
 } /* namespace MinVR */

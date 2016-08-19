@@ -11,6 +11,7 @@
 
 #include <string>
 #include <map>
+#include <sstream>
 #include <iostream>
 
 namespace MinVR {
@@ -28,34 +29,28 @@ typedef enum
 } VRLogLevel;
 }
 
-class VRLoggerStream;
+template<typename T> struct VRLogHelper;
+template <> struct VRLogHelper<std::string>;
 
 class VRLogger {
 public:
 	virtual ~VRLogger() {}
 
-	virtual void log(level::VRLogLevel lvl, const std::string& msg) = 0;
-
 	virtual void setLevel(level::VRLogLevel lvl) { loggerLevel = lvl; }
 	virtual level::VRLogLevel getLevel() { return loggerLevel; }
 
-	void log(const std::string& msg) { log(loggerLevel, msg); }
-	void trace(const std::string& msg) { log(level::trace, msg); }
-	void debug(const std::string& msg) { log(level::debug, msg); }
-	void info(const std::string& msg) { log(level::info, msg); }
-	void warn(const std::string& msg) { log(level::warn, msg); }
-	void error(const std::string& msg) { log(level::err, msg); }
-	void critical(const std::string& msg) { log(level::critical, msg); }
-
-	virtual VRLoggerStream& getStream(level::VRLogLevel lvl);
-	virtual VRLoggerStream& getStream() {
-		return getStream(loggerLevel);
+	template <typename T> void log(level::VRLogLevel lvl, const T& val) {
+		VRLogHelper<T>::logValue(lvl, val, this);
 	}
 
-	template<typename T>
-	VRLoggerStream& operator<<(T val) {
-		return getStream(loggerLevel);
-	}
+	template <typename T> void trace(const T& val) { log(level::trace,  val); }
+	template <typename T> void debug(const T& val) { log(level::debug,  val); }
+	template <typename T> void info(const T& val) { log(level::info,  val); }
+	template <typename T> void warn(const T& val) { log(level::warn,  val); }
+	template <typename T> void error(const T& val) { log(level::err,  val); }
+	template <typename T> void critical(const T& val) { log(level::critical,  val); }
+
+	virtual void logMessage(level::VRLogLevel lvl, const std::string& msg) = 0;
 
 	static std::string getAttributeName(){ return "loggerType"; };
 
@@ -112,27 +107,20 @@ private:
 	level::VRLogLevel loggerLevel;
 };
 
-class VRLoggerStream {
-public:
-	virtual ~VRLoggerStream() {}
+template<typename T> struct VRLogHelper {
+	static void logValue(level::VRLogLevel lvl, const T& val, VRLogger* logger) {
+		std::stringstream ss;
+		ss << val;
+		logger->logMessage(lvl, ss.str());
 
-	template<typename T>
-	VRLoggerStream& operator<<(T val) {
-		std::ostream* stream = getStream();
-		if(stream) {
-			*stream << val;
-		}
-
-		return *this;
 	}
-
-	virtual void flush() {}
-
-protected:
-	virtual std::ostream* getStream() { return NULL; }
 };
 
-
+template <> struct VRLogHelper<std::string> {
+	static void logValue(level::VRLogLevel lvl, const std::string& val, VRLogger* logger) {
+		logger->logMessage(lvl, val);
+	}
+};
 
 } /* namespace DSP */
 
