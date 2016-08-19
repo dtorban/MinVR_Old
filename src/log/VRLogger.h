@@ -27,16 +27,6 @@ typedef enum
 } VRLogLevel;
 }
 
-class VRLogger;
-
-class VRLoggerImpl {
-public:
-	virtual ~VRLoggerImpl() {}
-	virtual VRLogger* get(const std::string& key) = 0;
-};
-
-class VRBasicLoggerImpl;
-
 class VRLogger {
 public:
 	virtual ~VRLogger() {}
@@ -51,26 +41,77 @@ public:
 	void error(const std::string& msg) { log(level::err, msg); }
 	void critical(const std::string& msg) { log(level::critical, msg); }
 
-	static void setImpl(VRLoggerImpl* implementation) {
-		impl = implementation;
+	static void set(const std::string& key, VRLogger* logger) {
+		if (key == "Default") {
+			currentLogger.setLogger(logger);
+		}
+
+		std::map<std::string, VRLogger*>::iterator it = loggerMap.loggers.find(key);
+
+		if (it != loggerMap.loggers.end()) {
+			delete it->second;
+		}
+
+		loggerMap.loggers[key] = logger;
+	}
+
+	static void set(VRLogger* logger) {
+		currentLogger.setLogger(logger);
 	}
 
 	static VRLogger* get(const std::string& key) {
-		if (impl == NULL) {
-			impl = reinterpret_cast<VRLoggerImpl*>(&basicImpl);
+		if (key == "Default") {
+			return get();
 		}
 
-		return impl->get(key);
+		return loggerMap.loggers[key];
 	}
 
 	static VRLogger* get() {
-		return get("default");
+		return currentLogger.getLogger();
 	}
 
-private:
+	private:
 
-	static VRLoggerImpl* impl;
-	static VRBasicLoggerImpl basicImpl;
+		class LoggerPtr {
+		public:
+			LoggerPtr(VRLogger* logger) : logger(logger) {
+			}
+
+			~LoggerPtr() {
+				if (logger) {
+					delete logger;
+				}
+				logger = NULL;
+			}
+
+			VRLogger* getLogger() const {
+				return logger;
+			}
+
+			void setLogger(VRLogger* logger) {
+				if (this->logger) {
+					delete this->logger;
+				}
+
+				this->logger = logger;
+			}
+		private:
+			VRLogger* logger;
+	};
+
+	struct VRLoggerMap {
+		~VRLoggerMap() {
+			for (std::map<std::string, VRLogger*>::iterator it = loggers.begin(); it != loggers.end(); it++) {
+				delete it->second;
+			}
+		}
+
+		std::map<std::string, VRLogger*> loggers;
+	};
+
+	static LoggerPtr currentLogger;
+	static VRLoggerMap loggerMap;
 };
 
 

@@ -25,19 +25,6 @@ private:
 	level::VRLogLevel lvl;
 };
 
-class VRBasicLoggerImpl : public VRLoggerImpl {
-public:
-	VRBasicLoggerImpl() {}
-	virtual ~VRBasicLoggerImpl() {}
-
-	VRLogger* get(const std::string& key) {
-		return &logger;
-	}
-
-private:
-	static VRBasicLogger logger;
-};
-
 } /* namespace MinVR */
 
 #endif /* VRSIMPLELOGGER_H_ */

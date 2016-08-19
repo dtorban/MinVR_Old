@@ -12,8 +12,6 @@
 
 namespace MinVR {
 
-VRBasicLogger VRBasicLoggerImpl::logger;
-
 VRBasicLogger::VRBasicLogger() : lvl(level::info) {
 }
 

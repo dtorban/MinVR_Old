@@ -11,7 +11,7 @@
 
 namespace MinVR {
 
-VRLoggerImpl* VRLogger::impl = NULL;
-VRBasicLoggerImpl VRLogger::basicImpl;
+VRLogger::LoggerPtr VRLogger::currentLogger = VRLogger::LoggerPtr(new VRBasicLogger());
+VRLogger::VRLoggerMap VRLogger::loggerMap;
 
 } /* namespace MinVR */
