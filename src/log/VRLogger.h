@@ -112,7 +112,7 @@ private:
 	level::VRLogLevel loggerLevel;
 };
 
-class VRLoggerStream : public std::ostream {
+class VRLoggerStream {
 public:
 	virtual ~VRLoggerStream() {}
 
