@@ -11,6 +11,7 @@
 
 #include <string>
 #include <map>
+#include <iostream>
 
 namespace MinVR {
 
@@ -27,13 +28,18 @@ typedef enum
 } VRLogLevel;
 }
 
+class VRLoggerStream;
+
 class VRLogger {
 public:
 	virtual ~VRLogger() {}
 
 	virtual void log(level::VRLogLevel lvl, const std::string& msg) = 0;
-	virtual void setLevel(level::VRLogLevel lvl) = 0;
 
+	virtual void setLevel(level::VRLogLevel lvl) { loggerLevel = lvl; }
+	virtual level::VRLogLevel getLevel() { return loggerLevel; }
+
+	void log(const std::string& msg) { log(loggerLevel, msg); }
 	void trace(const std::string& msg) { log(level::trace, msg); }
 	void debug(const std::string& msg) { log(level::debug, msg); }
 	void info(const std::string& msg) { log(level::info, msg); }
@@ -41,80 +47,94 @@ public:
 	void error(const std::string& msg) { log(level::err, msg); }
 	void critical(const std::string& msg) { log(level::critical, msg); }
 
-	static void set(const std::string& key, VRLogger* logger) {
-		if (key == "Default") {
-			currentLogger.setLogger(logger);
-		}
+	virtual VRLoggerStream& getStream(level::VRLogLevel lvl);
+	virtual VRLoggerStream& getStream() {
+		return getStream(loggerLevel);
+	}
 
-		std::map<std::string, VRLogger*>::iterator it = loggerMap.loggers.find(key);
+	template<typename T>
+	VRLoggerStream& operator<<(T val) {
+		return getStream(loggerLevel);
+	}
+
+	static std::string getAttributeName(){ return "loggerType"; };
+
+	static void set(const std::string& name, VRLogger* logger) {
+		std::map<std::string, VRLogger*>::iterator it = loggerMap.loggers.find(name);
 
 		if (it != loggerMap.loggers.end()) {
 			delete it->second;
 		}
 
-		loggerMap.loggers[key] = logger;
+		loggerMap.loggers[name] = logger;
+
+		if (name == "Default") {
+			loggerMap.currentLogger = logger;
+		}
 	}
 
 	static void set(VRLogger* logger) {
-		currentLogger.setLogger(logger);
+		set("Default", logger);
 	}
 
-	static VRLogger* get(const std::string& key) {
-		if (key == "Default") {
+	static VRLogger& get(const std::string& name) {
+		if (name == "Default") {
 			return get();
 		}
 
-		return loggerMap.loggers[key];
+		return *(loggerMap.loggers[name]);
 	}
 
-	static VRLogger* get() {
-		return currentLogger.getLogger();
+	static VRLogger& get() {
+		return *(loggerMap.currentLogger);
 	}
 
-	private:
+protected:
+	VRLogger() : loggerLevel(level::info) {
+	}
 
-		class LoggerPtr {
-		public:
-			LoggerPtr(VRLogger* logger) : logger(logger) {
-			}
-
-			~LoggerPtr() {
-				if (logger) {
-					delete logger;
-				}
-				logger = NULL;
-			}
-
-			VRLogger* getLogger() const {
-				return logger;
-			}
-
-			void setLogger(VRLogger* logger) {
-				if (this->logger) {
-					delete this->logger;
-				}
-
-				this->logger = logger;
-			}
-		private:
-			VRLogger* logger;
-	};
+private:
 
 	struct VRLoggerMap {
+		VRLoggerMap();
 		~VRLoggerMap() {
 			for (std::map<std::string, VRLogger*>::iterator it = loggers.begin(); it != loggers.end(); it++) {
 				delete it->second;
 			}
 		}
 
+		VRLogger* currentLogger;
 		std::map<std::string, VRLogger*> loggers;
 	};
 
-	static LoggerPtr currentLogger;
 	static VRLoggerMap loggerMap;
+
+	level::VRLogLevel loggerLevel;
+};
+
+class VRLoggerStream : public std::ostream {
+public:
+	virtual ~VRLoggerStream() {}
+
+	template<typename T>
+	VRLoggerStream& operator<<(T val) {
+		std::ostream* stream = getStream();
+		if(stream) {
+			*stream << val;
+		}
+
+		return *this;
+	}
+
+	virtual void flush() {}
+
+protected:
+	virtual std::ostream* getStream() { return NULL; }
 };
 
 
+
 } /* namespace DSP */
+
 
 #endif /* VRLOGGER_H_ */

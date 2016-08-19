@@ -19,6 +19,7 @@
 #include <net/VRNetServer.h>
 #include <plugin/VRPluginManager.h>
 #include "log/VRLogger.h"
+#include "log/impl/VRBasicLogger.h"
 
 namespace MinVR {
 
@@ -87,6 +88,7 @@ VRMain::VRMain() : _initialized(false), _config(NULL), _net(NULL), _factory(NULL
   _factory->registerItemType<VRDisplayNode, VRLookAtNode>("VRLookAtNode");
   _factory->registerItemType<VRDisplayNode, VRTrackedLookAtNode>("VRTrackedLookAtNode");
   _factory->registerItemType<VRDisplayNode, VRViewportNode>("VRViewportNode");
+  _factory->registerItemType<VRLogger, VRBasicLogger>("VRBasicLogger");
   _pluginMgr = new VRPluginManager(this);
 }
 
@@ -141,7 +143,7 @@ VRMain::initialize(int argc, char** argv)
   
 
   std::string configFile = argv[1];
-  VRLogger::get()->info(std::string("Initializing VRMain with file: ") + std::string(configFile));
+  VRLogger::get().info(std::string("Initializing VRMain with file: ") + std::string(configFile));
 
   
   _config = new VRDataIndex();
@@ -321,6 +323,22 @@ VRMain::initialize(int argc, char** argv)
 		 //}
 	 }
   }
+
+	 // CONFIGURE Logging:
+	 {
+		std::list<std::string> names = _config->selectByAttribute("loggerType", "*", _name);
+		for (std::list<std::string>::const_iterator it = names.begin(); it != names.end(); ++it) {
+		  // create a new logger for each one in the list
+			VRLogger *logger = _factory->create<VRLogger>(this, _config, *it);
+		  if (logger) {
+			std::string loggerName = _config->getDatum(*it)->getAttributeValue("name");
+			VRLogger::set(loggerName, logger);
+		  }
+		  else{
+			  std::cerr << "Problem creating Logger: " << *it << " with loggerType=" << _config->getDatum(*it)->getAttributeValue("loggerType") << std::endl;
+		  }
+		}
+	 }
   
   // CONFIGURE NETWORKING:
 

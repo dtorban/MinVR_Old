@@ -10,6 +10,7 @@
 #define VRSIMPLELOGGER_H_
 
 #include "log/VRLogger.h"
+#include "main/VRMainInterface.h"
 
 namespace MinVR {
 
@@ -19,10 +20,21 @@ public:
 	virtual ~VRBasicLogger();
 
 	void log(level::VRLogLevel lvl, const std::string& msg);
-	void setLevel(level::VRLogLevel lvl);
+	VRLoggerStream& getStream(level::VRLogLevel lvl);
+
+	static VRBasicLogger* create(VRMainInterface *vrMain, VRDataIndex *config, const std::string &nameSpace);
 
 private:
-	level::VRLogLevel lvl;
+	class VRBasicLoggerStream : public VRLoggerStream {
+	public:
+		virtual ~VRBasicLoggerStream();
+		virtual void flush();
+
+	protected:
+		virtual std::ostream* getStream();
+	};
+
+	VRBasicLoggerStream stream;
 };
 
 } /* namespace MinVR */

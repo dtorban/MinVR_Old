@@ -11,7 +11,17 @@
 
 namespace MinVR {
 
-VRLogger::LoggerPtr VRLogger::currentLogger = VRLogger::LoggerPtr(new VRBasicLogger());
 VRLogger::VRLoggerMap VRLogger::loggerMap;
 
+VRLogger::VRLoggerMap::VRLoggerMap() {
+	currentLogger = new VRBasicLogger();
+	loggers["Default"] = currentLogger;
+}
+
+VRLoggerStream& VRLogger::getStream(level::VRLogLevel lvl) {
+	static VRLoggerStream defaultStream;
+	return defaultStream;
+}
+
 } /* namespace MinVR */
+
