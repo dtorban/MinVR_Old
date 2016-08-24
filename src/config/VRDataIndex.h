@@ -299,8 +299,7 @@ private:
   template <typename T, const VRCORETYPE_ID TID>
   std::string addDataSpecialized(const std::string valName, T value) {
 
-    std::pair<VRDataMap::iterator, bool>res =
-      mindex.insert(VRDataMap::value_type(valName, NULL));
+	  std::pair<VRDataMap::iterator, bool>res = mindex.insert(VRDataMap::value_type(valName, VRDatumPtr()));
 
     // Was it already used?
     if (res.second) {

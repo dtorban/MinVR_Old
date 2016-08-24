@@ -33,7 +33,7 @@ public:
 		Left = 1,
 		Right = 2
 	};
-	VRStereoNode(const std::string &name, float interOcularDist, VRGraphicsToolkit *gfxToolkit, VRStereoFormat format);
+	VRStereoNode(const std::string &name, float interOcularDist, VRGraphicsToolkit *gfxToolkit, VRStereoFormat format, bool swapEyes);
 	virtual ~VRStereoNode();
 
 	virtual std::string getType() { return "VRStereoNode"; }
@@ -50,6 +50,7 @@ protected:
 	VRGraphicsToolkit *_gfxToolkit;
 	VRStereoFormat _format;
 	float     _iod;
+	bool _swapEyes;
 };
 
 

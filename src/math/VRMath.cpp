@@ -317,10 +317,10 @@ VRMatrix4 VRMatrix4::orthonormal() const {
   VRVector3 y = getColumn(1);
   y = (y - y.dot(x)*x).normalize();
   VRVector3 z = x.cross(y).normalize();
-  return VRMatrix4(x[0], y[0], z[0], m[3],
-                   x[1], y[1], z[1], m[7],
-                   x[2], y[2], z[2], m[11],
-                   m[12], m[13], m[14], m[15]);
+  return VRMatrix4(x[0], y[0], z[0], m[12],
+                   x[1], y[1], z[1], m[13],
+                   x[2], y[2], z[2], m[14],
+                   m[3], m[7], m[11], m[15]);
 }
 
 

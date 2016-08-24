@@ -35,7 +35,7 @@ public:
 		_vrMain->addRenderHandler(this);
         _horizAngle = 0.0;
         _vertAngle = 0.0;
-		_radius =  15.0;
+		_radius =  0.0;
         _incAngle = -0.1f;
 	}
 
@@ -68,6 +68,13 @@ public:
         else if ((eventName == "/KbdDown_Down") || (eventName == "/KbdDown_Repeat")) {
           _vertAngle += _incAngle;
         }
+		else if (eventName == "/Wand_Move") {
+			_wandTransform = eventData->getValue("Transform", "/Wand_Move");
+			wandEvents++;
+		}
+		else if (eventName == "/Head_Move") {
+			headEvents++;
+		}
       
         if (_horizAngle > 6.283185) _horizAngle -= 6.283185;
         if (_horizAngle < 0.0) _horizAngle += 6.283185;
@@ -82,8 +89,6 @@ public:
         }
     }
 
-	int count = 0;
-  
 	// Callback for rendering, inherited from VRRenderHandler
 	virtual void onVRRenderScene(VRDataIndex *renderState, VRDisplayNode *callingNode) {
 		if (renderState->exists("IsConsole", "/")) {
@@ -95,7 +100,6 @@ public:
 			glEnable(GL_DEPTH_TEST);
 			glDepthFunc(GL_LEQUAL);
 			glClearDepth(1.0f);
-			count++;
 			glClearColor(0.0, 0.0, 0.0, 1.f);
 
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -129,6 +133,7 @@ public:
 			    glLoadMatrixd((V*M).m);
             }
             else {
+				
                 // If the DisplayGraph does not contain a node that sets the
                 // ProjectionMatrix and ViewMatrix, then we must be in a non-headtracked
                 // simple desktop mode.  We can just set the projection and modelview
@@ -154,6 +159,9 @@ public:
                            targetPos[0], targetPos[1], targetPos[2],
                            cameraAim[0], cameraAim[1], cameraAim[2]);
             }
+			
+			glPushMatrix();
+		    glScalef(0.05f, 0.05f, 0.05f);
           
             glBegin(GL_LINES);
             glColor3f(1.0, 1.0, 0.0);
@@ -304,12 +312,56 @@ public:
           glColor3f(0.0f,1.0f,0.0f);       // Green
           glVertex3f(-1.0f,-1.0f, 1.0f);
           glEnd();   // Done drawing the pyramid
+
+		  
+		  glPopMatrix();
+		  VRVector3 trans = _wandTransform.getColumn(3);
+		  glTranslatef(trans.x, trans.y, trans.z);
+		  
+		    glScalef(0.05f, 0.05f, 0.05f);
+
+		  glBegin(GL_TRIANGLES);           // Begin drawing the pyramid with 4 triangles
+                                           // Front
+          glColor3f(1.0f, 0.0f, 0.0f);     // Red
+          glVertex3f( 0.0f, 1.0f, 0.0f);
+          glColor3f(0.0f, 1.0f, 0.0f);     // Green
+          glVertex3f(-1.0f, -1.0f, 1.0f);
+          glColor3f(0.0f, 0.0f, 1.0f);     // Blue
+          glVertex3f(1.0f, -1.0f, 1.0f);
+          
+          // Right
+          glColor3f(1.0f, 0.0f, 0.0f);     // Red
+          glVertex3f(0.0f, 1.0f, 0.0f);
+          glColor3f(0.0f, 0.0f, 1.0f);     // Blue
+          glVertex3f(1.0f, -1.0f, 1.0f);
+          glColor3f(0.0f, 1.0f, 0.0f);     // Green
+          glVertex3f(1.0f, -1.0f, -1.0f);
+          
+          // Back
+          glColor3f(1.0f, 0.0f, 0.0f);     // Red
+          glVertex3f(0.0f, 1.0f, 0.0f);
+          glColor3f(0.0f, 1.0f, 0.0f);     // Green
+          glVertex3f(1.0f, -1.0f, -1.0f);
+          glColor3f(0.0f, 0.0f, 1.0f);     // Blue
+          glVertex3f(-1.0f, -1.0f, -1.0f);
+          
+          // Left
+          glColor3f(1.0f,0.0f,0.0f);       // Red
+          glVertex3f( 0.0f, 1.0f, 0.0f);
+          glColor3f(0.0f,0.0f,1.0f);       // Blue
+          glVertex3f(-1.0f,-1.0f,-1.0f);
+          glColor3f(0.0f,1.0f,0.0f);       // Green
+          glVertex3f(-1.0f,-1.0f, 1.0f);
+          glEnd();   // Done drawing the pyramid
 		}
 	}
 
 	void run() {
 		while (!_quit) {
+			wandEvents = 0;
+			headEvents = 0;
 			_vrMain->mainloop();
+			std::cout << headEvents << " " << wandEvents << std::endl;
 		}
 	}
 
@@ -317,6 +369,9 @@ protected:
 	VRMain *_vrMain;
 	bool _quit;
     double _horizAngle, _vertAngle, _radius, _incAngle;
+	VRMatrix4 _wandTransform;
+	int wandEvents;
+	int headEvents;
 };
 
 

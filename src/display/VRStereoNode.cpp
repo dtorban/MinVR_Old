@@ -12,8 +12,8 @@
 
 namespace MinVR {
 
-	VRStereoNode::VRStereoNode(const std::string &name, float interOcularDist, VRGraphicsToolkit *gfxToolkit, VRStereoFormat format) :
-VRDisplayNode(name), _iod(interOcularDist), _gfxToolkit(gfxToolkit), _format(format) {
+	VRStereoNode::VRStereoNode(const std::string &name, float interOcularDist, VRGraphicsToolkit *gfxToolkit, VRStereoFormat format, bool swapEyes) :
+VRDisplayNode(name), _iod(interOcularDist), _gfxToolkit(gfxToolkit), _format(format), _swapEyes(swapEyes) {
 }
 
 VRStereoNode::~VRStereoNode() {
@@ -103,6 +103,7 @@ void VRStereoNode::updateLookAtMatrix(VRDataIndex *renderState, VREyePosition ey
 
 void VRStereoNode::renderOneEye(VRDataIndex *renderState, VRRenderHandler *renderHandler, VREyePosition eye)
 {
+
 	renderState->pushState();
 		updateLookAtMatrix(renderState, eye);
 		if (_children.size() > 0) {
@@ -111,14 +112,21 @@ void VRStereoNode::renderOneEye(VRDataIndex *renderState, VRRenderHandler *rende
 				renderState->addData("Eye", "Cyclops");
 				_children[0]->render(renderState, renderHandler);		
 			}
-			else if (eye == Left){
-				renderState->addData("Eye", "Left");
-				_children[0]->render(renderState, renderHandler);		
-			} 
-			else if (eye == Right)
-			{
-				renderState->addData("Eye", "Right");
-				_children[1]->render(renderState, renderHandler);
+			else {
+				VREyePosition curEye = eye;
+				if (_swapEyes) {
+					curEye = eye == Left ? Right : Left;
+				}
+
+				if (eye == Left){
+					renderState->addData("Eye", "Left");
+					_children[0]->render(renderState, renderHandler);		
+				} 
+				else if (eye == Right)
+				{
+					renderState->addData("Eye", "Right");
+					_children[1]->render(renderState, renderHandler);
+				}
 			}
 		}
 		else
@@ -240,7 +248,9 @@ VRDisplayNode* VRStereoNode::create(VRMainInterface *vrMain, VRDataIndex *config
 		iod = (double)config->getValue("EyeSeparation", nameSpace);
 	}
 
-	VRDisplayNode *node = new VRStereoNode(nameSpace, iod, gfxToolkit, format);
+	bool swapEyes = (int)config->getValue("SwapEyes", nameSpace);
+
+	VRDisplayNode *node = new VRStereoNode(nameSpace, iod, gfxToolkit, format, swapEyes);
 
 	return node;
 }
