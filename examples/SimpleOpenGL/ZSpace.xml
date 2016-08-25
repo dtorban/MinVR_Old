@@ -12,8 +12,6 @@
   <!--#This is the zspace-docs coordinates, converted from meters to feet (0.345 -> 1.13, 0.222 -> 0.728)
   OptiTrack1_DeviceToRoom                  ((1,0,0,0.0), (0,1,0,1.13), (0,0,1,0.728), (0,0,0,1))-->
   <DeviceToRoom type="doublearray">1,0,0,0, 0,1,0,1.13, 0,0,1,0.728, 0,0,0,1</DeviceToRoom>
-
-  <!--DeviceToRoom type="doublearray">1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1</DeviceToRoom>-->
   
   <Optitrack1 inputdeviceType="VRVRPNTrackerDevice">
     <VRPNDeviceName type="string">Tracker0@127.0.0.1</VRPNDeviceName>

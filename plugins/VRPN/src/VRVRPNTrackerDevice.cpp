@@ -210,9 +210,11 @@ void VRVRPNTrackerDevice::appendNewInputEventsSinceLastCall(VRDataQueue *inputEv
     _vrpnDevice->mainloop();
   }
 
-  while (_pendingEvents.notEmpty()) {
+  if (_pendingEvents.notEmpty()) {
+	  inputEvents->addSerializedQueue(_pendingEvents.serialize());
     inputEvents->push(_pendingEvents.getSerializedObject());
-    _pendingEvents.pop();
+	_pendingEvents.clear();
+    //_pendingEvents.pop();
   }
 }
   

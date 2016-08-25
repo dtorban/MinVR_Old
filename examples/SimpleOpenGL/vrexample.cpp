@@ -361,7 +361,7 @@ public:
 			wandEvents = 0;
 			headEvents = 0;
 			_vrMain->mainloop();
-			std::cout << headEvents << " " << wandEvents << std::endl;
+			//std::cout << headEvents << " " << wandEvents << std::endl;
 		}
 	}
 
