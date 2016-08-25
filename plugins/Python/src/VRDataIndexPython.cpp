@@ -8,6 +8,7 @@
 
 #include <plugin/VRPlugin.h>
 #include "config/VRDataIndex.h"
+#include "math/VRMath.h"
 
 
 using namespace MinVR;
@@ -22,5 +23,15 @@ extern "C" {
 	// Get the data index value as an integer
 	PLUGIN_API int VRDataIndex_getIntValue(void* renderState, const char* valName, const char* nameSpace) {
 			return  ((VRDataIndex*)renderState)->getValue(valName, nameSpace);
+	}
+
+	// Get the data index value as an integer
+	PLUGIN_API void VRDataIndex_getDoubleArrayValue(void* renderState, const char* valName, const char* nameSpace, double* newArray) {
+		std::vector<double> array = ((VRDataIndex*)renderState)->getValue(valName, nameSpace);
+		VRMatrix4 mat = ((VRDataIndex*)renderState)->getValue(valName, nameSpace);
+		for (int f = 0; f < 16; f++) {
+			newArray[f] = mat.m[f];
+		}
+		//std::copy(array.begin(), array.end(), newArray); 
 	}
 }

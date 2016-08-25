@@ -12,7 +12,7 @@ if _platform == "linux" or _platform == "linux2":
 elif _platform == "darwin":
     libFilePath = 'lib/lib' + libName + '.dylib'
 elif _platform == "win32":
-    libFilePath = 'bin/' + libName + '.dll'
+    libFilePath = 'bin/' + libName + 'd.dll'
 
 lib = None
 
@@ -89,11 +89,17 @@ class VRDataIndex(object):
 		self.getDatumType.argtypes = (ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p)
 		self.getIntValue = lib.VRDataIndex_getIntValue
 		self.getIntValue.argtypes = (ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p)
+		self.getDoubleArrayValue = lib.VRDataIndex_getDoubleArrayValue
+		self.getDoubleArrayValue.argtypes = (ctypes.c_void_p, ctypes.c_char_p, ctypes.c_char_p, ctypes.POINTER(ctypes.c_double))
 		self.index = index
 	def getValue(self, valName, nameSpace):
 		datumType = self.getDatumType(self.index, valName, nameSpace)
 		if datumType == 1:
 			return self.getIntValue(self.index, valName, nameSpace)
+		if datumType == 5:
+			p = (ctypes.c_double*16)()
+			self.getDoubleArrayValue(self.index, valName, nameSpace, p)
+			return list(p)
 		return None
 
 
