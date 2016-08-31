@@ -71,47 +71,27 @@ public:
 	}
 
 	virtual void log(level::VRLogLevel lvl, const VRLogString& obj) {
-		std::cout << "---specific---";
 		log(lvl, obj.val);
 	}
 };
 
-template<typename T> struct VRLogHelper {
-	static void logValue(level::VRLogLevel lvl, const T& val, VRLoggerStreamInterface* innerStream) {
-		std::stringstream ss;
-		ss << val;
-		innerStream->log(lvl, ss.str());
-	}
-};
-
-template <typename T> struct VRSimpleLogHelper {
-	static void logValue(level::VRLogLevel lvl, const T& val, VRLoggerStreamInterface* innerStream) {
-		innerStream->log(lvl, val);
-	}
-};
-
-template <> struct VRLogHelper<std::string> : public VRSimpleLogHelper<std::string> {};
-template <> struct VRLogHelper<char*> : public VRSimpleLogHelper<char*> {};
-template <> struct VRLogHelper<int> : public VRSimpleLogHelper<int> {};
-template <> struct VRLogHelper<VRLog> : public VRSimpleLogHelper<VRLog> {};
-template <> struct VRLogHelper<char> : public VRSimpleLogHelper<char> {};
-template <> struct VRLogHelper<float> : public VRSimpleLogHelper<float> {};
-template <> struct VRLogHelper<double> : public VRSimpleLogHelper<double> {};
-
 class VRLoggerStream {
 public:
-	VRLoggerStream(level::VRLogLevel lvl, VRLoggerStreamInterface* innerStream) : lvl(lvl), innerStream(innerStream) {}
+	VRLoggerStream(level::VRLogLevel lvl, VRLoggerStreamInterface* innerStream, bool shouldLog) : lvl(lvl), innerStream(innerStream), shouldLog(shouldLog) {}
 	virtual ~VRLoggerStream() {}
 
 	template <typename T> VRLoggerStream operator<<(const T& val) {
-		//VRLogHelper<T>::logValue(lvl, val, innerStream);
-		innerStream->log(lvl, val);
+		if (shouldLog) {
+			innerStream->log(lvl, val);
+		}
+
 		return *this;
 	}
 
 private:
 	VRLoggerStreamInterface* innerStream;
 	level::VRLogLevel lvl;
+	bool shouldLog;
 };
 
 class VRLogger {
@@ -120,11 +100,16 @@ public:
 
 	virtual void setLevel(level::VRLogLevel lvl) { loggerLevel = lvl; }
 	virtual level::VRLogLevel getLevel() { return loggerLevel; }
+	virtual bool shouldLog(level::VRLogLevel lvl) {
+		return this->getLevel() < level::Off && lvl >= this->getLevel() && lvl < level::Off;
+	}
 
-	virtual void logMessage(level::VRLogLevel lvl, const std::string& msg) = 0;
+	VRLoggerStream operator<<(level::VRLogLevel lvl) {
+		return VRLoggerStream(lvl, getStream(), shouldLog(lvl));
+	}
 
-	virtual VRLoggerStream operator<<(level::VRLogLevel lvl) {
-		return VRLoggerStream(lvl, getStream());
+	void flush(level::VRLogLevel lvl) {
+		getStream()->flush(lvl);
 	}
 
 	static std::string getAttributeName(){ return "loggerType"; };

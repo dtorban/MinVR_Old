@@ -22,8 +22,6 @@ public:
 
 	void logMessage(level::VRLogLevel lvl, const std::string& msg);
 	VRLoggerStreamInterface* getStream();
-
-	bool canLog(level::VRLogLevel lvl);
 	std::ostream& getStream(level::VRLogLevel lvl);
 
 	static VRBasicLogger* create(VRMainInterface *vrMain, VRDataIndex *config, const std::string &nameSpace);

@@ -21,31 +21,31 @@ VROstreamLoggerStream::~VROstreamLoggerStream() {
 
 void VROstreamLoggerStream::log(level::VRLogLevel lvl,
 		const std::string& str) {
-	if (canLog(lvl)) getStream(lvl) << str;
+	getStream(lvl) << str;
 }
 
 void VROstreamLoggerStream::log(level::VRLogLevel lvl, const int& i) {
-	if (canLog(lvl)) getStream(lvl) << i;
+	getStream(lvl) << i;
 }
 
 void VROstreamLoggerStream::log(level::VRLogLevel lvl, const float& f) {
-	if (canLog(lvl)) getStream(lvl) << f;
+	getStream(lvl) << f;
 }
 
 void VROstreamLoggerStream::log(level::VRLogLevel lvl, const double& d) {
-	if (canLog(lvl)) getStream(lvl) << d;
+	getStream(lvl) << d;
 }
 
 void VROstreamLoggerStream::log(level::VRLogLevel lvl, const long & l) {
-	if (canLog(lvl)) getStream(lvl) << l;
+	getStream(lvl) << l;
 }
 
 void VROstreamLoggerStream::log(level::VRLogLevel lvl, const char& c) {
-	if (canLog(lvl)) getStream(lvl) << c;
+	getStream(lvl) << c;
 }
 
 void VROstreamLoggerStream::flush(level::VRLogLevel lvl) {
-	if (canLog(lvl)) getStream(lvl).flush();
+	getStream(lvl).flush();
 }
 
 

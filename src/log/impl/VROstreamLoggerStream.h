@@ -27,7 +27,6 @@ public:
 	void log(level::VRLogLevel lvl, const char& c);
 	void flush(level::VRLogLevel lvl);
 
-	virtual bool canLog(level::VRLogLevel lvl) = 0;
 	virtual std::ostream& getStream(level::VRLogLevel lvl) = 0;
 };
 
