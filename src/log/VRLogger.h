@@ -19,7 +19,7 @@ namespace MinVR {
 namespace level {
 typedef enum
 {
-    Trace = 0,
+    Verbose = 0,
     Debug = 1,
     Info = 2,
     Warn = 3,
@@ -29,8 +29,39 @@ typedef enum
 } VRLogLevel;
 }
 
-template<typename T> struct VRLogHelper;
-template <> struct VRLogHelper<std::string>;
+namespace log {
+struct endl {} ;
+}
+
+class VRLoggerStreamInterface {
+public:
+	virtual ~VRLoggerStreamInterface() {}
+	virtual void log(level::VRLogLevel lvl, std::string str) = 0;
+	virtual void log(level::VRLogLevel lvl, int i) = 0;
+	virtual void log(level::VRLogLevel lvl, float f) = 0;
+	virtual void log(level::VRLogLevel lvl, double d) = 0;
+	virtual void log(level::VRLogLevel lvl, long l) = 0;
+	virtual void log(level::VRLogLevel lvl, log::endl e) {
+		log(lvl, "\n");
+		flush(lvl);
+	}
+	virtual void flush(level::VRLogLevel lvl) = 0;
+};
+
+class VRLoggerStream {
+public:
+	VRLoggerStream(level::VRLogLevel lvl, VRLoggerStreamInterface* innerStream) : lvl(lvl), innerStream(innerStream) {}
+	virtual ~VRLoggerStream() {}
+
+	template <typename T> VRLoggerStream operator<<(const T& val) {
+		innerStream->log(lvl, val);
+		return *this;
+	}
+
+private:
+	VRLoggerStreamInterface* innerStream;
+	level::VRLogLevel lvl;
+};
 
 class VRLogger {
 public:
@@ -38,10 +69,6 @@ public:
 
 	virtual void setLevel(level::VRLogLevel lvl) { loggerLevel = lvl; }
 	virtual level::VRLogLevel getLevel() { return loggerLevel; }
-
-	template <typename T> void log(level::VRLogLevel lvl, const T& val) {
-		VRLogHelper<T>::logValue(lvl, val, this);
-	}
 
 	virtual void logMessage(level::VRLogLevel lvl, const std::string& msg) = 0;
 
@@ -98,21 +125,6 @@ private:
 	static VRLoggerMap loggerMap;
 
 	level::VRLogLevel loggerLevel;
-};
-
-template<typename T> struct VRLogHelper {
-	static void logValue(level::VRLogLevel lvl, const T& val, VRLogger* logger) {
-		std::stringstream ss;
-		ss << val;
-		logger->logMessage(lvl, ss.str());
-
-	}
-};
-
-template <> struct VRLogHelper<std::string> {
-	static void logValue(level::VRLogLevel lvl, const std::string& val, VRLogger* logger) {
-		logger->logMessage(lvl, val);
-	}
 };
 
 } /* namespace DSP */

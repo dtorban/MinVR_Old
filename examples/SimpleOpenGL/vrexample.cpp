@@ -31,7 +31,7 @@ class MyVRApp : public VREventHandler, public VRRenderHandler {
 public:
   MyVRApp(int argc, char** argv) : _vrMain(NULL), _quit(false) {
 	  VRLogger::get().setLevel(level::Debug);
-	  VRLogger::get().log(level::Debug, "Program started.");
+	  VRLogger::get().logMessage(level::Debug, "Program started.");
 		_vrMain = new VRMain();
         _vrMain->initialize(argc, argv);
       	_vrMain->addEventHandler(this);
