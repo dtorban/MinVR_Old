@@ -11,6 +11,7 @@
 
 #include <string>
 #include <map>
+#include <sstream>
 #include <iostream>
 #include <typeinfo>
 
@@ -28,6 +29,18 @@ typedef enum
     Off = 6
 } VRLogLevel;
 }
+
+struct VRLogString {
+	std::string val;
+};
+
+struct VRLogObject : public VRLogString {
+	template<typename T> VRLogObject(const T& obj) {
+		std::stringstream ss;
+		ss << obj;
+		val = ss.str();
+	}
+};
 
 struct VRLog {
 	static VRLog endl;
@@ -56,7 +69,34 @@ public:
 			flush(lvl);
 		}
 	}
+
+	virtual void log(level::VRLogLevel lvl, const VRLogString& obj) {
+		std::cout << "---specific---";
+		log(lvl, obj.val);
+	}
 };
+
+template<typename T> struct VRLogHelper {
+	static void logValue(level::VRLogLevel lvl, const T& val, VRLoggerStreamInterface* innerStream) {
+		std::stringstream ss;
+		ss << val;
+		innerStream->log(lvl, ss.str());
+	}
+};
+
+template <typename T> struct VRSimpleLogHelper {
+	static void logValue(level::VRLogLevel lvl, const T& val, VRLoggerStreamInterface* innerStream) {
+		innerStream->log(lvl, val);
+	}
+};
+
+template <> struct VRLogHelper<std::string> : public VRSimpleLogHelper<std::string> {};
+template <> struct VRLogHelper<char*> : public VRSimpleLogHelper<char*> {};
+template <> struct VRLogHelper<int> : public VRSimpleLogHelper<int> {};
+template <> struct VRLogHelper<VRLog> : public VRSimpleLogHelper<VRLog> {};
+template <> struct VRLogHelper<char> : public VRSimpleLogHelper<char> {};
+template <> struct VRLogHelper<float> : public VRSimpleLogHelper<float> {};
+template <> struct VRLogHelper<double> : public VRSimpleLogHelper<double> {};
 
 class VRLoggerStream {
 public:
@@ -64,6 +104,7 @@ public:
 	virtual ~VRLoggerStream() {}
 
 	template <typename T> VRLoggerStream operator<<(const T& val) {
+		//VRLogHelper<T>::logValue(lvl, val, innerStream);
 		innerStream->log(lvl, val);
 		return *this;
 	}

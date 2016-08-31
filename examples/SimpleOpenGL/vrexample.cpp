@@ -34,7 +34,7 @@ public:
 	  VRLogger::get().logMessage(level::Debug, "Program started.");
 	  VRLogger::get() << level::Debug << "This is a test" << 3 << "to see if it works";
 	  VRLogger::get() << level::Off << "Another test";
-	  VRLogger::get() << level::Info << "Again" << level::Info << VRLog::flush;
+	  VRLogger::get() << level::Info << "Again" << level::Info << VRLogObject("hi") << VRLog::flush;
 		_vrMain = new VRMain();
         _vrMain->initialize(argc, argv);
       	_vrMain->addEventHandler(this);
