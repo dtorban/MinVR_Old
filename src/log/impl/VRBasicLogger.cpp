@@ -19,8 +19,8 @@ VRBasicLogger::~VRBasicLogger() {
 }
 
 void VRBasicLogger::logMessage(level::VRLogLevel lvl, const std::string& msg) {
-	if (this->getLevel() < level::off && lvl >= this->getLevel()) {
-		std::ostream* stream = lvl == level::err ? &std::cerr : &std::cout;
+	if (this->getLevel() < level::Off && lvl >= this->getLevel()) {
+		std::ostream* stream = lvl == level::Error ? &std::cerr : &std::cout;
 		*stream << msg << std::endl;
 	}
 }

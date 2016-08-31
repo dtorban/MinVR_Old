@@ -19,13 +19,13 @@ namespace MinVR {
 namespace level {
 typedef enum
 {
-    trace = 0,
-    debug = 1,
-    info = 2,
-    warn = 3,
-    err = 4,
-    critical = 5,
-    off = 6
+    Trace = 0,
+    Debug = 1,
+    Info = 2,
+    Warn = 3,
+    Error = 4,
+    Critical = 5,
+    Off = 6
 } VRLogLevel;
 }
 
@@ -42,13 +42,6 @@ public:
 	template <typename T> void log(level::VRLogLevel lvl, const T& val) {
 		VRLogHelper<T>::logValue(lvl, val, this);
 	}
-
-	template <typename T> void trace(const T& val) { log(level::trace,  val); }
-	template <typename T> void debug(const T& val) { log(level::debug,  val); }
-	template <typename T> void info(const T& val) { log(level::info,  val); }
-	template <typename T> void warn(const T& val) { log(level::warn,  val); }
-	template <typename T> void error(const T& val) { log(level::err,  val); }
-	template <typename T> void critical(const T& val) { log(level::critical,  val); }
 
 	virtual void logMessage(level::VRLogLevel lvl, const std::string& msg) = 0;
 
@@ -85,7 +78,7 @@ public:
 	}
 
 protected:
-	VRLogger() : loggerLevel(level::info) {
+	VRLogger() : loggerLevel(level::Info) {
 	}
 
 private:
