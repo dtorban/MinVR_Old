@@ -143,7 +143,7 @@ VRMain::initialize(int argc, char** argv)
   
 
   std::string configFile = argv[1];
-  VRLogger::get() << level::Info << "Initializing VRMain with file: " << configFile << VRLog::endl;
+  VRLogger::get().getStream(level::Info) << "Initializing VRMain with file: " << configFile << VRLog::endl;
 
   
   _config = new VRDataIndex();

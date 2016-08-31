@@ -42,10 +42,12 @@ struct VRLogObject : public VRLogString {
 	}
 };
 
-struct VRLog {
-	static VRLog endl;
-	static VRLog flush;
-};
+namespace VRLog {
+typedef enum {
+	endl,
+	flush
+} VRLogAction;
+}
 
 class VRLoggerStreamInterface {
 public:
@@ -58,13 +60,13 @@ public:
 	virtual void log(level::VRLogLevel lvl, const char& c) = 0;
 	virtual void flush(level::VRLogLevel lvl) = 0;
 
-	virtual void log(level::VRLogLevel lvl, const VRLog& e) {
-		if (&e == &(VRLog::endl))
+	virtual void log(level::VRLogLevel lvl, const VRLog::VRLogAction& e) {
+		if (e == VRLog::endl)
 		{
 			log(lvl, "\n");
 			flush(lvl);
 		}
-		else if (&e == &(VRLog::flush))
+		else if (e == VRLog::flush)
 		{
 			flush(lvl);
 		}
@@ -88,6 +90,10 @@ public:
 		return *this;
 	}
 
+	void flush() {
+		innerStream->flush(lvl);
+	}
+
 private:
 	VRLoggerStreamInterface* innerStream;
 	level::VRLogLevel lvl;
@@ -104,12 +110,8 @@ public:
 		return this->getLevel() < level::Off && lvl >= this->getLevel() && lvl < level::Off;
 	}
 
-	VRLoggerStream operator<<(level::VRLogLevel lvl) {
+	VRLoggerStream getStream(level::VRLogLevel lvl) {
 		return VRLoggerStream(lvl, getStream(), shouldLog(lvl));
-	}
-
-	void flush(level::VRLogLevel lvl) {
-		getStream()->flush(lvl);
 	}
 
 	static std::string getAttributeName(){ return "loggerType"; };
@@ -153,6 +155,7 @@ private:
 	struct VRLoggerMap {
 		VRLoggerMap();
 		~VRLoggerMap() {
+			std::cout << "First " << this << std::endl;
 			for (std::map<std::string, VRLogger*>::iterator it = loggers.begin(); it != loggers.end(); it++) {
 				delete it->second;
 			}
@@ -160,6 +163,7 @@ private:
 
 		VRLogger* currentLogger;
 		std::map<std::string, VRLogger*> loggers;
+
 	};
 
 	static VRLoggerMap loggerMap;

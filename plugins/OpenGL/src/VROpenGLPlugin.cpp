@@ -9,6 +9,7 @@
 #include <iostream>
 #include <plugin/VRPlugin.h>
 #include "VROpenGLGraphicsToolkit.h"
+#include "log/VRLogger.h"
 
 // special: include this only once in one .cpp file per plugin
 #include <plugin/VRPluginVersion.h>
@@ -27,6 +28,7 @@ public:
 
 	PLUGIN_API void registerWithMinVR(VRMainInterface *vrMain)
 	{
+		VRLogger::get().getStream(level::Info) << "Registering VROpenGLPlugin" << VRLog::endl;
       //std::cout << "Registering VROpenGLPlugin." << std::endl;
 		vrMain->getFactory()->registerItemType<VRGraphicsToolkit, VROpenGLGraphicsToolkit>("VROpenGLGraphicsToolkit");
 	}

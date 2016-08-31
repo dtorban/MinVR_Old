@@ -12,8 +12,6 @@
 namespace MinVR {
 
 VRLogger::VRLoggerMap VRLogger::loggerMap;
-VRLog VRLog::endl;
-VRLog VRLog::flush;
 
 VRLogger::VRLoggerMap::VRLoggerMap() {
 	currentLogger = new VRBasicLogger();
