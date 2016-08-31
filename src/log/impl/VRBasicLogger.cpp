@@ -25,9 +25,21 @@ void VRBasicLogger::logMessage(level::VRLogLevel lvl, const std::string& msg) {
 	}
 }
 
+bool VRBasicLogger::canLog(level::VRLogLevel lvl) {
+	return this->getLevel() < level::Off && lvl >= this->getLevel() && lvl < level::Off;
+}
+
 VRBasicLogger* VRBasicLogger::create(VRMainInterface* vrMain,
 		VRDataIndex* config, const std::string& nameSpace) {
 	return new VRBasicLogger();
+}
+
+VRLoggerStreamInterface* VRBasicLogger::getStream() {
+	return this;
+}
+
+std::ostream& VRBasicLogger::getStream(level::VRLogLevel lvl) {
+	return lvl == level::Error ? std::cerr : std::cout;
 }
 
 } /* namespace MinVR */

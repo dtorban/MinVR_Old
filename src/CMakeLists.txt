@@ -104,11 +104,14 @@ set(vr_input_h
 set(vr_log_cpp
   ${vr_src_dir}/log/VRLogger.cpp
   ${vr_src_dir}/log/impl/VRBasicLogger.cpp
+  ${vr_src_dir}/log/impl/VROstreamLoggerStream.cpp
 )
 
 set(vr_log_h
   ${vr_src_dir}/log/VRLogger.h
   ${vr_src_dir}/log/impl/VRBasicLogger.h
+  ${vr_src_dir}/log/impl/VROstreamLoggerStream.h
+  
 )
 
 set(vr_main_cpp

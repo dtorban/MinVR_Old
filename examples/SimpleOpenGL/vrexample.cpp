@@ -32,6 +32,9 @@ public:
   MyVRApp(int argc, char** argv) : _vrMain(NULL), _quit(false) {
 	  VRLogger::get().setLevel(level::Debug);
 	  VRLogger::get().logMessage(level::Debug, "Program started.");
+	  VRLogger::get() << level::Debug << "This is a test" << 3 << "to see if it works";
+	  VRLogger::get() << level::Off << "Another test";
+	  VRLogger::get() << level::Info << "Again" << level::Info << VRLog::flush;
 		_vrMain = new VRMain();
         _vrMain->initialize(argc, argv);
       	_vrMain->addEventHandler(this);

@@ -11,8 +11,8 @@
 
 #include <string>
 #include <map>
-#include <sstream>
 #include <iostream>
+#include <typeinfo>
 
 namespace MinVR {
 
@@ -29,23 +29,33 @@ typedef enum
 } VRLogLevel;
 }
 
-namespace log {
-struct endl {} ;
-}
+struct VRLog {
+	static VRLog endl;
+	static VRLog flush;
+};
 
 class VRLoggerStreamInterface {
 public:
 	virtual ~VRLoggerStreamInterface() {}
-	virtual void log(level::VRLogLevel lvl, std::string str) = 0;
-	virtual void log(level::VRLogLevel lvl, int i) = 0;
-	virtual void log(level::VRLogLevel lvl, float f) = 0;
-	virtual void log(level::VRLogLevel lvl, double d) = 0;
-	virtual void log(level::VRLogLevel lvl, long l) = 0;
-	virtual void log(level::VRLogLevel lvl, log::endl e) {
-		log(lvl, "\n");
-		flush(lvl);
-	}
+	virtual void log(level::VRLogLevel lvl, const std::string& str) = 0;
+	virtual void log(level::VRLogLevel lvl, const int& i) = 0;
+	virtual void log(level::VRLogLevel lvl, const float& f) = 0;
+	virtual void log(level::VRLogLevel lvl, const double& d) = 0;
+	virtual void log(level::VRLogLevel lvl, const long& l) = 0;
+	virtual void log(level::VRLogLevel lvl, const char& c) = 0;
 	virtual void flush(level::VRLogLevel lvl) = 0;
+
+	virtual void log(level::VRLogLevel lvl, const VRLog& e) {
+		if (&e == &(VRLog::endl))
+		{
+			log(lvl, "\n");
+			flush(lvl);
+		}
+		else if (&e == &(VRLog::flush))
+		{
+			flush(lvl);
+		}
+	}
 };
 
 class VRLoggerStream {
@@ -71,6 +81,10 @@ public:
 	virtual level::VRLogLevel getLevel() { return loggerLevel; }
 
 	virtual void logMessage(level::VRLogLevel lvl, const std::string& msg) = 0;
+
+	virtual VRLoggerStream operator<<(level::VRLogLevel lvl) {
+		return VRLoggerStream(lvl, getStream());
+	}
 
 	static std::string getAttributeName(){ return "loggerType"; };
 
@@ -105,8 +119,8 @@ public:
 	}
 
 protected:
-	VRLogger() : loggerLevel(level::Info) {
-	}
+	VRLogger() : loggerLevel(level::Info) {}
+	virtual VRLoggerStreamInterface* getStream() = 0;
 
 private:
 
