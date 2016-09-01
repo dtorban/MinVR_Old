@@ -14,6 +14,7 @@
 #include <sstream>
 #include <iostream>
 #include <typeinfo>
+#include "VRLogManager.h"
 
 namespace MinVR {
 
@@ -117,33 +118,19 @@ public:
 	static std::string getAttributeName(){ return "loggerType"; };
 
 	static void set(const std::string& name, VRLogger* logger) {
-		std::map<std::string, VRLogger*>::iterator it = loggerMap.loggers.find(name);
-
-		if (it != loggerMap.loggers.end()) {
-			delete it->second;
-		}
-
-		loggerMap.loggers[name] = logger;
-
-		if (name == "Default") {
-			loggerMap.currentLogger = logger;
-		}
+		VRLogManager::getInstance()->set(name, logger);
 	}
 
 	static void set(VRLogger* logger) {
-		set("Default", logger);
+		VRLogManager::getInstance()->set(logger);
 	}
 
 	static VRLogger& get(const std::string& name) {
-		if (name == "Default") {
-			return get();
-		}
-
-		return *(loggerMap.loggers[name]);
+		return VRLogManager::getInstance()->get(name);
 	}
 
 	static VRLogger& get() {
-		return *(loggerMap.currentLogger);
+		return VRLogManager::getInstance()->get();
 	}
 
 protected:
@@ -151,23 +138,6 @@ protected:
 	virtual VRLoggerStreamInterface* getStream() = 0;
 
 private:
-
-	struct VRLoggerMap {
-		VRLoggerMap();
-		~VRLoggerMap() {
-			std::cout << "First " << this << std::endl;
-			for (std::map<std::string, VRLogger*>::iterator it = loggers.begin(); it != loggers.end(); it++) {
-				delete it->second;
-			}
-		}
-
-		VRLogger* currentLogger;
-		std::map<std::string, VRLogger*> loggers;
-
-	};
-
-	static VRLoggerMap loggerMap;
-
 	level::VRLogLevel loggerLevel;
 };
 

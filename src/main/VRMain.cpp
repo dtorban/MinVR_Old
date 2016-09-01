@@ -23,6 +23,7 @@
 
 namespace MinVR {
 
+VRLogManager VRMain::_logManager;
 
 /** This helper class is a wrapper around a list of VRRenderHandlers that makes
     the collection of render handlers act like a single render handler.  VRMain
@@ -77,6 +78,8 @@ std::string getCurrentWorkingDir()
   
 VRMain::VRMain() : _initialized(false), _config(NULL), _net(NULL), _factory(NULL), _pluginMgr(NULL), _frame(0)
 {
+	VRLogManager::setInstance(&_logManager);
+
   _factory = new VRFactory();
   // add sub-factories that are part of the MinVR core library right away
   _factory->registerItemType<VRDisplayNode, VRConsoleNode>("VRConsoleNode");

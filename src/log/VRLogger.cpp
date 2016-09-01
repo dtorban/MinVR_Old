@@ -11,12 +11,5 @@
 
 namespace MinVR {
 
-VRLogger::VRLoggerMap VRLogger::loggerMap;
-
-VRLogger::VRLoggerMap::VRLoggerMap() {
-	currentLogger = new VRBasicLogger();
-	loggers["Default"] = currentLogger;
-}
-
 } /* namespace MinVR */
 

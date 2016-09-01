@@ -101,6 +101,7 @@ bool VRPluginManager::loadPlugin(const std::string& pluginFilePath) {
 
 		VRPlugin* plugin = createVRPlugin();
 		
+		plugin->setStaticObjects(_vrMain);
 		plugin->registerWithMinVR(_vrMain);
 
 		_plugins.push_back(plugin);

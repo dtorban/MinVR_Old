@@ -46,6 +46,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <memory>
 
 #include <main/VRMainInterface.h>
+#include <log/VRLogManager.h>
 
 namespace MinVR {
 
@@ -75,6 +76,10 @@ public:
 
 	/// Needed?
 	virtual void unregisterWithMinVR(VRMainInterface *vrMain) = 0;
+
+	virtual void setStaticObjects(VRMainInterface *vrMain) {
+		VRLogManager::setInstance(vrMain->getLogManager());
+	}
 };
 
 }/* namespace MinVR */

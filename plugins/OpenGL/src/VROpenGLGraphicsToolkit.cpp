@@ -5,7 +5,6 @@
 namespace MinVR {
 
 VROpenGLGraphicsToolkit::VROpenGLGraphicsToolkit() {
-
 }
 	
 VROpenGLGraphicsToolkit::~VROpenGLGraphicsToolkit() {

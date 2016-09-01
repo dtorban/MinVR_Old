@@ -6,6 +6,7 @@
 #include <input/VRInputDevice.h>
 #include <main/VREventHandler.h>
 #include <main/VRRenderHandler.h>
+#include <log/VRLogManager.h>
 
 
 
@@ -29,6 +30,7 @@ public:
   virtual VRGraphicsToolkit* getGraphicsToolkit(const std::string &name) = 0;  
   virtual VRWindowToolkit* getWindowToolkit(const std::string &name) = 0;
   virtual VRFactory* getFactory() = 0;
+  virtual VRLogManager* getLogManager() = 0;
 };
 
 

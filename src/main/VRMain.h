@@ -99,6 +99,8 @@ public:
 
   VRDataIndex* getConfig() { return _config; }
 
+  VRLogManager* getLogManager() { return &_logManager; }
+
   void addInputDevice(VRInputDevice* dev);
  
   VRGraphicsToolkit* getGraphicsToolkit(const std::string &name);
@@ -124,6 +126,8 @@ private:
   std::vector<VRDisplayNode*>     _displayGraphs;
 
   int _frame;
+
+  static VRLogManager _logManager;
 };
 
 
