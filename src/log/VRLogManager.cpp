@@ -32,6 +32,7 @@ void VRLogManager::set(const std::string& name, VRLogger* logger) {
 	}
 
 	loggers[name] = logger;
+	logger->setName(name);
 
 	if (name == "Default") {
 		currentLogger = logger;

@@ -15,23 +15,27 @@
 
 namespace MinVR {
 
-class VRspdlogLogger : public VRLogger, public VRLoggerStreamInterface {
+class VRspdlogLogger : public VRLogger {
 public:
-	VRspdlogLogger(spdlog::logger* logger);
+	VRspdlogLogger(std::shared_ptr<spdlog::logger> logger);
 	virtual ~VRspdlogLogger();
-
-	void log(VRLog::VRLogLevel lvl, const std::string& str);
-	void log(VRLog::VRLogLevel lvl, const int& i);
-	void log(VRLog::VRLogLevel lvl, const float& f);
-	void log(VRLog::VRLogLevel lvl, const double& d);
-	void log(VRLog::VRLogLevel lvl, const long& l);
-	void log(VRLog::VRLogLevel lvl, const char& c);
-	void flush(VRLog::VRLogLevel lvl);
 
 	VRLoggerStreamInterface* getStream();
 
 private:
-	spdlog::logger* logger;
+	std::shared_ptr<spdlog::logger> logger;
+};
+
+class VR_stdout_logger_mt : public VRspdlogLogger {
+public:
+	VR_stdout_logger_mt(std::shared_ptr<spdlog::logger> logger) : VRspdlogLogger(logger) {}
+	static VRLogger* create(VRMainInterface *vrMain, VRDataIndex *config, const std::string &nameSpace);
+};
+
+class VR_basic_logger_mt : public VRspdlogLogger {
+public:
+	VR_basic_logger_mt(std::shared_ptr<spdlog::logger> logger) : VRspdlogLogger(logger) {}
+	static VRLogger* create(VRMainInterface *vrMain, VRDataIndex *config, const std::string &nameSpace);
 };
 
 } /* namespace DSP */

@@ -9,6 +9,8 @@
 #include <iostream>
 #include <plugin/VRPlugin.h>
 #include "log/VRLogger.h"
+#include "VRspdlogLogger.h"
+#include "main/VRFactory.h"
 
 // special: include this only once in one .cpp file per plugin
 #include <plugin/VRPluginVersion.h>
@@ -27,6 +29,9 @@ public:
 
 	PLUGIN_API void registerWithMinVR(VRMainInterface *vrMain)
 	{
+		//std::shared_ptr<spdlog::logger> log = spdlog::stdout_logger_mt("console", true);
+		vrMain->getFactory()->registerItemType<VRLogger, VR_stdout_logger_mt>("stdout_logger_mt");
+		vrMain->getFactory()->registerItemType<VRLogger, VR_basic_logger_mt>("basic_logger_mt");
 		VRLogger::get().getStream(VRLog::Info) << "Registering spdlog plugin." << VRLog::endl;
 	}
 

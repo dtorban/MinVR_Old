@@ -27,7 +27,8 @@ typedef enum
     Warn = 3,
     Error = 4,
     Critical = 5,
-    Off = 6
+    Off = 6,
+    NUM_LOG_LEVELS = 7
 } VRLogLevel;
 
 typedef enum {
@@ -67,6 +68,7 @@ public:
 	virtual void log(VRLog::VRLogLevel lvl, const long& l) = 0;
 	virtual void log(VRLog::VRLogLevel lvl, const char& c) = 0;
 	virtual void flush(VRLog::VRLogLevel lvl) = 0;
+	virtual void finish(VRLog::VRLogLevel lvl) {}
 
 	virtual void log(VRLog::VRLogLevel lvl, const VRLog::VRLogAction& e) {
 		if (e == VRLog::endl)
@@ -89,14 +91,22 @@ public:
 
 class VRLoggerStream {
 public:
-	VRLoggerStream(VRLog::VRLogLevel lvl, VRLoggerStreamInterface* innerStream, bool shouldLog) : lvl(lvl), innerStream(innerStream), shouldLog(shouldLog) {}
-	virtual ~VRLoggerStream() {}
+	VRLoggerStream(VRLog::VRLogLevel lvl, VRLoggerStreamInterface* innerStream, bool shouldLog)
+		: lvl(lvl), innerStream(innerStream), shouldLog(shouldLog), finish(true) {}
+	VRLoggerStream(const VRLoggerStream& stream)
+		: lvl(stream.lvl), innerStream(stream.innerStream), shouldLog(stream.shouldLog), finish(true) {}
+	virtual ~VRLoggerStream() {
+		if (finish) {
+			innerStream->finish(lvl);
+		}
+	}
 
 	template <typename T> VRLoggerStream operator<<(const T& val) {
 		if (shouldLog) {
 			innerStream->log(lvl, val);
 		}
 
+		this->finish = false;
 		return *this;
 	}
 
@@ -108,6 +118,7 @@ private:
 	VRLoggerStreamInterface* innerStream;
 	VRLog::VRLogLevel lvl;
 	bool shouldLog;
+	bool finish;
 };
 
 class VRLogger {
@@ -146,12 +157,21 @@ public:
 		return VRLogManager::getInstance()->get();
 	}
 
+	const std::string& getName() const {
+		return name;
+	}
+
+	void setName(const std::string& name) {
+		this->name = name;
+	}
+
 protected:
 	VRLogger() : loggerLevel(VRLog::Info) {}
 	virtual VRLoggerStreamInterface* getStream() = 0;
 
 private:
 	VRLog::VRLogLevel loggerLevel;
+	std::string name;
 };
 
 } /* namespace DSP */

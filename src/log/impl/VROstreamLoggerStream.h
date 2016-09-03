@@ -26,7 +26,7 @@ public:
 	void log(VRLog::VRLogLevel lvl, const long& l);
 	void log(VRLog::VRLogLevel lvl, const char& c);
 	void log(VRLog::VRLogLevel lvl, const VRLogValue& obj);
-	void flush(VRLog::VRLogLevel lvl);
+	virtual void flush(VRLog::VRLogLevel lvl);
 
 	virtual std::ostream& getStream(VRLog::VRLogLevel lvl) = 0;
 };
