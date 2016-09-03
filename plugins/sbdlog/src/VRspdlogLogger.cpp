@@ -10,22 +10,44 @@
 
 namespace MinVR {
 
-VRspdlogLogger::VRspdlogLogger() {
-	// TODO Auto-generated constructor stub
-
+VRspdlogLogger::VRspdlogLogger(spdlog::logger* logger) : logger(logger) {
 }
 
 VRspdlogLogger::~VRspdlogLogger() {
-	// TODO Auto-generated destructor stub
+	delete logger;
+}
+
+void VRspdlogLogger::log(VRLog::VRLogLevel lvl, const std::string& str) {
+	logger->log((spdlog::level::level_enum)lvl, str);
+}
+
+void VRspdlogLogger::log(VRLog::VRLogLevel lvl, const int& i) {
+	logger->log((spdlog::level::level_enum)lvl, i);
+}
+
+void VRspdlogLogger::log(VRLog::VRLogLevel lvl, const float& f) {
+	logger->log((spdlog::level::level_enum)lvl, f);
+}
+
+void VRspdlogLogger::log(VRLog::VRLogLevel lvl, const double& d) {
+	logger->log((spdlog::level::level_enum)lvl, d);
+}
+
+void VRspdlogLogger::log(VRLog::VRLogLevel lvl, const long & l) {
+	logger->log((spdlog::level::level_enum)lvl, l);
+}
+
+void VRspdlogLogger::log(VRLog::VRLogLevel lvl, const char& c) {
+	logger->log((spdlog::level::level_enum)lvl, c);
+}
+
+void VRspdlogLogger::flush(VRLog::VRLogLevel lvl) {
+	logger->flush();
+}
+
+VRLoggerStreamInterface* VRspdlogLogger::getStream() {
+	return this;
 }
 
 } /* namespace DSP */
 
-MinVR::VRspdlogLoggerImpl::VRspdlogLoggerImpl(VRMainInterface* vrmain) {
-}
-
-MinVR::VRspdlogLoggerImpl::~VRspdlogLoggerImpl() {
-}
-
-VRLogger* MinVR::VRspdlogLoggerImpl::get(const std::string& key) {
-}

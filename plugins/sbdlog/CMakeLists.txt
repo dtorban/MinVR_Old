@@ -2,6 +2,7 @@ project (MinVR_spdlog)
 
 set (SOURCEFILES 
   src/VRspdlogPlugin.cpp
+  src/VRspdlogLogger.cpp
 )
 
 set (HEADERFILES

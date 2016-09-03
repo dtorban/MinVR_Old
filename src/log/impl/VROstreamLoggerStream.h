@@ -19,15 +19,16 @@ public:
 	VROstreamLoggerStream();
 	virtual ~VROstreamLoggerStream();
 
-	void log(level::VRLogLevel lvl, const std::string& str);
-	void log(level::VRLogLevel lvl, const int& i);
-	void log(level::VRLogLevel lvl, const float& f);
-	void log(level::VRLogLevel lvl, const double& d);
-	void log(level::VRLogLevel lvl, const long& l);
-	void log(level::VRLogLevel lvl, const char& c);
-	void flush(level::VRLogLevel lvl);
+	void log(VRLog::VRLogLevel lvl, const std::string& str);
+	void log(VRLog::VRLogLevel lvl, const int& i);
+	void log(VRLog::VRLogLevel lvl, const float& f);
+	void log(VRLog::VRLogLevel lvl, const double& d);
+	void log(VRLog::VRLogLevel lvl, const long& l);
+	void log(VRLog::VRLogLevel lvl, const char& c);
+	void log(VRLog::VRLogLevel lvl, const VRLogValue& obj);
+	void flush(VRLog::VRLogLevel lvl);
 
-	virtual std::ostream& getStream(level::VRLogLevel lvl) = 0;
+	virtual std::ostream& getStream(VRLog::VRLogLevel lvl) = 0;
 };
 
 } /* namespace DSP */

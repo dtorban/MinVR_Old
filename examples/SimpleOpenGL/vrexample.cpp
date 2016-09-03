@@ -32,8 +32,7 @@ public:
   MyVRApp(int argc, char** argv) : _vrMain(NULL), _quit(false) {
 		_vrMain = new VRMain();
         _vrMain->initialize(argc, argv);
-		VRLogger::get().setLevel(level::Info);
-		VRLogger::get().getStream(level::Info) << "Program started." << VRLog::endl;
+		VRLogger::get().getStream(VRLog::Info) << "Program started." << VRLog::endl;
       	_vrMain->addEventHandler(this);
 		_vrMain->addRenderHandler(this);
         _horizAngle = 0.0;

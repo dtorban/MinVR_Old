@@ -10,21 +10,28 @@
 #define VRSPDLOGLOGGER_H_
 
 #include "main/VRMainInterface.h"
+#include "spdlog/spdlog.h"
+#include "log/VRLogger.h"
 
 namespace MinVR {
 
-class VRspdlogLogger {
+class VRspdlogLogger : public VRLogger, public VRLoggerStreamInterface {
 public:
-	VRspdlogLogger();
+	VRspdlogLogger(spdlog::logger* logger);
 	virtual ~VRspdlogLogger();
-};
 
-class VRspdlogLoggerImpl : public VRLoggerImpl {
-public:
-	VRspdlogLoggerImpl(VRMainInterface* vrmain);
-	virtual ~VRspdlogLoggerImpl();
+	void log(VRLog::VRLogLevel lvl, const std::string& str);
+	void log(VRLog::VRLogLevel lvl, const int& i);
+	void log(VRLog::VRLogLevel lvl, const float& f);
+	void log(VRLog::VRLogLevel lvl, const double& d);
+	void log(VRLog::VRLogLevel lvl, const long& l);
+	void log(VRLog::VRLogLevel lvl, const char& c);
+	void flush(VRLog::VRLogLevel lvl);
 
-	VRLogger* get(const std::string& key);
+	VRLoggerStreamInterface* getStream();
+
+private:
+	spdlog::logger* logger;
 };
 
 } /* namespace DSP */

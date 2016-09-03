@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <plugin/VRPlugin.h>
+#include "log/VRLogger.h"
 
 // special: include this only once in one .cpp file per plugin
 #include <plugin/VRPluginVersion.h>
@@ -26,7 +27,7 @@ public:
 
 	PLUGIN_API void registerWithMinVR(VRMainInterface *vrMain)
 	{
-		std::cout << "sbdlog plugin" << std::endl;
+		VRLogger::get().getStream(VRLog::Info) << "Registering spdlog plugin." << VRLog::endl;
 	}
 
 	PLUGIN_API void unregisterWithMinVR(VRMainInterface *vrMain)

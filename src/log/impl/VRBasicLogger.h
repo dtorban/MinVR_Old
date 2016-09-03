@@ -20,9 +20,9 @@ public:
 	VRBasicLogger();
 	virtual ~VRBasicLogger();
 
-	void logMessage(level::VRLogLevel lvl, const std::string& msg);
+	void logMessage(VRLog::VRLogLevel lvl, const std::string& msg);
 	VRLoggerStreamInterface* getStream();
-	std::ostream& getStream(level::VRLogLevel lvl);
+	std::ostream& getStream(VRLog::VRLogLevel lvl);
 
 	static VRBasicLogger* create(VRMainInterface *vrMain, VRDataIndex *config, const std::string &nameSpace);
 };

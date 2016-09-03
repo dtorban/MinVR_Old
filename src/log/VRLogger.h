@@ -18,7 +18,7 @@
 
 namespace MinVR {
 
-namespace level {
+namespace VRLog {
 typedef enum
 {
     Verbose = 0,
@@ -29,39 +29,46 @@ typedef enum
     Critical = 5,
     Off = 6
 } VRLogLevel;
-}
 
-struct VRLogString {
-	std::string val;
-};
-
-struct VRLogObject : public VRLogString {
-	template<typename T> VRLogObject(const T& obj) {
-		std::stringstream ss;
-		ss << obj;
-		val = ss.str();
-	}
-};
-
-namespace VRLog {
 typedef enum {
 	endl,
 	flush
 } VRLogAction;
 }
 
+class VRLogValue {
+public:
+	virtual ~VRLogValue() {}
+	virtual void logValue(std::ostream& stream) const = 0;
+};
+
+template <typename T>
+struct VRLogObject : public VRLogValue {
+public:
+	VRLogObject(const T& obj) : obj(obj) {
+	}
+	virtual ~VRLogObject() {}
+
+	void logValue(std::ostream& stream) const {
+		stream << obj;
+	}
+
+private:
+	const T& obj;
+};
+
 class VRLoggerStreamInterface {
 public:
 	virtual ~VRLoggerStreamInterface() {}
-	virtual void log(level::VRLogLevel lvl, const std::string& str) = 0;
-	virtual void log(level::VRLogLevel lvl, const int& i) = 0;
-	virtual void log(level::VRLogLevel lvl, const float& f) = 0;
-	virtual void log(level::VRLogLevel lvl, const double& d) = 0;
-	virtual void log(level::VRLogLevel lvl, const long& l) = 0;
-	virtual void log(level::VRLogLevel lvl, const char& c) = 0;
-	virtual void flush(level::VRLogLevel lvl) = 0;
+	virtual void log(VRLog::VRLogLevel lvl, const std::string& str) = 0;
+	virtual void log(VRLog::VRLogLevel lvl, const int& i) = 0;
+	virtual void log(VRLog::VRLogLevel lvl, const float& f) = 0;
+	virtual void log(VRLog::VRLogLevel lvl, const double& d) = 0;
+	virtual void log(VRLog::VRLogLevel lvl, const long& l) = 0;
+	virtual void log(VRLog::VRLogLevel lvl, const char& c) = 0;
+	virtual void flush(VRLog::VRLogLevel lvl) = 0;
 
-	virtual void log(level::VRLogLevel lvl, const VRLog::VRLogAction& e) {
+	virtual void log(VRLog::VRLogLevel lvl, const VRLog::VRLogAction& e) {
 		if (e == VRLog::endl)
 		{
 			log(lvl, "\n");
@@ -73,14 +80,16 @@ public:
 		}
 	}
 
-	virtual void log(level::VRLogLevel lvl, const VRLogString& obj) {
-		log(lvl, obj.val);
+	virtual void log(VRLog::VRLogLevel lvl, const VRLogValue& obj) {
+		std::stringstream ss;
+		obj.logValue(ss);
+		log(lvl, ss.str());
 	}
 };
 
 class VRLoggerStream {
 public:
-	VRLoggerStream(level::VRLogLevel lvl, VRLoggerStreamInterface* innerStream, bool shouldLog) : lvl(lvl), innerStream(innerStream), shouldLog(shouldLog) {}
+	VRLoggerStream(VRLog::VRLogLevel lvl, VRLoggerStreamInterface* innerStream, bool shouldLog) : lvl(lvl), innerStream(innerStream), shouldLog(shouldLog) {}
 	virtual ~VRLoggerStream() {}
 
 	template <typename T> VRLoggerStream operator<<(const T& val) {
@@ -97,7 +106,7 @@ public:
 
 private:
 	VRLoggerStreamInterface* innerStream;
-	level::VRLogLevel lvl;
+	VRLog::VRLogLevel lvl;
 	bool shouldLog;
 };
 
@@ -105,14 +114,18 @@ class VRLogger {
 public:
 	virtual ~VRLogger() {}
 
-	virtual void setLevel(level::VRLogLevel lvl) { loggerLevel = lvl; }
-	virtual level::VRLogLevel getLevel() { return loggerLevel; }
-	virtual bool shouldLog(level::VRLogLevel lvl) {
-		return this->getLevel() < level::Off && lvl >= this->getLevel() && lvl < level::Off;
+	virtual void setLevel(VRLog::VRLogLevel lvl) { loggerLevel = lvl; }
+	virtual VRLog::VRLogLevel getLevel() { return loggerLevel; }
+	virtual bool shouldLog(VRLog::VRLogLevel lvl) {
+		return this->getLevel() < VRLog::Off && lvl >= this->getLevel() && lvl < VRLog::Off;
 	}
 
-	VRLoggerStream getStream(level::VRLogLevel lvl) {
+	VRLoggerStream getStream(VRLog::VRLogLevel lvl) {
 		return VRLoggerStream(lvl, getStream(), shouldLog(lvl));
+	}
+
+	VRLoggerStream operator<<(VRLog::VRLogLevel lvl) {
+		return getStream(lvl);
 	}
 
 	static std::string getAttributeName(){ return "loggerType"; };
@@ -134,11 +147,11 @@ public:
 	}
 
 protected:
-	VRLogger() : loggerLevel(level::Info) {}
+	VRLogger() : loggerLevel(VRLog::Info) {}
 	virtual VRLoggerStreamInterface* getStream() = 0;
 
 private:
-	level::VRLogLevel loggerLevel;
+	VRLog::VRLogLevel loggerLevel;
 };
 
 } /* namespace DSP */

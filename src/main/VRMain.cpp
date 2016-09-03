@@ -78,8 +78,10 @@ std::string getCurrentWorkingDir()
   
 VRMain::VRMain() : _initialized(false), _config(NULL), _net(NULL), _factory(NULL), _pluginMgr(NULL), _frame(0)
 {
+	// Initialize static log manager
 	VRLogManager::setInstance(&_logManager);
 
+	VRLogger::get().getStream(VRLog::Verbose) << "Register default MinVR Types." << VRLog::endl;
   _factory = new VRFactory();
   // add sub-factories that are part of the MinVR core library right away
   _factory->registerItemType<VRDisplayNode, VRConsoleNode>("VRConsoleNode");
@@ -146,7 +148,7 @@ VRMain::initialize(int argc, char** argv)
   
 
   std::string configFile = argv[1];
-  VRLogger::get().getStream(level::Info) << "Initializing VRMain with file: " << configFile << VRLog::endl;
+  VRLogger::get().getStream(VRLog::Info) << "Initializing VRMain with file: " << configFile << VRLog::endl;
 
   
   _config = new VRDataIndex();
