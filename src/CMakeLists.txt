@@ -78,6 +78,7 @@ set(vr_display_cpp
   ${vr_src_dir}/display/VRViewportNode.cpp
   ${vr_src_dir}/display/VRLookAtNode.cpp
   ${vr_src_dir}/display/VRTrackedLookAtNode.cpp
+  ${vr_src_dir}/display/VRRenderHelper.cpp
 )
 
 set(vr_display_h
@@ -92,6 +93,7 @@ set(vr_display_h
   ${vr_src_dir}/display/VRWindowToolkit.h
   ${vr_src_dir}/display/VRLookAtNode.h
   ${vr_src_dir}/display/VRTrackedLookAtNode.h
+  ${vr_src_dir}/display/VRRenderHelper.h
 )
 
 set(vr_input_cpp

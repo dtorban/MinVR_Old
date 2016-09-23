@@ -7,6 +7,7 @@
 #include <main/VREventHandler.h>
 #include <main/VRRenderHandler.h>
 #include <math/VRMath.h>
+#include <display/VRRenderHelper.h>
 
 
 #if defined(WIN32)
@@ -86,7 +87,13 @@ public:
   
 	// Callback for rendering, inherited from VRRenderHandler
 	virtual void onVRRenderScene(VRDataIndex *renderState, VRDisplayNode *callingNode) {
-		if (renderState->exists("IsConsole", "/")) {
+		VRRenderHelper renderHelper(*renderState);
+
+		if (renderHelper.firstRenderCall()) {
+			std::cout << "First render call." << std::endl;
+		}
+
+		if (renderHelper.isConsole()) {
 			VRConsoleNode *console = dynamic_cast<VRConsoleNode*>(callingNode);
 			console->println("Console output...");
 		}
@@ -108,7 +115,7 @@ public:
             
                 glMatrixMode(GL_PROJECTION);
                 glLoadIdentity();
-			    VRMatrix4 P = renderState->getValue("ProjectionMatrix", "/");
+			    VRMatrix4 P = renderHelper.getProjectionMatrix();
 			    glLoadMatrixd(P.m);
               
 			    glMatrixMode(GL_MODELVIEW);
@@ -125,7 +132,7 @@ public:
                               VRMatrix4::rotationX(_vertAngle) *
                               VRMatrix4::rotationY(_horizAngle);
               
-			    VRMatrix4 V = renderState->getValue("ViewMatrix", "/");
+			    VRMatrix4 V = renderHelper.getViewMatrix();
 			    glLoadMatrixd((V*M).m);
             }
             else {
