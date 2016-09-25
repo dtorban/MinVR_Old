@@ -141,28 +141,8 @@ VRMain::initialize(int argc, char** argv)
 		exit(0);
 	}
 
-	std::string cmd;
-	std::string initString;
-	bool encoded = false;
-
-	for(int i = 1; i < argc ; i ++){
-		std::string arg(argv[i]);
-		int pos = arg.find("MINVR_DATA=");
-		if(pos != std::string::npos){
-			initString = arg.substr(11);
-			encoded = true;
-		}
-		else {
-			if (i > 1) {
-				cmd += " ";
-			}
-
-			cmd += argv[i];
-		}
-	}
-
-	VRDefaultAppLauncher launcher(std::string(argv[0]) + " " + cmd);
-	initialize(launcher, encoded ? initString : cmd, encoded);
+	VRDefaultAppLauncher launcher(argc, argv);
+	initialize(launcher, launcher.getInitString(), launcher.isEncoded());
 }
 
 
@@ -238,7 +218,7 @@ void VRMain::initialize(const VRAppLauncher& launcher, const std::string initStr
 
 				std::string sshData(configFile);
 
-				for (int i = 1; i < args.size(); i++)
+				for (int i = 0; i < args.size(); i++)
 				{
 					sshData += " ";
 					sshData = sshData + args[i];
@@ -295,7 +275,7 @@ void VRMain::initialize(const VRAppLauncher& launcher, const std::string initStr
 		si.lpTitle = title;
 
 		std::string cmdData(configFile);
-		for (int i = 1; i < args.size(); i++)
+		for (int i = 0; i < args.size(); i++)
 			cmdData = cmdData + " " + args[i];
 		cmdData = cmdData + " VRSetupsToStart=" + vrSetupsToStartArray[i];
 		std::string encodedData = base64_encode((unsigned char const* )cmdData.c_str(), cmdData.size());

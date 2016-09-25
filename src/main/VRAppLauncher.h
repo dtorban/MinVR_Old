@@ -17,7 +17,7 @@ class VRAppLauncher {
 public:
 	virtual ~VRAppLauncher() {}
 
-	virtual std::string generateCommandLine(const std::string& minvrData) const = 0;
+	virtual std::string generateCommandLine(const std::string& initString) const = 0;
 };
 
 

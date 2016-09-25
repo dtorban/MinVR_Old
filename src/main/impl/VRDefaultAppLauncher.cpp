@@ -10,18 +10,36 @@
 
 namespace MinVR {
 
-VRDefaultAppLauncher::VRDefaultAppLauncher(const std::string& cmd) : cmd(cmd) {
-	// TODO Auto-generated constructor stub
+VRDefaultAppLauncher::VRDefaultAppLauncher(int argc, char** argv, const std::string& customInitString) : encoded(false) {
+	program = std::string(argv[0]);
 
+	for(int i = 1; i < argc ; i ++){
+		std::string arg(argv[i]);
+		int pos = arg.find("MINVR_DATA=");
+		if(pos != std::string::npos){
+			initString = arg.substr(11);
+			encoded = true;
+		}
+		else {
+			if (i > 1) {
+				cmd += " ";
+			}
+
+			cmd += argv[i];
+		}
+	}
+
+	if (customInitString.size() > 0) {
+		cmd = customInitString;
+	}
 }
 
 VRDefaultAppLauncher::~VRDefaultAppLauncher() {
-	// TODO Auto-generated destructor stub
 }
 
 std::string VRDefaultAppLauncher::generateCommandLine(
-		const std::string& minvrData) const  {
-	return cmd + " MINVR_DATA=" + minvrData;
+		const std::string& initString) const  {
+	return program + " " + cmd + " MINVR_DATA=" + initString;
 }
 
 } /* namespace MinVR */

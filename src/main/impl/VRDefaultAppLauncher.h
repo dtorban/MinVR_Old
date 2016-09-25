@@ -15,13 +15,24 @@ namespace MinVR {
 
 class VRDefaultAppLauncher : public VRAppLauncher {
 public:
-	VRDefaultAppLauncher(const std::string& cmd);
+	VRDefaultAppLauncher(int argc, char** argv, const std::string& customInitString = "");
 	virtual ~VRDefaultAppLauncher();
 
-	std::string generateCommandLine(const std::string& minvrData) const;
+	std::string generateCommandLine(const std::string& initString) const;
+
+	bool isEncoded() const {
+		return encoded;
+	}
+
+	const std::string& getInitString() const {
+		return encoded ? initString : cmd;
+	}
 
 private:
+	std::string program;
 	std::string cmd;
+	std::string initString;
+	bool encoded;
 };
 
 } /* namespace MinVR */

@@ -7,6 +7,7 @@
 #include <main/VREventHandler.h>
 #include <main/VRRenderHandler.h>
 #include <math/VRMath.h>
+#include <main/impl/VRDefaultAppLauncher.h>
 
 
 #if defined(WIN32)
@@ -30,6 +31,8 @@ class MyVRApp : public VREventHandler, public VRRenderHandler {
 public:
   MyVRApp(int argc, char** argv) : _vrMain(NULL), _quit(false) {
 		_vrMain = new VRMain();
+		//VRDefaultAppLauncher launcher(argc, argv);
+		//_vrMain->initialize(launcher, launcher.getInitString(), launcher.isEncoded());
         _vrMain->initialize(argc, argv);
       	_vrMain->addEventHandler(this);
 		_vrMain->addRenderHandler(this);
