@@ -31,9 +31,12 @@ class MyVRApp : public VREventHandler, public VRRenderHandler {
 public:
   MyVRApp(int argc, char** argv) : _vrMain(NULL), _quit(false) {
 		_vrMain = new VRMain();
-		//VRDefaultAppLauncher launcher(argc, argv);
-		//_vrMain->initialize(launcher, launcher.getInitString(), launcher.isEncoded());
-        _vrMain->initialize(argc, argv);
+
+		//std::string minVRCommandLine = std::string(argv[3]) + " /My/ConfigVal1=1 /VRSetupToStart=FrontWall";
+		//VRDefaultAppLauncher launcher(argc, argv, minVRCommandLine);
+		//_vrMain->initialize(launcher);
+
+//        _vrMain->initialize(argc, argv);
       	_vrMain->addEventHandler(this);
 		_vrMain->addRenderHandler(this);
         _horizAngle = 0.0;
