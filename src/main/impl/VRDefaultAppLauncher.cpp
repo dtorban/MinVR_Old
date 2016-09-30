@@ -7,6 +7,7 @@
  */
 
 #include <main/impl/VRDefaultAppLauncher.h>
+#include <config/base64/base64.h>
 
 namespace MinVR {
 
@@ -17,7 +18,7 @@ VRDefaultAppLauncher::VRDefaultAppLauncher(int argc, char** argv, const std::str
 		std::string arg(argv[i]);
 		int pos = arg.find("MINVR_DATA=");
 		if(pos != std::string::npos){
-			initString = arg.substr(11);
+			initString = base64_decode(arg.substr(11));
 			encoded = true;
 		}
 		else {
@@ -39,7 +40,9 @@ VRDefaultAppLauncher::~VRDefaultAppLauncher() {
 
 std::string VRDefaultAppLauncher::generateCommandLine(
 		const std::string& initString) const  {
-	return program + " " + cmd + " MINVR_DATA=" + initString;
+
+	std::string encodedData = base64_encode((unsigned char const* )initString.c_str(), initString.size());
+	return program + " " + cmd + " MINVR_DATA=" + encodedData;
 }
 
 } /* namespace MinVR */

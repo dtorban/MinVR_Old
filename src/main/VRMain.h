@@ -64,7 +64,7 @@ public:
   /// has its own process.
   void initialize(int argc, char **argv);
   //void initialize(const std::string configFile, const VRCmdLineGenerator& generator);
-  void initialize(const VRAppLauncher& launcher, const std::string initString, bool encoded = true);
+  void initialize(const VRAppLauncher& launcher, const std::string initString);
   
 
   // STEP 3:  CALL MINVR'S MAINLOOP() FUNCTION OR INCORPORATE THE FOLLOWING

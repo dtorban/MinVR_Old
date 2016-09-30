@@ -18,7 +18,6 @@
 #include <net/VRNetClient.h>
 #include <net/VRNetServer.h>
 #include <plugin/VRPluginManager.h>
-#include <config/base64/base64.h>
 #include <sstream>
 #include <main/impl/VRDefaultAppLauncher.h>
 
@@ -142,12 +141,12 @@ VRMain::initialize(int argc, char** argv)
 	}
 
 	VRDefaultAppLauncher launcher(argc, argv);
-	initialize(launcher, launcher.getInitString(), launcher.isEncoded());
+	initialize(launcher, launcher.getInitString());
 }
 
 
-void VRMain::initialize(const VRAppLauncher& launcher, const std::string initString, bool encoded) {
-	std::string data = encoded ? base64_decode(initString) : initString;
+void VRMain::initialize(const VRAppLauncher& launcher, const std::string initString) {
+	std::string data = initString;
 	std::cout << data << std::endl;
 
 	std::stringstream ss(data);
@@ -225,14 +224,13 @@ void VRMain::initialize(const VRAppLauncher& launcher, const std::string initStr
 				}
 				sshData = sshData + " VRSetupsToStart=" + *it + " StartedSSH=1";
 				std::string sshcmd;
-				std::string encodedData = base64_encode((unsigned char const* )sshData.c_str(), sshData.size());
 				if(_config->exists("LogToFile",*it)){
 					std::string logFile = _config->getValue("LogToFile",*it);
 
-					sshcmd = "ssh " + nodeIP + " '" + command + launcher.generateCommandLine(encodedData) + " > " + logFile + " " +  "2>&1 &'";
+					sshcmd = "ssh " + nodeIP + " '" + command + launcher.generateCommandLine(sshData) + " > " + logFile + " " +  "2>&1 &'";
 				}else{
-					sshcmd = "ssh " + nodeIP + " '" + command + launcher.generateCommandLine(encodedData) + " > /dev/null 2>&1 &'";
-					//sshcmd = "ssh " + nodeIP + " '" + command + launcher.generateCommandLine(encodedData) + "'";
+					sshcmd = "ssh " + nodeIP + " '" + command + launcher.generateCommandLine(sshData) + " > /dev/null 2>&1 &'";
+					//sshcmd = "ssh " + nodeIP + " '" + command + launcher.generateCommandLine(sshData) + "'";
 				}
 
 				std::cerr << "Start " << sshcmd << std::endl;
@@ -278,9 +276,8 @@ void VRMain::initialize(const VRAppLauncher& launcher, const std::string initStr
 		for (int i = 0; i < args.size(); i++)
 			cmdData = cmdData + " " + args[i];
 		cmdData = cmdData + " VRSetupsToStart=" + vrSetupsToStartArray[i];
-		std::string encodedData = base64_encode((unsigned char const* )cmdData.c_str(), cmdData.size());
 
-		std::string cmdLine = launcher.generateCommandLine(encodedData);
+		std::string cmdLine = launcher.generateCommandLine(cmdData);
 
 		LPSTR cmd = new char[cmdLine.size() + 1];
 		strcpy(cmd, cmdLine.c_str());
