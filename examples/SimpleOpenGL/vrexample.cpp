@@ -36,7 +36,7 @@ public:
 		//VRDefaultAppLauncher launcher(argc, argv, minVRCommandLine);
 		//_vrMain->initialize(launcher);
 
-//        _vrMain->initialize(argc, argv);
+        _vrMain->initialize(argc, argv);
       	_vrMain->addEventHandler(this);
 		_vrMain->addRenderHandler(this);
         _horizAngle = 0.0;
