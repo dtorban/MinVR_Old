@@ -1,0 +1,24 @@
+# Look for the header file.
+FIND_PATH(LEAP_INCLUDE_DIR NAMES Leap.h HINTS ${CMAKE_SOURCE_DIR}/../LeapSDK/include)
+
+find_library(MinVR2_OPT_LIBRARIES NAMES libMinVR.a MinVR.lib MinVR
+          HINTS ${CMAKE_SOURCE_DIR}/../MinVR2/build ${CMAKE_SOURCE_DIR}/../MinVR2/build/Release/lib)
+
+# Look for the library.
+FIND_LIBRARY(LEAP_LIBRARY NAMES libLeap.so Leap.dll Leap
+	 HINTS ${CMAKE_SOURCE_DIR}/../LeapSDK/lib/x64)
+
+# Handle the QUIETLY and REQUIRED arguments and set FREEGLUT_FOUND to TRUE if all listed variables are TRUE.
+INCLUDE(FindPackageHandleStandardArgs)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(LEAP DEFAULT_MSG LEAP_LIBRARY LEAP_INCLUDE_DIR)
+
+# Copy the results to the output variables.
+IF(LEAP_FOUND)
+	SET(LEAP_LIBRARIES ${LEAP_LIBRARY})
+	SET(LEAP_INCLUDE_DIRS ${LEAP_INCLUDE_DIR})
+ELSE(LEAP_FOUND)
+	SET(LEAP_LIBRARIES)
+	SET(LEAP_INCLUDE_DIRS)
+ENDIF(LEAP_FOUND)
+
+MARK_AS_ADVANCED(LEAP_INCLUDE_DIRS LEAP_LIBRARIES)
