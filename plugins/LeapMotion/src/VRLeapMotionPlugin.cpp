@@ -13,27 +13,25 @@
 #include <plugin/VRPluginVersion.h>
 
 
+#include "VRLeapMotionDevice.h"
+#include "main/VRFactory.h"
+
 namespace MinVR {
 
 class VRLeapMotionPlugin : public VRPlugin {
 public:
 	PLUGIN_API VRLeapMotionPlugin() {
-      //std::cout << "Leap created." << std::endl;
 	}
 	PLUGIN_API virtual ~VRLeapMotionPlugin() {
-      //std::cout << "OpenGLPlugin destroyed." << std::endl;
 	}
 
 	PLUGIN_API void registerWithMinVR(VRMainInterface *vrMain)
 	{
-      std::cout << "Registering VRLeapMotionPlugin." << std::endl;
-		//vrMain->getFactory()->registerItemType<VRGraphicsToolkit, VROpenGLGraphicsToolkit>("VROpenGLGraphicsToolkit");
+      vrMain->getFactory()->registerItemType<VRInputDevice, VRLeapMotionDevice>("VRLeapMotionDevice");
 	}
 
 	PLUGIN_API void unregisterWithMinVR(VRMainInterface *vrMain)
 	{
-      //std::cout << "Unregistering GlfwPlugin." << std::endl;
-		// TODO
 	}
 };
 

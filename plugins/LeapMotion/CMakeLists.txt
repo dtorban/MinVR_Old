@@ -1,10 +1,12 @@
 project(MinVR_LeapMotion)
 
 set (SOURCEFILES 
+  src/VRLeapMotionDevice.cpp
   src/VRLeapMotionPlugin.cpp
 )
 
 set (HEADERFILES
+  src/VRLeapMotionDevice.h
 )
 
 source_group("Header Files" FILES ${HEADERFILES})
