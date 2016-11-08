@@ -29,7 +29,7 @@ using namespace MinVR;
 
 class MyVRApp : public VREventHandler, public VRRenderHandler {
 public:
-  MyVRApp(int argc, char** argv) : _vrMain(NULL), _quit(false) {
+  MyVRApp(int argc, char** argv) : _vrMain(NULL), _quit(false), rightPalmPos(-1.5f, 0.0f, -6.0f) {
 		_vrMain = new VRMain();
 
 		//std::string minVRCommandLine = std::string(argv[3]) + " /My/ConfigVal1=1 /VRSetupToStart=FrontWall";
@@ -56,9 +56,20 @@ public:
 		delete _vrMain;
 	}
 
+	void handleHand(std::string handName, VRDataIndex *eventData) {
+		int id = eventData->getValue(handName + "/Id");
+		//VRVector3 pos = eventData->getValue(handName + "/Palm/Pos");
+		rightPalmPos = eventData->getValue(handName + "/Palm/Pos");
+		double x = rightPalmPos.x;
+		rightPalmPos.x = rightPalmPos.z/30.0f;
+		rightPalmPos.y /= 30.0f - 10.f;
+		rightPalmPos.z = -x/30.0f;
+		std::cout << handName << " " << id << ": (" << rightPalmPos.x << ", " << rightPalmPos.y << ", " << rightPalmPos.z << ")" << std::endl;
+	}
+
 	// Callback for event handling, inherited from VREventHandler
 	virtual void onVREvent(const std::string &eventName, VRDataIndex *eventData) {
-		//std::cout << "Event: " << eventName << std::endl;
+		std::cout << "Event: " << eventName << std::endl;
 		if (eventName == "/KbdEsc_Down") {
 			_quit = true;
 		}
@@ -80,6 +91,15 @@ public:
         else if ((eventName == "/KbdDown_Down") || (eventName == "/KbdDown_Repeat")) {
           _vertAngle += _incAngle;
         }
+    	else if (eventName == "/Leap") {
+    		std::cout << (int)eventData->getValue(eventName + "/Hands/NumHands") << std::endl;
+    		if (eventData->exists(eventName + "/Hands/Left")) {
+    			handleHand(eventName + "/Hands/Left", eventData);
+    		}
+    		if (eventData->exists(eventName + "/Hands/Right")) {
+    			handleHand(eventName + "/Hands/Right", eventData);
+    		}
+    	}
       
         if (_horizAngle > 6.283185) _horizAngle -= 6.283185;
         if (_horizAngle < 0.0) _horizAngle += 6.283185;
@@ -281,7 +301,9 @@ public:
           
           // Render a pyramid consists of 4 triangles
           //   glLoadIdentity();                  // Reset the model-view matrix
-          glTranslatef(-1.5f, 0.0f, -6.0f);  // Move left and into the screen
+          //glTranslatef(-1.5f, 0.0f, -6.0f);  // Move left and into the screen
+          glTranslatef(-1.5f, -12.0f, 0.0f);
+          glTranslatef(rightPalmPos.x, rightPalmPos.y, rightPalmPos.z);  // Move left and into the screen
           
           glBegin(GL_TRIANGLES);           // Begin drawing the pyramid with 4 triangles
                                            // Front
@@ -329,6 +351,7 @@ protected:
 	VRMain *_vrMain;
 	bool _quit;
     double _horizAngle, _vertAngle, _radius, _incAngle;
+    VRPoint3 rightPalmPos;
 };
 
 

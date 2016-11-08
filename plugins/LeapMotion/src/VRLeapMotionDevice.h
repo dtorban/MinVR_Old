@@ -19,7 +19,7 @@ namespace MinVR {
 
 class VRLeapMotionDevice : public VRInputDevice, public Leap::Listener {
 public:
-	VRLeapMotionDevice();
+	VRLeapMotionDevice(const std::string& name);
 	virtual ~VRLeapMotionDevice();
 
 	void appendNewInputEventsSinceLastCall(VRDataQueue *inputEvents);
@@ -38,6 +38,7 @@ public:
 	static VRInputDevice* create(VRMainInterface *vrMain, VRDataIndex *config,const std::string &nameSpace);
 
 private:
+	std::string name;
 	VRDataIndex dataIndex;
 	std::vector<std::string> events;
 	static Leap::Controller controller;

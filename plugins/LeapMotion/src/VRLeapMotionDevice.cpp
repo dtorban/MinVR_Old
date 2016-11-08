@@ -7,7 +7,7 @@
  */
 
 #include "VRLeapMotionDevice.h"
-
+#include <math/VRMath.h>
 #include <iostream>
 
 using namespace Leap;
@@ -20,7 +20,7 @@ const std::string stateNames[] = {"STATE_INVALID", "STATE_START", "STATE_UPDATE"
 
 Controller VRLeapMotionDevice::controller;
 
-VRLeapMotionDevice::VRLeapMotionDevice() {
+VRLeapMotionDevice::VRLeapMotionDevice(const std::string& name) : name(name) {
 }
 
 VRLeapMotionDevice::~VRLeapMotionDevice() {
@@ -29,9 +29,12 @@ VRLeapMotionDevice::~VRLeapMotionDevice() {
 
 void VRLeapMotionDevice::appendNewInputEventsSinceLastCall(
 		VRDataQueue* inputEvents) {
-	for (int f = 0; f < events.size(); f++) {
-		inputEvents->addSerializedQueue(events[f]);
-	}
+    for (int f = 0; f < events.size(); f++)
+    {
+    	inputEvents->push(events[f]);
+    }
+
+    events.clear();
 }
 
 void VRLeapMotionDevice::onInit(const Controller&) {
@@ -57,7 +60,62 @@ void VRLeapMotionDevice::onExit(const Controller&) {
 void VRLeapMotionDevice::onFrame(const Controller&) {
 	// Get the most recent frame and report some basic information
 	const Frame frame = controller.frame();
-	std::cout << "Frame id: " << frame.id()
+
+	if (frame.hands().isEmpty()) {
+		return;
+	}
+
+	std::string event = name;
+
+	dataIndex.addData(name + "/Hands/NumHands", frame.hands().count());
+
+	HandList hands = frame.hands();
+	for (HandList::const_iterator hl = hands.begin(); hl != hands.end(); ++hl) {
+		const Hand hand = *hl;
+		std::string handType = hand.isLeft() ? "Left" : "Right";
+		std::string handNameSpace = name + "/Hands/" + handType;
+		dataIndex.addData(handNameSpace + "/Id", hand.id());
+		std::string palmNameSpace = handNameSpace + "/Palm";
+		const Vector palmPos = hand.palmPosition();
+		VRPoint3 pos(palmPos.x, palmPos.y, palmPos.z);
+		dataIndex.addData(palmNameSpace + "/Pos", pos);
+		const Vector palmNormal = hand.palmNormal();
+		VRVector3 normal(palmNormal.x, palmNormal.y, palmNormal.z);
+		dataIndex.addData(palmNameSpace + "/Normal", normal);
+		const Vector direction = hand.direction();
+		VRVector3 dir(direction.x, direction.y, direction.z);
+		dataIndex.addData(handNameSpace + "/Dir", normal);
+
+		dataIndex.addData(handNameSpace + "/Pitch", direction.pitch() * RAD_TO_DEG);
+		dataIndex.addData(handNameSpace + "/Roll", palmNormal.roll() * RAD_TO_DEG);
+		dataIndex.addData(handNameSpace + "/Yaw", direction.yaw() * RAD_TO_DEG);
+
+		std::string armNameSpace = handNameSpace + "/Arm";
+		Arm arm = hand.arm();
+		const Vector armDirection = arm.direction();
+		VRVector3 armDir(armDirection.x, armDirection.y, armDirection.z);
+		dataIndex.addData(armNameSpace + "/Dir", armDir);
+
+		const Vector wristPosition = arm.wristPosition();
+		VRVector3 wristPos(wristPosition.x, wristPosition.y, wristPosition.z);
+		dataIndex.addData(armNameSpace + "/WristPos", wristPos);
+
+		const Vector elbowPosition = arm.elbowPosition();
+		VRVector3 elbowPos(elbowPosition.x, elbowPosition.y, elbowPosition.z);
+		dataIndex.addData(armNameSpace + "/ElbowPos", wristPos);
+
+		/*std::cout << std::string(2, ' ') <<  "Arm direction: " << arm.direction()
+	            		  << " wrist position: " << arm.wristPosition()
+	            		  << " elbow position: " << arm.elbowPosition() << std::endl;*/
+	}
+
+	events.push_back(dataIndex.serialize(name));
+
+	if (true) {
+		return;
+	}
+
+	/*std::cout << "Frame id: " << frame.id()
 	            		<< ", timestamp: " << frame.timestamp()
 	            		<< ", hands: " << frame.hands().count()
 	            		<< ", extended fingers: " << frame.fingers().extended().count()
@@ -186,7 +244,7 @@ void VRLeapMotionDevice::onFrame(const Controller&) {
 
 	if (!frame.hands().isEmpty() || !gestures.isEmpty()) {
 		std::cout << std::endl;
-	}
+	}*/
 }
 
 void VRLeapMotionDevice::onFocusGained(const Controller&) {
@@ -217,7 +275,7 @@ void VRLeapMotionDevice::onServiceDisconnect(const Controller&) {
 
 VRInputDevice* VRLeapMotionDevice::create(VRMainInterface* vrMain,
 		VRDataIndex* config, const std::string& nameSpace) {
-	VRLeapMotionDevice* listener = new VRLeapMotionDevice();
+	VRLeapMotionDevice* listener = new VRLeapMotionDevice("Leap");
 	controller.addListener(*listener);
 	return listener;
 }
