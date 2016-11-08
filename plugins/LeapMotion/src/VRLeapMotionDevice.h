@@ -14,6 +14,7 @@
 #include "config/VRDataIndex.h"
 #include "Leap.h"
 #include "main/VRMainInterface.h"
+#include "math/VRMath.h"
 
 namespace MinVR {
 
@@ -38,6 +39,8 @@ public:
 	static VRInputDevice* create(VRMainInterface *vrMain, VRDataIndex *config,const std::string &nameSpace);
 
 private:
+	VRVector3 convertFromLeap(const Leap::Vector vec);
+
 	std::string name;
 	VRDataIndex dataIndex;
 	std::vector<std::string> events;

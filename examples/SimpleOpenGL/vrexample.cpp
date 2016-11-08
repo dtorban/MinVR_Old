@@ -26,18 +26,33 @@
 
 using namespace MinVR;
 
+struct Bone {
+	VRVector3 start;
+	VRVector3 end;
+
+	void draw() {
+		glBegin(GL_LINES);
+		glColor3f(1.0, 1.0, 0.0);
+		glVertex3f(start.x, start.y, start.z);
+		glVertex3f(end.x, end.y, end.z);
+		glEnd();
+	}
+};
+
+struct Hand {
+	Bone bones[20];
+
+	void draw() {
+		for (int f = 0; f < 20; f++) {
+			bones[f].draw();
+		}
+	}
+};
 
 class MyVRApp : public VREventHandler, public VRRenderHandler {
 public:
-  MyVRApp(int argc, char** argv) : _vrMain(NULL), _quit(false), rightPalmPos(-1.5f, 0.0f, -6.0f) {
+  MyVRApp(int argc, char** argv) : _vrMain(NULL), _quit(false) {
 		_vrMain = new VRMain();
-
-		//std::string minVRCommandLine = std::string(argv[3]) + " /My/ConfigVal1=1 /VRSetupToStart=FrontWall";
-		//VRDefaultAppLauncher launcher(argc, argv, minVRCommandLine);
-		//_vrMain->initialize(launcher);
-
-		//std::string args[] = {"test=3", "again=44"};
-        //_vrMain->initialize(argc, argv, argv[1], std::vector<std::string>(args, args + sizeof(args) / sizeof(args[0])));
 
 		std::string configFile = argv[1];
 		_vrMain->initialize(argc, argv, configFile);
@@ -56,20 +71,23 @@ public:
 		delete _vrMain;
 	}
 
-	void handleHand(std::string handName, VRDataIndex *eventData) {
-		int id = eventData->getValue(handName + "/Id");
-		//VRVector3 pos = eventData->getValue(handName + "/Palm/Pos");
-		rightPalmPos = eventData->getValue(handName + "/Palm/Pos");
-		double x = rightPalmPos.x;
-		rightPalmPos.x = rightPalmPos.z/30.0f;
-		rightPalmPos.y /= 30.0f - 10.f;
-		rightPalmPos.z = -x/30.0f;
-		std::cout << handName << " " << id << ": (" << rightPalmPos.x << ", " << rightPalmPos.y << ", " << rightPalmPos.z << ")" << std::endl;
+	void handleHand(std::string handName, VRDataIndex *eventData, int handIndex) {
+		VRContainer fingers = eventData->getValue(handName + "/Fingers");
+		int boneNum = 0;
+		for (VRContainer::iterator it = fingers.begin(); it != fingers.end(); it++) {
+			VRContainer bones = eventData->getValue(handName + "/Fingers/" + *it + "/Bones");
+			for (VRContainer::iterator boneIt = bones.begin(); boneIt != bones.end(); boneIt++) {
+				hands[handIndex].bones[boneNum].start = eventData->getValue(handName + "/Fingers/" + *it + "/Bones/" + *boneIt + "/Start");
+				hands[handIndex].bones[boneNum].end = eventData->getValue(handName + "/Fingers/" + *it + "/Bones/" + *boneIt + "/End");
+				boneNum++;
+			}
+		}
+
 	}
 
 	// Callback for event handling, inherited from VREventHandler
 	virtual void onVREvent(const std::string &eventName, VRDataIndex *eventData) {
-		std::cout << "Event: " << eventName << std::endl;
+		//std::cout << "Event: " << eventName << std::endl;
 		if (eventName == "/KbdEsc_Down") {
 			_quit = true;
 		}
@@ -92,12 +110,11 @@ public:
           _vertAngle += _incAngle;
         }
     	else if (eventName == "/Leap") {
-    		std::cout << (int)eventData->getValue(eventName + "/Hands/NumHands") << std::endl;
     		if (eventData->exists(eventName + "/Hands/Left")) {
-    			handleHand(eventName + "/Hands/Left", eventData);
+    			handleHand(eventName + "/Hands/Left", eventData, 0);
     		}
     		if (eventData->exists(eventName + "/Hands/Right")) {
-    			handleHand(eventName + "/Hands/Right", eventData);
+    			handleHand(eventName + "/Hands/Right", eventData, 1);
     		}
     	}
       
@@ -300,10 +317,9 @@ public:
           glEnd();  // End of drawing color-cube
           
           // Render a pyramid consists of 4 triangles
-          //   glLoadIdentity();                  // Reset the model-view matrix
-          //glTranslatef(-1.5f, 0.0f, -6.0f);  // Move left and into the screen
-          glTranslatef(-1.5f, -12.0f, 0.0f);
-          glTranslatef(rightPalmPos.x, rightPalmPos.y, rightPalmPos.z);  // Move left and into the screen
+          // // Move left and into the screen
+          glPushMatrix();
+          glTranslatef(-1.5f, 0.0f, -6.0f);
           
           glBegin(GL_TRIANGLES);           // Begin drawing the pyramid with 4 triangles
                                            // Front
@@ -338,6 +354,13 @@ public:
           glColor3f(0.0f,1.0f,0.0f);       // Green
           glVertex3f(-1.0f,-1.0f, 1.0f);
           glEnd();   // Done drawing the pyramid
+
+          glPopMatrix();
+          glTranslatef(-1.5f, -12.0f, 0.0f);
+
+          for (int f = 0; f < 2; f++) {
+        	  hands[f].draw();
+          }
 		}
 	}
 
@@ -351,7 +374,7 @@ protected:
 	VRMain *_vrMain;
 	bool _quit;
     double _horizAngle, _vertAngle, _radius, _incAngle;
-    VRPoint3 rightPalmPos;
+    Hand hands[2];
 };
 
 

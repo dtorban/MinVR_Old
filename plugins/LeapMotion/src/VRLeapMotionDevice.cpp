@@ -69,6 +69,8 @@ void VRLeapMotionDevice::onFrame(const Controller&) {
 
 	dataIndex.addData(name + "/Hands/NumHands", frame.hands().count());
 
+	VRVector3 vec;
+
 	HandList hands = frame.hands();
 	for (HandList::const_iterator hl = hands.begin(); hl != hands.end(); ++hl) {
 		const Hand hand = *hl;
@@ -76,19 +78,19 @@ void VRLeapMotionDevice::onFrame(const Controller&) {
 		std::string handNameSpace = name + "/Hands/" + handType;
 		dataIndex.addData(handNameSpace + "/Id", hand.id());
 		std::string palmNameSpace = handNameSpace + "/Palm";
-		const Vector palmPos = hand.palmPosition();
-		VRPoint3 pos(palmPos.x, palmPos.y, palmPos.z);
-		dataIndex.addData(palmNameSpace + "/Pos", pos);
-		const Vector palmNormal = hand.palmNormal();
-		VRVector3 normal(palmNormal.x, palmNormal.y, palmNormal.z);
-		dataIndex.addData(palmNameSpace + "/Normal", normal);
-		const Vector direction = hand.direction();
-		VRVector3 dir(direction.x, direction.y, direction.z);
-		dataIndex.addData(handNameSpace + "/Dir", normal);
 
-		dataIndex.addData(handNameSpace + "/Pitch", direction.pitch() * RAD_TO_DEG);
-		dataIndex.addData(handNameSpace + "/Roll", palmNormal.roll() * RAD_TO_DEG);
-		dataIndex.addData(handNameSpace + "/Yaw", direction.yaw() * RAD_TO_DEG);
+		vec = convertFromLeap(hand.palmPosition());
+		dataIndex.addData(palmNameSpace + "/Pos", vec);
+
+		vec = convertFromLeap(hand.palmNormal());
+		dataIndex.addData(palmNameSpace + "/Normal", vec);
+
+		vec = convertFromLeap(hand.direction());
+		dataIndex.addData(handNameSpace + "/Dir", vec);
+
+		dataIndex.addData(handNameSpace + "/Pitch", hand.direction().pitch() * RAD_TO_DEG);
+		dataIndex.addData(handNameSpace + "/Roll", hand.palmNormal().roll() * RAD_TO_DEG);
+		dataIndex.addData(handNameSpace + "/Yaw", hand.direction().yaw() * RAD_TO_DEG);
 
 		std::string armNameSpace = handNameSpace + "/Arm";
 		Arm arm = hand.arm();
@@ -104,147 +106,34 @@ void VRLeapMotionDevice::onFrame(const Controller&) {
 		VRVector3 elbowPos(elbowPosition.x, elbowPosition.y, elbowPosition.z);
 		dataIndex.addData(armNameSpace + "/ElbowPos", wristPos);
 
-		/*std::cout << std::string(2, ' ') <<  "Arm direction: " << arm.direction()
-	            		  << " wrist position: " << arm.wristPosition()
-	            		  << " elbow position: " << arm.elbowPosition() << std::endl;*/
-	}
-
-	events.push_back(dataIndex.serialize(name));
-
-	if (true) {
-		return;
-	}
-
-	/*std::cout << "Frame id: " << frame.id()
-	            		<< ", timestamp: " << frame.timestamp()
-	            		<< ", hands: " << frame.hands().count()
-	            		<< ", extended fingers: " << frame.fingers().extended().count()
-	            		<< ", tools: " << frame.tools().count()
-	            		<< ", gestures: " << frame.gestures().count() << std::endl;
-
-	HandList hands = frame.hands();
-	for (HandList::const_iterator hl = hands.begin(); hl != hands.end(); ++hl) {
-		// Get the first hand
-		const Hand hand = *hl;
-		std::string handType = hand.isLeft() ? "Left hand" : "Right hand";
-		std::cout << std::string(2, ' ') << handType << ", id: " << hand.id()
-	            		  << ", palm position: " << hand.palmPosition() << std::endl;
-		// Get the hand's normal vector and direction
-		const Vector normal = hand.palmNormal();
-		const Vector direction = hand.direction();
-
-		// Calculate the hand's pitch, roll, and yaw angles
-		std::cout << std::string(2, ' ') <<  "pitch: " << direction.pitch() * RAD_TO_DEG << " degrees, "
-				<< "roll: " << normal.roll() * RAD_TO_DEG << " degrees, "
-				<< "yaw: " << direction.yaw() * RAD_TO_DEG << " degrees" << std::endl;
-
-		// Get the Arm bone
-		Arm arm = hand.arm();
-		std::cout << std::string(2, ' ') <<  "Arm direction: " << arm.direction()
-	            		  << " wrist position: " << arm.wristPosition()
-	            		  << " elbow position: " << arm.elbowPosition() << std::endl;
-
-		// Get fingers
 		const FingerList fingers = hand.fingers();
 		for (FingerList::const_iterator fl = fingers.begin(); fl != fingers.end(); ++fl) {
 			const Finger finger = *fl;
-			std::cout << std::string(4, ' ') <<  fingerNames[finger.type()]
-			                                                 << " finger, id: " << finger.id()
-			                                                 << ", length: " << finger.length()
-			                                                 << "mm, width: " << finger.width() << std::endl;
+			std::string fingerType = fingerNames[finger.type()];
+			std::string fingerNamespace = handNameSpace + "/Fingers/" + fingerType;
+			dataIndex.addData(fingerNamespace + "/Id", finger.id());
+			dataIndex.addData(fingerNamespace + "/Len", finger.length());
+			dataIndex.addData(fingerNamespace + "/Width", finger.width());
 
 			// Get finger bones
 			for (int b = 0; b < 4; ++b) {
 				Bone::Type boneType = static_cast<Bone::Type>(b);
 				Bone bone = finger.bone(boneType);
-				std::cout << std::string(6, ' ') <<  boneNames[boneType]
-				                                               << " bone, start: " << bone.prevJoint()
-				                                               << ", end: " << bone.nextJoint()
-				                                               << ", direction: " << bone.direction() << std::endl;
+				std::string boneNamespace = fingerNamespace + "/Bones/" + boneNames[boneType];
+
+				vec = convertFromLeap(bone.prevJoint());
+				dataIndex.addData(boneNamespace + "/Start", vec);
+
+				vec = convertFromLeap(bone.nextJoint());
+				dataIndex.addData(boneNamespace + "/End", vec);
+
+				vec = convertFromLeap(bone.direction());
+				dataIndex.addData(boneNamespace + "/Dir", vec);
 			}
 		}
 	}
 
-	// Get tools
-	const ToolList tools = frame.tools();
-	for (ToolList::const_iterator tl = tools.begin(); tl != tools.end(); ++tl) {
-		const Tool tool = *tl;
-		std::cout << std::string(2, ' ') <<  "Tool, id: " << tool.id()
-	            		  << ", position: " << tool.tipPosition()
-	            		  << ", direction: " << tool.direction() << std::endl;
-	}
-
-	// Get gestures
-	const GestureList gestures = frame.gestures();
-	for (int g = 0; g < gestures.count(); ++g) {
-		Gesture gesture = gestures[g];
-
-		switch (gesture.type()) {
-		case Gesture::TYPE_CIRCLE:
-		{
-			CircleGesture circle = gesture;
-			std::string clockwiseness;
-
-			if (circle.pointable().direction().angleTo(circle.normal()) <= PI/2) {
-				clockwiseness = "clockwise";
-			} else {
-				clockwiseness = "counterclockwise";
-			}
-
-			// Calculate angle swept since last frame
-			float sweptAngle = 0;
-			if (circle.state() != Gesture::STATE_START) {
-				CircleGesture previousUpdate = CircleGesture(controller.frame(1).gesture(circle.id()));
-				sweptAngle = (circle.progress() - previousUpdate.progress()) * 2 * PI;
-			}
-			std::cout << std::string(2, ' ')
-			<< "Circle id: " << gesture.id()
-			<< ", state: " << stateNames[gesture.state()]
-			                             << ", progress: " << circle.progress()
-			                             << ", radius: " << circle.radius()
-			                             << ", angle " << sweptAngle * RAD_TO_DEG
-			                             <<  ", " << clockwiseness << std::endl;
-			break;
-		}
-		case Gesture::TYPE_SWIPE:
-		{
-			SwipeGesture swipe = gesture;
-			std::cout << std::string(2, ' ')
-			<< "Swipe id: " << gesture.id()
-			<< ", state: " << stateNames[gesture.state()]
-			                             << ", direction: " << swipe.direction()
-			                             << ", speed: " << swipe.speed() << std::endl;
-			break;
-		}
-		case Gesture::TYPE_KEY_TAP:
-		{
-			KeyTapGesture tap = gesture;
-			std::cout << std::string(2, ' ')
-			<< "Key Tap id: " << gesture.id()
-			<< ", state: " << stateNames[gesture.state()]
-			                             << ", position: " << tap.position()
-			                             << ", direction: " << tap.direction()<< std::endl;
-			break;
-		}
-		case Gesture::TYPE_SCREEN_TAP:
-		{
-			ScreenTapGesture screentap = gesture;
-			std::cout << std::string(2, ' ')
-			<< "Screen Tap id: " << gesture.id()
-			<< ", state: " << stateNames[gesture.state()]
-			                             << ", position: " << screentap.position()
-			                             << ", direction: " << screentap.direction()<< std::endl;
-			break;
-		}
-		default:
-			std::cout << std::string(2, ' ')  << "Unknown gesture type." << std::endl;
-			break;
-		}
-	}
-
-	if (!frame.hands().isEmpty() || !gestures.isEmpty()) {
-		std::cout << std::endl;
-	}*/
+	events.push_back(dataIndex.serialize(name));
 }
 
 void VRLeapMotionDevice::onFocusGained(const Controller&) {
@@ -278,6 +167,11 @@ VRInputDevice* VRLeapMotionDevice::create(VRMainInterface* vrMain,
 	VRLeapMotionDevice* listener = new VRLeapMotionDevice("Leap");
 	controller.addListener(*listener);
 	return listener;
+}
+
+VRVector3 VRLeapMotionDevice::convertFromLeap(const Leap::Vector vec) {
+	VRVector3 v(vec.z/30.0, vec.y/30.0, -1.0*vec.x/30.0);
+	return v;
 }
 
 } /* namespace MinVR */
