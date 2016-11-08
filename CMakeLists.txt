@@ -126,6 +126,7 @@ include_directories(
 add_subdirectory(src)
 add_subdirectory(plugins)
 add_subdirectory(examples/SimpleOpenGL)
+add_subdirectory(examples/LeapMotionExample)
 add_subdirectory(examples/ConfigExample)
 add_subdirectory(tests/config)
 

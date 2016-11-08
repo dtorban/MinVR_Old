@@ -170,7 +170,7 @@ VRInputDevice* VRLeapMotionDevice::create(VRMainInterface* vrMain,
 }
 
 VRVector3 VRLeapMotionDevice::convertFromLeap(const Leap::Vector vec) {
-	VRVector3 v(vec.z/30.0, vec.y/30.0, -1.0*vec.x/30.0);
+	VRVector3 v(vec.z/30.0, vec.y/30.0 - 7.0, -1.0*vec.x/30.0);
 	return v;
 }
 
