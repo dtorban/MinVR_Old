@@ -28,12 +28,12 @@
         <GLFWToolkit windowtoolkitType="VRGLFWWindowToolkit"/>
         <OpenGLToolkit graphicstoolkitType="VROpenGLGraphicsToolkit"/>
 
-        <Border>0</Border>
+        <Border>1</Border>
         <Caption>Desktop</Caption>
-				<XPos>100</XPos>
-				<YPos>100</YPos>
-				<Width>640</Width>
-				<Height>400</Height>
+				<XPos>0</XPos>
+				<YPos>0</YPos>
+				<Width>1200</Width>
+				<Height>800</Height>
         
 			</RootNode>
 		</Desktop>
