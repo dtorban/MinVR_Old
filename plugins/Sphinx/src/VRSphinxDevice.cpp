@@ -266,53 +266,69 @@ namespace MinVR {
 void
 VRSphinxDevice::recognize_from_microphone()
 {
+	static int curCount;
+	curCount++;
   //  for (;;) {
-        if ((k = ad_read(ad, adbuf, 2048)) < 0)
+    	if ((k = ad_read(ad, adbuf, 2048)) < 0)
             E_FATAL("Failed to read audio\n");
-        ps_process_raw(ps, adbuf, k, FALSE, FALSE);
-        in_speech = ps_get_in_speech(ps);
-        if (in_speech && !utt_started) {
-            utt_started = TRUE;
-            E_INFO("Listening...\n");
-        }
-        if (!in_speech && utt_started) {
-//        	std::unique_lock<std::mutex> lock(counter_mutex);
-            ps_end_utt(ps);
-            Nbest *nbest = (Nbest*)ckd_calloc(1, sizeof(*nbest));
-            nbest->nbest = ps_nbest(ps);
-            nbest->nbest = ps_nbest_next(nbest->nbest);
-            int32 score;
-            int count = 0;
-            while (nbest->nbest != NULL && count < 10) {
-            	hyp = ps_nbest_hyp(nbest->nbest, &score);
+        //std::cout << "frame" << std::endl;
+    	//if ((curCount % 3) == 0) {
+            ps_process_raw(ps, adbuf, k, FALSE, FALSE);
+            in_speech = ps_get_in_speech(ps);
+            //printf("Frame...\n");
+            if (in_speech && !utt_started) {
+                utt_started = TRUE;
+                printf("Listening...\n");
+            }
+            if (!in_speech && utt_started) {
+    //        	std::unique_lock<std::mutex> lock(counter_mutex);
+                ps_end_utt(ps);
+                Nbest *nbest = (Nbest*)ckd_calloc(1, sizeof(*nbest));
+                nbest->nbest = ps_nbest(ps);
+                nbest->nbest = ps_nbest_next(nbest->nbest);
+                int32 score;
+                int count = 0;
 
-            	std::unique_lock<std::mutex> lock(deviceMutex);
-            	events.push_back(hyp);
-            	//printf("%s %i\n", hyp, score);
-            	lock.unlock();
-            	fflush(stdout);
-            	nbest->nbest = ps_nbest_next(nbest->nbest);
-            	if (nbest->nbest != NULL) {
+                std::vector<std::string> words;
+
+                while (nbest->nbest != NULL && count < 10) {
                 	hyp = ps_nbest_hyp(nbest->nbest, &score);
-            	}
-            	count++;
-            }
 
-            if (nbest->nbest) {
-                ps_nbest_free(nbest->nbest);
-            }
+                	if (hyp != NULL) {
+                		words.push_back(hyp);
+                	}
 
-            ckd_free(nbest);
-            /*hyp = ps_get_hyp(ps, NULL );
-            if (hyp != NULL) {
-                printf("%s\n", hyp);
-                fflush(stdout);
-            }*/
+                	nbest->nbest = ps_nbest_next(nbest->nbest);
+                	if (nbest->nbest != NULL) {
+                    	hyp = ps_nbest_hyp(nbest->nbest, &score);
+                	}
+                	count++;
 
-            if (ps_start_utt(ps) < 0)
-                E_FATAL("Failed to start utterance\n");
-            utt_started = FALSE;
-            E_INFO("Ready....\n");
+                	deviceMutex.lock();
+                	dataIndex.addData("/Words", words);
+                	events.push_back(dataIndex.serialize("/Words"));
+                	deviceMutex.unlock();
+                	//if ((k = ad_read(ad, adbuf, 2048)) < 0)
+                		//E_FATAL("Failed to read audio\n");
+                }
+
+                if (nbest->nbest) {
+                    ps_nbest_free(nbest->nbest);
+                }
+
+                ckd_free(nbest);
+                /*hyp = ps_get_hyp(ps, NULL );
+                if (hyp != NULL) {
+                    printf("%s\n", hyp);
+                    fflush(stdout);
+                }*/
+
+                if (ps_start_utt(ps) < 0)
+                    E_FATAL("Failed to start utterance\n");
+                utt_started = FALSE;
+                printf("Ready....\n");
+    	//}
+
         }
         sleep_msec(10);
     //}
@@ -335,7 +351,7 @@ VRSphinxDevice::~VRSphinxDevice() {
 
 void VRSphinxDevice::appendNewInputEventsSinceLastCall(
 		VRDataQueue* inputEvents) {
-	std::unique_lock<std::mutex> lock(deviceMutex);
+	deviceMutex.lock();
     for (int f = 0; f < events.size(); f++)
     {
     	std::cout << events[f] << std::endl;
@@ -343,7 +359,7 @@ void VRSphinxDevice::appendNewInputEventsSinceLastCall(
     }
 
     events.clear();
-    lock.unlock();
+    deviceMutex.unlock();
 }
 
 void VRSphinxDevice::run() {
