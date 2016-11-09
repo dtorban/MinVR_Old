@@ -32,7 +32,6 @@ struct Bone {
 
 	void draw() {
 		glBegin(GL_LINES);
-		glColor3f(1.0, 1.0, 0.0);
 		glVertex3f(start.x, start.y, start.z);
 		glVertex3f(end.x, end.y, end.z);
 		glEnd();
@@ -51,7 +50,7 @@ struct Hand {
 
 class MyVRApp : public VREventHandler, public VRRenderHandler {
 public:
-  MyVRApp(int argc, char** argv) : _vrMain(NULL), _quit(false) {
+  MyVRApp(int argc, char** argv) : _vrMain(NULL), _quit(false), showHands(false), handColor(1.0, 1.0, 0.0), talking(0) {
 		_vrMain = new VRMain();
 
 		std::string configFile = argv[1];
@@ -91,6 +90,9 @@ public:
 		if (eventName == "/KbdEsc_Down") {
 			_quit = true;
 		}
+		else if (eventName == "/KbdSpace_Down") {
+			showHands = true;
+		}
     	else if (eventName == "/Leap") {
     		if (eventData->exists(eventName + "/Hands/Left")) {
     			handleHand(eventName + "/Hands/Left", eventData, 0);
@@ -99,12 +101,58 @@ public:
     			handleHand(eventName + "/Hands/Right", eventData, 1);
     		}
     	}
+    	else if (eventName == "/Words") {
+    		std::string words = eventData->getValue("/Words");
+    		if (talking > 0) {
+    			if (words.find("hands") != std::string::npos) {
+    			     showHands = true;
+    			     talking = 0;
+    			}
+    			else if (words.find("red") != std::string::npos && words.find("read") != std::string::npos) {
+    				handColor.x = 1.0;
+    				handColor.y = 0.0;
+    				handColor.z = 0.0;
+    				talking = 0;
+    			}
+    			else if (words.find("blue") != std::string::npos) {
+    				handColor.x = 0.0;
+    				handColor.y = 0.0;
+    				handColor.z = 1.0;
+    				talking = 0;
+    			}
+    			else if (words.find("gre") != std::string::npos) {
+    				handColor.x = 0.0;
+    				handColor.y = 1.0;
+    				handColor.z = 0.0;
+    				talking = 0;
+    			}
+    			else if (words.find("yel") != std::string::npos) {
+    				handColor.x = 1.0;
+    				handColor.y = 1.0;
+    				handColor.z = 0.0;
+    				talking = 0;
+    			}
+
+    			if (words.find("ex") != std::string::npos) {
+    				_quit = true;
+    			}
+    		}
+    		else {
+        		if (words.find("prog") != std::string::npos) {
+        			talking = 255.0*2.0;
+        		}
+    		}
+
+    	}
 
 	}
 
   
     virtual void onVRRenderContext(VRDataIndex *renderState, VRDisplayNode *callingNode) {
         if (!renderState->exists("IsConsole", "/")) {
+        }
+        if (talking > 0) {
+            talking--;
         }
     }
 
@@ -122,7 +170,7 @@ public:
 			glDepthFunc(GL_LEQUAL);
 			glClearDepth(1.0f);
 			count++;
-			glClearColor(0.0, 0.0, 0.0, 1.f);
+			glClearColor((1.0*talking)/(255.0*2.0)/2.0, (1.0*talking)/(255.0*2.0)/2.0, (1.0*talking)/(255.0*2.0)/2.0, 1.f);
 
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 			//glClear(GL_DEPTH_BUFFER_BIT);
@@ -182,9 +230,13 @@ public:
             }
 
 
-          for (int f = 0; f < 2; f++) {
-        	  hands[f].draw();
-          }
+            if (showHands) {
+            	glColor3f(handColor.x, handColor.y, handColor.z);
+                for (int f = 0; f < 2; f++) {
+              	  hands[f].draw();
+                }
+            }
+
 		}
 	}
 
@@ -199,6 +251,9 @@ protected:
 	bool _quit;
     double _horizAngle, _vertAngle, _radius, _incAngle;
     Hand hands[2];
+    bool showHands;
+    VRVector3 handColor;
+    int talking;
 };
 
 

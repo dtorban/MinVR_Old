@@ -295,7 +295,10 @@ VRSphinxDevice::recognize_from_microphone()
                 	hyp = ps_nbest_hyp(nbest->nbest, &score);
 
                 	if (hyp != NULL) {
-                		words.push_back(hyp);
+                		std::string str(hyp);
+                		if (str.size() > 0) {
+                    		words.push_back(hyp);
+                		}
                 	}
 
                 	nbest->nbest = ps_nbest_next(nbest->nbest);
@@ -304,10 +307,13 @@ VRSphinxDevice::recognize_from_microphone()
                 	}
                 	count++;
 
-                	deviceMutex.lock();
-                	dataIndex.addData("/Words", words);
-                	events.push_back(dataIndex.serialize("/Words"));
-                	deviceMutex.unlock();
+                	if (words.size() > 0) {
+                		deviceMutex.lock();
+                		dataIndex.addData("/Words", words);
+                		events.push_back(dataIndex.serialize("/Words"));
+                		deviceMutex.unlock();
+                	}
+
                 	//if ((k = ad_read(ad, adbuf, 2048)) < 0)
                 		//E_FATAL("Failed to read audio\n");
                 }
@@ -355,7 +361,7 @@ void VRSphinxDevice::appendNewInputEventsSinceLastCall(
     for (int f = 0; f < events.size(); f++)
     {
     	std::cout << events[f] << std::endl;
-    	//inputEvents->push(events[f]);
+    	inputEvents->push(events[f]);
     }
 
     events.clear();
