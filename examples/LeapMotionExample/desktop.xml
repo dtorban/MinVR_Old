@@ -1,0 +1,41 @@
+
+<MinVR>
+  <PluginPath>../../build/Release/plugins</PluginPath>
+	<GLFWPlugin pluginType="MinVR_GLFW"/>
+	<OpenGLPlugin pluginType="MinVR_OpenGL"/>
+	<LeapPlugin pluginType="MinVR_LeapMotion" />
+
+  <RGBBits>8</RGBBits>
+  <AlphaBits>8</AlphaBits>
+  <DepthBits>24</DepthBits>
+  <StencilBits>8</StencilBits>
+  <FullScreen>0</FullScreen>
+  <Resizable>1</Resizable>
+  <AllowMaximize>1</AllowMaximize>
+  <Visible>1</Visible>
+  <SharedContextGroupID>-1</SharedContextGroupID>
+  <ContextVersionMajor>3</ContextVersionMajor>
+  <ContextVersionMinor>0</ContextVersionMinor>
+  <UseGPUAffinity>1</UseGPUAffinity>
+  <UseDebugContext>0</UseDebugContext>
+  <MSAASamples>1</MSAASamples>
+  <QuadBuffered>0</QuadBuffered>
+
+  <VRSetups>
+    <Desktop hostType="VRStandAlone">
+	    <Leap inputdeviceType="VRLeapMotionDevice" />  
+      <RootNode displaynodeType="VRGraphicsWindowNode">
+        <GLFWToolkit windowtoolkitType="VRGLFWWindowToolkit"/>
+        <OpenGLToolkit graphicstoolkitType="VROpenGLGraphicsToolkit"/>
+
+        <Border>1</Border>
+        <Caption>Desktop</Caption>
+				<XPos>0</XPos>
+				<YPos>0</YPos>
+				<Width>1200</Width>
+				<Height>800</Height>
+        
+			</RootNode>
+		</Desktop>
+	</VRSetups>
+</MinVR>

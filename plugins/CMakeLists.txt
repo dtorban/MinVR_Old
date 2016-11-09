@@ -66,6 +66,12 @@ if (MINVR_TUIO_PLUGIN)
 	add_subdirectory (TUIO)
 endif()
 
+#------------------Leap Motion-----------------------------
+option(MINVR_LEAPMOTION_PLUGIN "If enabled, Leap Motion plugin will be installed" OFF)
+if (MINVR_LEAPMOTION_PLUGIN)
+	add_subdirectory (LeapMotion)
+endif()
+
 #------------------OpenVR-----------------------------
 option(MINVR_OPENVR_PLUGIN "If enabled, OpenVR plugin will be installed" OFF)
 if (MINVR_OPENVR_PLUGIN)

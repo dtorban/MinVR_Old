@@ -26,18 +26,33 @@
 
 using namespace MinVR;
 
+struct Bone {
+	VRVector3 start;
+	VRVector3 end;
+
+	void draw() {
+		glBegin(GL_LINES);
+		glColor3f(1.0, 1.0, 0.0);
+		glVertex3f(start.x, start.y, start.z);
+		glVertex3f(end.x, end.y, end.z);
+		glEnd();
+	}
+};
+
+struct Hand {
+	Bone bones[20];
+
+	void draw() {
+		for (int f = 0; f < 20; f++) {
+			bones[f].draw();
+		}
+	}
+};
 
 class MyVRApp : public VREventHandler, public VRRenderHandler {
 public:
   MyVRApp(int argc, char** argv) : _vrMain(NULL), _quit(false) {
 		_vrMain = new VRMain();
-
-		//std::string minVRCommandLine = std::string(argv[3]) + " /My/ConfigVal1=1 /VRSetupToStart=FrontWall";
-		//VRDefaultAppLauncher launcher(argc, argv, minVRCommandLine);
-		//_vrMain->initialize(launcher);
-
-		//std::string args[] = {"test=3", "again=44"};
-        //_vrMain->initialize(argc, argv, argv[1], std::vector<std::string>(args, args + sizeof(args) / sizeof(args[0])));
 
 		std::string configFile = argv[1];
 		_vrMain->initialize(argc, argv, configFile);
@@ -54,6 +69,20 @@ public:
 	virtual ~MyVRApp() {
 		_vrMain->shutdown();
 		delete _vrMain;
+	}
+
+	void handleHand(std::string handName, VRDataIndex *eventData, int handIndex) {
+		VRContainer fingers = eventData->getValue(handName + "/Fingers");
+		int boneNum = 0;
+		for (VRContainer::iterator it = fingers.begin(); it != fingers.end(); it++) {
+			VRContainer bones = eventData->getValue(handName + "/Fingers/" + *it + "/Bones");
+			for (VRContainer::iterator boneIt = bones.begin(); boneIt != bones.end(); boneIt++) {
+				hands[handIndex].bones[boneNum].start = eventData->getValue(handName + "/Fingers/" + *it + "/Bones/" + *boneIt + "/Start");
+				hands[handIndex].bones[boneNum].end = eventData->getValue(handName + "/Fingers/" + *it + "/Bones/" + *boneIt + "/End");
+				boneNum++;
+			}
+		}
+
 	}
 
 	// Callback for event handling, inherited from VREventHandler
@@ -80,6 +109,14 @@ public:
         else if ((eventName == "/KbdDown_Down") || (eventName == "/KbdDown_Repeat")) {
           _vertAngle += _incAngle;
         }
+    	else if (eventName == "/Leap") {
+    		if (eventData->exists(eventName + "/Hands/Left")) {
+    			handleHand(eventName + "/Hands/Left", eventData, 0);
+    		}
+    		if (eventData->exists(eventName + "/Hands/Right")) {
+    			handleHand(eventName + "/Hands/Right", eventData, 1);
+    		}
+    	}
       
         if (_horizAngle > 6.283185) _horizAngle -= 6.283185;
         if (_horizAngle < 0.0) _horizAngle += 6.283185;
@@ -280,8 +317,9 @@ public:
           glEnd();  // End of drawing color-cube
           
           // Render a pyramid consists of 4 triangles
-          //   glLoadIdentity();                  // Reset the model-view matrix
-          glTranslatef(-1.5f, 0.0f, -6.0f);  // Move left and into the screen
+          // // Move left and into the screen
+          glPushMatrix();
+          glTranslatef(-1.5f, 0.0f, -6.0f);
           
           glBegin(GL_TRIANGLES);           // Begin drawing the pyramid with 4 triangles
                                            // Front
@@ -316,6 +354,13 @@ public:
           glColor3f(0.0f,1.0f,0.0f);       // Green
           glVertex3f(-1.0f,-1.0f, 1.0f);
           glEnd();   // Done drawing the pyramid
+
+          glPopMatrix();
+          glTranslatef(-1.5f, -12.0f, 0.0f);
+
+          for (int f = 0; f < 2; f++) {
+        	  hands[f].draw();
+          }
 		}
 	}
 
@@ -329,6 +374,7 @@ protected:
 	VRMain *_vrMain;
 	bool _quit;
     double _horizAngle, _vertAngle, _radius, _incAngle;
+    Hand hands[2];
 };
 
 
