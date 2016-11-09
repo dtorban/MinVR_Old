@@ -12,8 +12,8 @@
 #include "input/VRInputDevice.h"
 #include <thread>
 #include <mutex>
-#include <condition_variable>
 #include "main/VRMainInterface.h"
+#include <vector>
 
 namespace MinVR {
 
@@ -23,8 +23,17 @@ public:
 	virtual ~VRSphinxDevice();
 
 	void appendNewInputEventsSinceLastCall(VRDataQueue *inputEvents);
+	void run();
+	void recognize_from_microphone();
 
 	static VRInputDevice* create(VRMainInterface *vrMain, MinVR::VRDataIndex *config, const std::string &nameSpace);
+
+private:
+	std::thread* deviceThread;
+	std::mutex deviceMutex;
+	VRDataIndex dataIndex;
+	std::vector<std::string> events;
+
 };
 
 } /* namespace MinVR */

@@ -128,38 +128,11 @@ uint8 utt_started, in_speech;
 int32 k;
 char const *hyp;
 
-static void
-recognize_from_microphone()
-{
+typedef struct nbest_s {
+	ps_nbest_t *nbest;
+} Nbest;
 
 
-  //  for (;;) {
-        if ((k = ad_read(ad, adbuf, 2048)) < 0)
-            E_FATAL("Failed to read audio\n");
-        ps_process_raw(ps, adbuf, k, FALSE, FALSE);
-        in_speech = ps_get_in_speech(ps);
-        if (in_speech && !utt_started) {
-            utt_started = TRUE;
-            E_INFO("Listening...\n");
-        }
-        if (!in_speech && utt_started) {
-
-            ps_end_utt(ps);
-            hyp = ps_get_hyp(ps, NULL );
-            if (hyp != NULL) {
-                printf("%s\n", hyp);
-                fflush(stdout);
-            }
-
-            if (ps_start_utt(ps) < 0)
-                E_FATAL("Failed to start utterance\n");
-            utt_started = FALSE;
-            E_INFO("Ready....\n");
-        }
-        sleep_msec(10);
-    //}
-    //ad_close(ad);
-}
 
 /*static void
 recognize_from_microphone()
@@ -242,7 +215,7 @@ main(int argc, char *argv[])
     if (cmd_ln_str_r(config, "-infile") != NULL) {
         //recognize_from_file();
     } else if (cmd_ln_boolean_r(config, "-inmic")) {
-        recognize_from_microphone();
+        //recognize_from_microphone();
     }
 
     ps_free(ps);
@@ -290,18 +263,93 @@ wmain(int32 argc, wchar_t * wargv[])
 
 namespace MinVR {
 
-VRSphinxDevice::VRSphinxDevice() {
-	// TODO Auto-generated constructor stub
+void
+VRSphinxDevice::recognize_from_microphone()
+{
+  //  for (;;) {
+        if ((k = ad_read(ad, adbuf, 2048)) < 0)
+            E_FATAL("Failed to read audio\n");
+        ps_process_raw(ps, adbuf, k, FALSE, FALSE);
+        in_speech = ps_get_in_speech(ps);
+        if (in_speech && !utt_started) {
+            utt_started = TRUE;
+            E_INFO("Listening...\n");
+        }
+        if (!in_speech && utt_started) {
+//        	std::unique_lock<std::mutex> lock(counter_mutex);
+            ps_end_utt(ps);
+            Nbest *nbest = (Nbest*)ckd_calloc(1, sizeof(*nbest));
+            nbest->nbest = ps_nbest(ps);
+            nbest->nbest = ps_nbest_next(nbest->nbest);
+            int32 score;
+            int count = 0;
+            while (nbest->nbest != NULL && count < 10) {
+            	hyp = ps_nbest_hyp(nbest->nbest, &score);
 
+            	std::unique_lock<std::mutex> lock(deviceMutex);
+            	events.push_back(hyp);
+            	//printf("%s %i\n", hyp, score);
+            	lock.unlock();
+            	fflush(stdout);
+            	nbest->nbest = ps_nbest_next(nbest->nbest);
+            	if (nbest->nbest != NULL) {
+                	hyp = ps_nbest_hyp(nbest->nbest, &score);
+            	}
+            	count++;
+            }
+
+            if (nbest->nbest) {
+                ps_nbest_free(nbest->nbest);
+            }
+
+            ckd_free(nbest);
+            /*hyp = ps_get_hyp(ps, NULL );
+            if (hyp != NULL) {
+                printf("%s\n", hyp);
+                fflush(stdout);
+            }*/
+
+            if (ps_start_utt(ps) < 0)
+                E_FATAL("Failed to start utterance\n");
+            utt_started = FALSE;
+            E_INFO("Ready....\n");
+        }
+        sleep_msec(10);
+    //}
+    //ad_close(ad);
+}
+
+VRSphinxDevice::VRSphinxDevice() {
+	deviceThread = new std::thread(&VRSphinxDevice::run, this);
 }
 
 VRSphinxDevice::~VRSphinxDevice() {
-	// TODO Auto-generated destructor stub
+	// Join the thread if needed
+	if (deviceThread) {
+		deviceThread->join();
+	}
+
+	// Delete thread
+	delete deviceThread;
 }
 
 void VRSphinxDevice::appendNewInputEventsSinceLastCall(
 		VRDataQueue* inputEvents) {
-	recognize_from_microphone();
+	std::unique_lock<std::mutex> lock(deviceMutex);
+    for (int f = 0; f < events.size(); f++)
+    {
+    	std::cout << events[f] << std::endl;
+    	//inputEvents->push(events[f]);
+    }
+
+    events.clear();
+    lock.unlock();
+}
+
+void VRSphinxDevice::run() {
+	while (true) {
+		recognize_from_microphone();
+	}
 }
 
 VRInputDevice* VRSphinxDevice::create(VRMainInterface* vrMain,
@@ -310,15 +358,20 @@ VRInputDevice* VRSphinxDevice::create(VRMainInterface* vrMain,
 
     char const *cfg;
 
-    int argc = 3;
+    int argc = 5;
 
 
     char** argv =  (char**)malloc(argc * sizeof(char *));
     argv[0] = new char[0];
     argv[1] = new char[6];
     argv[2] = new char[3];
+    argv[3] = new char[9];
+    argv[4] = new char[2];
     std::strcpy(argv[1], "-inmic");
     std::strcpy(argv[2], "yes");
+    std::strcpy(argv[3], "-bestpath");
+    std::strcpy(argv[4], "no");
+
 
     config = cmd_ln_parse_r(NULL, cont_args_def, argc, argv, TRUE);
 
