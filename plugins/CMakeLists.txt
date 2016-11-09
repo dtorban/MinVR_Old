@@ -54,6 +54,12 @@ if (MINVR_THREADING_PLUGIN OR BASE_PLUGINS)
 	add_subdirectory (Threading)
 endif()
 
+#------------------Sphinx-----------------------------
+option(MINVR_SPHINX_PLUGIN "If enabled, Threading plugin will be installed" OFF)
+if (MINVR_SPHINX_PLUGIN)
+	add_subdirectory (Sphinx)
+endif()
+
 #------------------TUIO-----------------------------
 option(MINVR_TUIO_PLUGIN "If enabled, TUIO plugin will be installed" OFF)
 if (MINVR_TUIO_PLUGIN)
