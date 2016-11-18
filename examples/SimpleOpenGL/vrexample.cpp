@@ -9,7 +9,6 @@
 #include <math/VRMath.h>
 #include <main/impl/VRDefaultAppLauncher.h>
 
-
 #if defined(WIN32)
 #define NOMINMAX
 #include <windows.h>
@@ -27,7 +26,7 @@
 using namespace MinVR;
 
 
-class MyVRApp : public VREventHandler, public VRRenderHandler {
+class MyVRApp : public VREventHandler, public VRGraphicsRenderHandler {
 public:
   MyVRApp(int argc, char** argv) : _vrMain(NULL), _quit(false) {
 		_vrMain = new VRMain();
@@ -89,16 +88,21 @@ public:
 	}
 
   
-    virtual void onVRRenderContext(VRDataIndex *renderState, VRDisplayNode *callingNode) {
-        if (!renderState->exists("IsConsole", "/")) {
+    virtual void onVRRenderContext(VRGraphicsRenderState& renderState, VRDisplayNode *callingNode) {
+        if (!renderState.isConsole()) {
         }
     }
 
 	int count;
   
 	// Callback for rendering, inherited from VRRenderHandler
-	virtual void onVRRenderScene(VRDataIndex *renderState, VRDisplayNode *callingNode) {
-		if (renderState->exists("IsConsole", "/")) {
+	virtual void onVRRenderScene(VRGraphicsRenderState& renderState, VRDisplayNode *callingNode) {
+
+		if (renderState.firstRenderCall()) {
+			std::cout << "First render call." << std::endl;
+		}
+
+		if (renderState.isConsole()) {
 			VRConsoleNode *console = dynamic_cast<VRConsoleNode*>(callingNode);
 			console->println("Console output...");
 		}
@@ -113,14 +117,14 @@ public:
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 			//glClear(GL_DEPTH_BUFFER_BIT);
 
-            if (renderState->exists("ProjectionMatrix", "/")) {
+            if (renderState.getDataIndex().exists("ProjectionMatrix", "/")) {
                 // This is the typical case where the MinVR DisplayGraph contains
                 // an OffAxisProjectionNode or similar node, which sets the
                 // ProjectionMatrix and ViewMatrix based on head tracking data.
             
                 glMatrixMode(GL_PROJECTION);
                 glLoadIdentity();
-			    VRMatrix4 P = renderState->getValue("ProjectionMatrix", "/");
+			    VRMatrix4 P = renderState.getProjectionMatrix();
 			    glLoadMatrixd(P.m);
               
 			    glMatrixMode(GL_MODELVIEW);
@@ -137,7 +141,7 @@ public:
                               VRMatrix4::rotationX(_vertAngle) *
                               VRMatrix4::rotationY(_horizAngle);
               
-			    VRMatrix4 V = renderState->getValue("ViewMatrix", "/");
+			    VRMatrix4 V = renderState.getViewMatrix();
 			    glLoadMatrixd((V*M).m);
             }
             else {

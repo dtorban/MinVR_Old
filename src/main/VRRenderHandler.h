@@ -2,7 +2,7 @@
 #define VRRENDERHANDLER_H
 
 #include <config/VRDataIndex.h>
-
+#include <display/VRGraphicsRenderState.h>
 
 namespace MinVR {
 
@@ -46,6 +46,28 @@ public:
   /// textures or mesh data into graphics card memory.
   virtual void onVRRenderContext(VRDataIndex *renderState, VRDisplayNode *callingNode) {};
 };
+
+template<typename T>
+class VRInterpretedRenderHandler : public VRRenderHandler {
+public:
+	virtual ~VRInterpretedRenderHandler() {}
+
+	void onVRRenderScene(VRDataIndex *renderState, VRDisplayNode *callingNode) {
+		T state = T(*renderState);
+		onVRRenderScene(state, callingNode);
+	}
+
+	virtual void onVRRenderScene(T& renderState, VRDisplayNode *callingNode) = 0;
+
+	void onVRRenderContext(VRDataIndex *renderState, VRDisplayNode *callingNode) {
+		T state = T(*renderState);
+		onVRRenderScene(state, callingNode);
+	}
+
+	virtual void onVRRenderContext(T& renderState, VRDisplayNode *callingNode) = 0;
+};
+
+typedef VRInterpretedRenderHandler<VRGraphicsRenderState> VRGraphicsRenderHandler;
 
 } // end namespace
 
