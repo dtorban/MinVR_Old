@@ -69,6 +69,10 @@ VROffAxisProjectionNode::render(VRDataIndex *renderState, VRRenderHandler *rende
 
 	renderState->addData("ViewMatrix", viewMat);
 
+	VRMatrix4 normalMatrix = viewMat.inverse().transpose();
+
+	renderState->addData("NormalMatrix", normalMatrix);
+
 	VRDisplayNode::render(renderState, renderHandler);
 
 	renderState->popState();
