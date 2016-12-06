@@ -66,12 +66,12 @@ VROffAxisProjectionNode::render(VRDataIndex *renderState, VRRenderHandler *rende
 	VRMatrix4 Mtrans = VRMatrix4::translation(VRPoint3(0, 0, 0) - pe);
 
 	VRMatrix4 viewMat = Mrot * Mtrans;
-
 	renderState->addData("ViewMatrix", viewMat);
 
 	VRMatrix4 normalMatrix = viewMat.inverse().transpose();
-
 	renderState->addData("NormalMatrix", normalMatrix);
+
+	renderState->addData("EyePosition", pe);
 
 	VRDisplayNode::render(renderState, renderHandler);
 
