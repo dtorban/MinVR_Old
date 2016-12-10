@@ -1,0 +1,3 @@
+add_subdirectory(SimpleOpenGL)
+add_subdirectory(ShaderExample)
+add_subdirectory(ConfigExample)
