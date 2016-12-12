@@ -51,13 +51,13 @@ public:
 
 		// Quit if the escape button is pressed
 		if (eventName == "/KbdEsc_Down") {
-			running = false;
+			shutdown();
 		}
 	}
 
 	/// onVRRenderContext is the override which allows users to setup context specific
 	/// variables like VBO's, VAO's, textures, framebuffers, and shader programs.
-	void onVRRenderContext(VRGraphicsState& renderState) {
+	void onVRRenderGraphicsContext(VRGraphicsState& renderState) {
 		// If this is the inital call, initialize context variables
 		if (renderState.isInitialRenderCall()) {
 			// Init GL
@@ -180,7 +180,7 @@ public:
 		}
 
 		// Destroy context items if the program is no longer running
-		if (!running) {
+		if (!isRunning()) {
 			glDeleteBuffers(1, &vbo);
 			glDeleteVertexArrays(1, &vao);
 			glDetachShader(shaderProgram, vshader);
@@ -193,9 +193,9 @@ public:
 	}
 
 	/// onVRRenderScene will run draw calls on each viewport inside a context.
-	void onVRRenderScene(VRGraphicsState& renderState) {
+	void onVRRenderGraphics(VRGraphicsState& renderState) {
 		// Only draw if the application is still running.
-		if (running) {
+		if (isRunning()) {
 			// clear screen
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 

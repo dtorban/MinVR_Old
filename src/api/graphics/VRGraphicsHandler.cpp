@@ -14,14 +14,14 @@ void VRGraphicsHandler::onVRRenderScene(VRDataIndex* renderState,
 		VRDisplayNode* callingNode) {
 	// Wraps VRDataIndex inside VRGraphicsState
 	VRGraphicsState state(*renderState);
-	onVRRenderScene(state);
+	onVRRenderGraphics(state);
 }
 
 void VRGraphicsHandler::onVRRenderContext(VRDataIndex* renderState,
 		VRDisplayNode* callingNode) {
 	// Wraps VRDataIndex inside VRGraphicsState
 	VRGraphicsState state(*renderState);
-	onVRRenderContext(state);
+	onVRRenderGraphicsContext(state);
 }
 
 } /* namespace MinVR */

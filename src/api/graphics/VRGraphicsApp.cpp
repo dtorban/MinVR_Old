@@ -31,4 +31,16 @@ void VRGraphicsApp::run()  {
 	}
 }
 
+void VRGraphicsApp::shutdown() {
+	running = false;
+}
+
+bool VRGraphicsApp::isRunning() const {
+	return running;
+}
+
+int VRGraphicsApp::getFrame() const {
+	return frame;
+}
+
 }
