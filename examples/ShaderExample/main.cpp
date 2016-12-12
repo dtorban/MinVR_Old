@@ -1,10 +1,7 @@
 #include <iostream>
 
-// MinVR header
-#include <graphics/VRGraphicsApp.h>
-
-// Math library
-#include "math/VRMath.h"
+// MinVR header (needed for VRGraphicsApp)
+#include <api/MinVR.h>
 
 // OpenGL Headers
 #if defined(WIN32)
@@ -19,6 +16,9 @@
 #define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h>
 #endif
+
+// Math library
+#include "math/VRMath.h"
 
 using namespace MinVR;
 
