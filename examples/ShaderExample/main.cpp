@@ -11,8 +11,11 @@
 #define NOMINMAX
 #include <windows.h>
 #include <GL/gl.h>
+#include <gl/GLU.h>
 #elif defined(__APPLE__)
-#include <OpenGL/OpenGL.h>
+#define GL_GLEXT_PROTOTYPES
+#include <OpenGL/gl3.h>
+#include <OpenGL/glext.h>
 #else
 #define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h>
@@ -25,7 +28,7 @@ using namespace MinVR;
  * from VRGraphicsApp, which allows you to override onVREvent to get input events, onRenderContext
  * to setup context sepecific objects, and onRenderScene that renders to each viewport.
  */
-class MyVRApp : public VRGraphicsApp {
+class MyVRApp : public VRGraphicsApp { 
 public:
 	/// The application expects the user to specify the command line arguments and a path to the vr config file.
 	MyVRApp(int argc, char** argv, const std::string& configFile) : VRGraphicsApp(argc, argv, configFile) {}
@@ -123,16 +126,16 @@ public:
 
 			// Allocate space and send Vertex Data
 			glGenBuffers(1, &vbo);
-			glBindBuffer(GL_ARRAY_BUFFER_ARB, vbo);
-			glBufferDataARB(GL_ARRAY_BUFFER_ARB, sizeof(vertices)+sizeof(normals)+sizeof(colors), 0, GL_STATIC_DRAW);
-			glBufferSubDataARB(GL_ARRAY_BUFFER_ARB, 0, sizeof(vertices), vertices);
-			glBufferSubDataARB(GL_ARRAY_BUFFER_ARB, sizeof(vertices), sizeof(normals), normals);
-			glBufferSubDataARB(GL_ARRAY_BUFFER_ARB, sizeof(vertices)+sizeof(normals), sizeof(colors), colors);
+			glBindBuffer(GL_ARRAY_BUFFER, vbo);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(vertices)+sizeof(normals)+sizeof(colors), 0, GL_STATIC_DRAW);
+			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
+			glBufferSubData(GL_ARRAY_BUFFER, sizeof(vertices), sizeof(normals), normals);
+			glBufferSubData(GL_ARRAY_BUFFER, sizeof(vertices)+sizeof(normals), sizeof(colors), colors);
 
 			// Create vao
 			glGenVertexArrays(1, &vao);
 			glBindVertexArray(vao);
-			glBindBuffer(GL_ARRAY_BUFFER_ARB, vbo);
+			glBindBuffer(GL_ARRAY_BUFFER, vbo);
 			glEnableVertexAttribArray(0);
 			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(GLfloat), (char*)0);
 			glEnableVertexAttribArray(1);
