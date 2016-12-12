@@ -16,7 +16,7 @@ namespace MinVR {
 
 class VRGraphicsApp : public VREventHandler, public VRGraphicsHandler {
 public:
-	VRGraphicsApp(int argc, char** argv);
+	VRGraphicsApp(int argc, char** argv, const std::string& configFile);
 	virtual ~VRGraphicsApp();
 
 	virtual void onVREvent(const std::string &eventName, VRDataIndex *eventData) {}

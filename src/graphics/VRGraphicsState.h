@@ -66,7 +66,7 @@ public:
 //		to the current camera position.  The pointer is valid as long as the
 //		GraphicsState object exists.
 //	*/
-//	const double const * getCameraPos() const;
+	const float* getCameraPos();
 //
 //
 //	const double const * getLookVec() const;
@@ -98,6 +98,7 @@ private:
 	VRDataIndex* internalState;
 	float* projectionMatrix;
 	float* viewMatrix;
+	float* cameraPos;
 };
 
 

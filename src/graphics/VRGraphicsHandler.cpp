@@ -10,23 +10,16 @@
 
 namespace MinVR {
 
-VRGraphicsHandler::VRGraphicsHandler() {
-	// TODO Auto-generated constructor stub
-
-}
-
-VRGraphicsHandler::~VRGraphicsHandler() {
-	// TODO Auto-generated destructor stub
-}
-
 void VRGraphicsHandler::onVRRenderScene(VRDataIndex* renderState,
 		VRDisplayNode* callingNode) {
+	// Wraps VRDataIndex inside VRGraphicsState
 	VRGraphicsState state(*renderState);
 	onVRRenderScene(state);
 }
 
 void VRGraphicsHandler::onVRRenderContext(VRDataIndex* renderState,
 		VRDisplayNode* callingNode) {
+	// Wraps VRDataIndex inside VRGraphicsState
 	VRGraphicsState state(*renderState);
 	onVRRenderContext(state);
 }

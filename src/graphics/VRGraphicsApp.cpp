@@ -10,10 +10,9 @@
 
 namespace MinVR {
 
-VRGraphicsApp::VRGraphicsApp(int argc, char** argv) : vrMain(NULL), running(true), frame(0) {
+VRGraphicsApp::VRGraphicsApp(int argc, char** argv, const std::string& configFile) : vrMain(NULL), running(true), frame(0) {
 	vrMain = new VRMain();
 
-	std::string configFile = argv[1];
 	vrMain->initialize(argc, argv, configFile);
 
 	vrMain->addEventHandler(this);

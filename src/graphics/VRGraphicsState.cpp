@@ -11,12 +11,14 @@
 
 namespace MinVR {
 
-VRGraphicsState::VRGraphicsState(VRDataIndex& internalState) : internalState(&internalState), projectionMatrix(NULL), viewMatrix(NULL) {
+VRGraphicsState::VRGraphicsState(VRDataIndex& internalState)
+	: internalState(&internalState), projectionMatrix(NULL), viewMatrix(NULL), cameraPos(NULL) {
 }
 
 VRGraphicsState::~VRGraphicsState() {
 	if (projectionMatrix) { delete[] projectionMatrix; }
 	if (viewMatrix) { delete[] viewMatrix; }
+	if (cameraPos) { delete[] cameraPos; }
 }
 
 float* VRGraphicsState::getMatrix(VRDataIndex* state, const std::string& name) const {
@@ -48,6 +50,22 @@ const float * VRGraphicsState::getViewMatrix() {
 	}
 
 	return viewMatrix;
+}
+
+const float* VRGraphicsState::getCameraPos() {
+	if (!cameraPos) {
+		VRPoint3 pe;
+		if (internalState->exists("EyePosition","/")) {
+			pe = internalState->getValue("EyePosition","/");
+		}
+
+		cameraPos = new float[3];
+		cameraPos[0] = pe.x;
+		cameraPos[1] = pe.y;
+		cameraPos[2] = pe.z;
+	}
+
+	return cameraPos;
 }
 
 bool VRGraphicsState::isInitialRenderCall() {

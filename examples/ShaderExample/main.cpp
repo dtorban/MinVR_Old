@@ -1,8 +1,12 @@
 #include <iostream>
 
+// MinVR header
 #include <graphics/VRGraphicsApp.h>
+
+// Math library
 #include "math/VRMath.h"
 
+// OpenGL Headers
 #if defined(WIN32)
 #define NOMINMAX
 #include <windows.h>
@@ -16,36 +20,43 @@
 
 using namespace MinVR;
 
+/**
+ * MyVRApp is an example of a modern OpenGL using VBOs, VAOs, and shaders.  MyVRApp inherits
+ * from VRGraphicsApp, which allows you to override onVREvent to get input events, onRenderContext
+ * to setup context sepecific objects, and onRenderScene that renders to each viewport.
+ */
 class MyVRApp : public VRGraphicsApp {
 public:
-	MyVRApp(int argc, char** argv) : VRGraphicsApp(argc, argv) {}
-	virtual ~MyVRApp() {
-	}
+	/// The application expects the user to specify the command line arguments and a path to the vr config file.
+	MyVRApp(int argc, char** argv, const std::string& configFile) : VRGraphicsApp(argc, argv, configFile) {}
 
+	/// onVREvent is called when a new intput event happens.
 	void onVREvent(const std::string &eventName, VRDataIndex *eventData) {
+		// Set time since application began
 		if (eventName == "/Time") {
-			time = eventData->getValue(eventName);
+			double time = eventData->getValue(eventName);
+			// Calculate model matrix based on time
+			VRMatrix4 modelMatrix = VRMatrix4::rotationX(0.5*time);
+			modelMatrix = modelMatrix * VRMatrix4::rotationY(0.5*time);
+			for (int f = 0; f < 16; f++) {
+				model[f] = modelMatrix.m[f];
+			}
 			return;
 		}
 
+		// Output event name
 		std::cout << eventName << std::endl;
+
+		// Quit if the escape button is pressed
 		if (eventName == "/KbdEsc_Down") {
 			running = false;
 		}
 	}
 
+	/// onVRRenderContext is the override which allows users to setup context specific
+	/// variables like VBO's, VAO's, textures, framebuffers, and shader programs.
 	void onVRRenderContext(VRGraphicsState& renderState) {
-		if (!running) {
-			glDeleteBuffers(1, &vbo);
-			glDeleteVertexArrays(1, &vao);
-			glDetachShader(shaderProgram, vshader);
-			glDetachShader(shaderProgram, fshader);
-			glDeleteShader(vshader);
-			glDeleteShader(fshader);
-			glDeleteProgram(shaderProgram);
-			return;
-		}
-
+		// If this is the inital call, initialize context variables
 		if (renderState.isInitialRenderCall()) {
 			// Init GL
 			glEnable(GL_DEPTH_TEST);
@@ -110,6 +121,7 @@ public:
 					0, 0, 1,   0, 0, 0,   0, 1, 0,      // v4-v7-v6 (back)
 					0, 1, 0,   0, 1, 1,   0, 0, 1 };    // v6-v5-v4
 
+			// Allocate space and send Vertex Data
 			glGenBuffers(1, &vbo);
 			glBindBuffer(GL_ARRAY_BUFFER_ARB, vbo);
 			glBufferDataARB(GL_ARRAY_BUFFER_ARB, sizeof(vertices)+sizeof(normals)+sizeof(colors), 0, GL_STATIC_DRAW);
@@ -158,41 +170,53 @@ public:
 					"}";
 			fshader = compileShader(fragmentShader, GL_FRAGMENT_SHADER);
 
+			// Create shader program
 			shaderProgram = glCreateProgram();
 			glAttachShader(shaderProgram, vshader);
 			glAttachShader(shaderProgram, fshader);
 			linkShaderProgram(shaderProgram);
 		}
+
+		// Destroy context items if the program is no longer running
+		if (!running) {
+			glDeleteBuffers(1, &vbo);
+			glDeleteVertexArrays(1, &vao);
+			glDetachShader(shaderProgram, vshader);
+			glDetachShader(shaderProgram, fshader);
+			glDeleteShader(vshader);
+			glDeleteShader(fshader);
+			glDeleteProgram(shaderProgram);
+			return;
+		}
 	}
 
+	/// onVRRenderScene will run draw calls on each viewport inside a context.
 	void onVRRenderScene(VRGraphicsState& renderState) {
+		// Only draw if the application is still running.
 		if (running) {
+			// clear screen
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
+			// Set shader parameters
 			glUseProgram(shaderProgram);
 			GLint loc = glGetUniformLocation(shaderProgram, "ProjectionMatrix");
 			glUniformMatrix4fv(loc, 1, GL_FALSE, renderState.getProjectionMatrix());
 			loc = glGetUniformLocation(shaderProgram, "ViewMatrix");
 			glUniformMatrix4fv(loc, 1, GL_FALSE, renderState.getViewMatrix());
-
-			float model[16];
-			VRMatrix4 modelMatrix = VRMatrix4::rotationX(0.5*time);
-			modelMatrix = modelMatrix * VRMatrix4::rotationY(0.5*time);
-			for (int f = 0; f < 16; f++) {
-				model[f] = modelMatrix.m[f];
-			}
-
 			loc = glGetUniformLocation(shaderProgram, "ModelMatrix");
 			glUniformMatrix4fv(loc, 1, GL_FALSE, model);
 
+			// Draw cube
 			glBindVertexArray(vao);
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 			glBindVertexArray(0);
 
+			// reset program
 			glUseProgram(0);
 		}
 	}
 
+	/// Compiles shader
 	GLuint compileShader(const std::string& shaderText, GLuint shaderType) {
 		const char* source = shaderText.c_str();
 		int length = shaderText.size();
@@ -212,6 +236,7 @@ public:
 		return shader;
 	}
 
+	/// links shader program
 	void linkShaderProgram(GLuint shaderProgram) {
 		glLinkProgram(shaderProgram);
 		GLint status;
@@ -227,11 +252,12 @@ public:
 
 private:
 	GLuint vbo, vao, vshader, fshader, shaderProgram;
-	double time;
+	float model[16];
 };
 
+/// Main method which creates and calls application
 int main(int argc, char **argv) {
-	MyVRApp app(argc, argv);
+	MyVRApp app(argc, argv, argv[1]);
 	app.run();
 	return 0;
 }

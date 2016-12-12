@@ -14,16 +14,29 @@
 
 namespace MinVR {
 
+/**
+ * VRGraphicsHandler wraps a VRGraphicsState around a VRDataIndex so that users can
+ * use the VRGraphisState functions to retrieve graphics specific variables rather
+ * than generic structures.
+ */
 class VRGraphicsHandler : public VRRenderHandler {
 public:
-	VRGraphicsHandler();
-	virtual ~VRGraphicsHandler();
+	virtual ~VRGraphicsHandler() {}
 
-	void onVRRenderScene(VRDataIndex *renderState, VRDisplayNode *callingNode);
-	void onVRRenderContext(VRDataIndex *renderState, VRDisplayNode *callingNode);
+	/**
+	 * onVRRenderScene handles drawing graphics for each viewport.
+	 */
 	virtual void onVRRenderScene(VRGraphicsState& renderState) = 0;
+
+	/**
+	 * onVRRenderContext handles graphics specific implementations for each window.
+	 */
 	virtual void onVRRenderContext(VRGraphicsState& renderState) {}
 
+	/// onVRRenderScene(VRDataIndex) calls onVRRenderScene(VRGraphicsState)
+	void onVRRenderScene(VRDataIndex *renderState, VRDisplayNode *callingNode);
+	/// onVRRenderContext(VRDataIndex) calls onVRRenderContext(VRGraphicsState)
+	void onVRRenderContext(VRDataIndex *renderState, VRDisplayNode *callingNode);
 };
 
 } /* namespace MinVR */
