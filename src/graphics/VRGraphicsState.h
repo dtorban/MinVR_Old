@@ -18,7 +18,6 @@ Author(s) of Significant Updates/Modifications to the File:
 #define VRGRAPHICSSTATE_H_
 
 #include "config/VRDataIndex.h"
-#include "math/VRMath.h"
 
 namespace MinVR {
 
@@ -35,6 +34,7 @@ namespace MinVR {
 class VRGraphicsState {
 public:
 	VRGraphicsState(VRDataIndex& internalState);
+	~VRGraphicsState();
 //
 //	/** Returns a pointer to a 16 element array that stores the current projection
 //	    matrix, calculated by MinVR taking into account the current display geometry
@@ -44,7 +44,7 @@ public:
 //	    returned following the same convention as OpenGL -- this is the same as
 //	    glOrtho(-1, 1, -1, 1, 1, -1).
 //	*/
-	const double * getProjectionMatrix() const;
+	const float * getProjectionMatrix();
 //
 //
 //	/** Returns a pointer to a 16 element array that stores the current view
@@ -53,7 +53,7 @@ public:
 //	    object is valid.  If the MinVR DisplayGraph does not contain a node that
 //	    sets the view matrix then the identify matrix is returned.
 //	*/
-	const double * getViewMatrix() const;
+	const float * getViewMatrix();
 //
 //
 //	/** Returns a pointer to a 3 element array that stores the current camera
@@ -90,13 +90,14 @@ public:
 //	enum EyeType {Left, Right, Center};
 //	EyeType currentEye() const;
 //
-	bool isInitialRenderCall() const;
+	bool isInitialRenderCall();
 
 private:
+	float* getMatrix(VRDataIndex* state, const std::string& name) const;
+
 	VRDataIndex* internalState;
-	VRMatrix4 projectionMatrix;
-	VRMatrix4 viewMatrix;
-	bool initRender;
+	float* projectionMatrix;
+	float* viewMatrix;
 };
 
 

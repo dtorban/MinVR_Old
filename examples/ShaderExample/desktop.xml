@@ -22,7 +22,7 @@
 	  <StereoFormat>Mono</StereoFormat>
 
  <LookAtUp type="doublearray">0,1,0</LookAtUp>
- <LookAtEye type="doublearray">0,0,2</LookAtEye>
+ <LookAtEye type="doublearray">0,0,8</LookAtEye>
  <LookAtCenter type="doublearray">0,0,0</LookAtCenter>
  
   <HeadTrackingEvent>Head_Move</HeadTrackingEvent>
