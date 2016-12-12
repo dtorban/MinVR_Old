@@ -12,7 +12,9 @@
 #include <windows.h>
 #include <GL/gl.h>
 #elif defined(__APPLE__)
-#include <OpenGL/OpenGL.h>
+#define GL_GLEXT_PROTOTYPES
+#include <OpenGL/gl3.h>
+#include <OpenGL/glext.h>
 #else
 #define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h>
