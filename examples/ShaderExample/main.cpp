@@ -23,6 +23,11 @@ public:
 	}
 
 	void onVREvent(const std::string &eventName, VRDataIndex *eventData) {
+		if (eventName == "/Time") {
+			time = eventData->getValue(eventName);
+			return;
+		}
+
 		std::cout << eventName << std::endl;
 		if (eventName == "/KbdEsc_Down") {
 			running = false;
@@ -171,8 +176,8 @@ public:
 			glUniformMatrix4fv(loc, 1, GL_FALSE, renderState.getViewMatrix());
 
 			float model[16];
-			VRMatrix4 modelMatrix = VRMatrix4::rotationX(0.01*frame);
-			modelMatrix = modelMatrix * VRMatrix4::rotationY(0.01*frame);
+			VRMatrix4 modelMatrix = VRMatrix4::rotationX(0.5*time);
+			modelMatrix = modelMatrix * VRMatrix4::rotationY(0.5*time);
 			for (int f = 0; f < 16; f++) {
 				model[f] = modelMatrix.m[f];
 			}
@@ -222,6 +227,7 @@ public:
 
 private:
 	GLuint vbo, vao, vshader, fshader, shaderProgram;
+	double time;
 };
 
 int main(int argc, char **argv) {

@@ -22,6 +22,7 @@ public:
 	virtual void onVREvent(const std::string &eventName, VRDataIndex *eventData) {}
 	virtual void onVRRenderScene(VRGraphicsState& renderState) {}
 	virtual void onVRRenderContext(VRGraphicsState& renderState) {}
+
 	void run();
 
 protected:
