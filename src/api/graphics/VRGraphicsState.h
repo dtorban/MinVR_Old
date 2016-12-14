@@ -33,7 +33,7 @@ namespace MinVR {
 */
 class VRGraphicsState {
 public:
-	VRGraphicsState(VRDataIndex& internalState);
+	VRGraphicsState(VRDataIndex& state);
 	~VRGraphicsState();
 //
 //	/** Returns a pointer to a 16 element array that stores the current projection
@@ -44,7 +44,7 @@ public:
 //	    returned following the same convention as OpenGL -- this is the same as
 //	    glOrtho(-1, 1, -1, 1, 1, -1).
 //	*/
-	const float * getProjectionMatrix();
+	const float * getProjectionMatrix() const;
 //
 //
 //	/** Returns a pointer to a 16 element array that stores the current view
@@ -53,7 +53,7 @@ public:
 //	    object is valid.  If the MinVR DisplayGraph does not contain a node that
 //	    sets the view matrix then the identify matrix is returned.
 //	*/
-	const float * getViewMatrix();
+	const float * getViewMatrix() const;
 //
 //
 //	/** Returns a pointer to a 3 element array that stores the current camera
@@ -66,7 +66,7 @@ public:
 //		to the current camera position.  The pointer is valid as long as the
 //		GraphicsState object exists.
 //	*/
-	const float* getCameraPos();
+	const float* getCameraPos() const;
 //
 //
 //	const double const * getLookVec() const;
@@ -90,15 +90,13 @@ public:
 //	enum EyeType {Left, Right, Center};
 //	EyeType currentEye() const;
 //
-	bool isInitialRenderCall();
+	bool isInitialRenderCall() const;
 
 private:
-	float* getMatrix(VRDataIndex* state, const std::string& name) const;
 
-	VRDataIndex* internalState;
-	float* projectionMatrix;
-	float* viewMatrix;
-	float* cameraPos;
+	// opaque ref to internal implementation state
+	class VRGraphicsStateInternal;
+	VRGraphicsStateInternal &_;
 };
 
 
