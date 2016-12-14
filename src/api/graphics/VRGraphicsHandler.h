@@ -55,12 +55,8 @@ public:
 	/**  onVRRenderScene calls onVRRenderGraphics by transforming the VRDataIndex into
 		 a VRGraphicsState object
 	 */
-	void onVRRenderScene(VRDataIndex *renderState, VRDisplayNode *callingNode);
+	void onVRRender(VRDataIndex *renderState, VRDisplayNode *callingNode);
 
-	/**  onVRRenderScene calls onVRRenderGraphicsContext by transforming the VRDataIndex into
-		 a VRGraphicsState object
-	 */
-	void onVRRenderContext(VRDataIndex *renderState, VRDisplayNode *callingNode);
 };
 
 } /* namespace MinVR */

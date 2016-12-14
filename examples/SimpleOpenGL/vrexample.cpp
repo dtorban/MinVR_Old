@@ -88,16 +88,14 @@ public:
         if (_vertAngle < 0.0) _vertAngle += 6.283185;
 	}
 
-  
-    virtual void onVRRenderContext(VRDataIndex *renderState, VRDisplayNode *callingNode) {
-        if (!renderState->exists("IsConsole", "/")) {
-        }
-    }
-
 	int count;
   
 	// Callback for rendering, inherited from VRRenderHandler
-	virtual void onVRRenderScene(VRDataIndex *renderState, VRDisplayNode *callingNode) {
+	virtual void onVRRender(VRDataIndex *renderState, VRDisplayNode *callingNode) {
+		if ("Context" == (std::string)renderState->getValue("Render")) {
+			return;
+		}
+
 		if (renderState->exists("IsConsole", "/")) {
 			VRConsoleNode *console = dynamic_cast<VRConsoleNode*>(callingNode);
 			console->println("Console output...");

@@ -10,18 +10,19 @@
 
 namespace MinVR {
 
-void VRGraphicsHandler::onVRRenderScene(VRDataIndex* renderState,
+void VRGraphicsHandler::onVRRender(VRDataIndex* renderState,
 		VRDisplayNode* callingNode) {
 	// Wraps VRDataIndex inside VRGraphicsState
-	VRGraphicsState state(*renderState);
-	onVRRenderGraphics(state);
-}
-
-void VRGraphicsHandler::onVRRenderContext(VRDataIndex* renderState,
-		VRDisplayNode* callingNode) {
-	// Wraps VRDataIndex inside VRGraphicsState
-	VRGraphicsState state(*renderState);
-	onVRRenderGraphicsContext(state);
+	if (renderState->exists("HasGraphicsContext", "/") && 1 == (int)renderState->getValue("HasGraphicsContext", "/")) {
+		VRGraphicsState state(*renderState);
+		std::string renderType = renderState->getValue("Render", "/");
+		if (renderType == "Context") {
+			onVRRenderGraphicsContext(state);
+		}
+		else {
+			onVRRenderGraphics(state);
+		}
+	}
 }
 
 } /* namespace MinVR */
