@@ -6,7 +6,7 @@
  * 		Dan Orban (dtorban)
  */
 
-#include "VRGraphicsState.h"
+#include "api/VRGraphicsState.h"
 #include "math/VRMath.h"
 
 namespace MinVR {

@@ -10,8 +10,8 @@
 #define VRAPP_H_
 
 #include <string>
-#include <main/VREventHandler.h>
-#include <main/VRRenderHandler.h>
+#include <api/VREventHandler.h>
+#include <api/VRRenderHandler.h>
 
 namespace MinVR {
 

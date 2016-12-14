@@ -35,11 +35,23 @@ public:
   virtual void onVRRender(VRDataIndex *renderState, VRDisplayNode *callingNode) = 0;
 };
 
+/**
+ * VRRenderHandlerImpl allows subclasses to specify an implementation of the
+ * render handler.  This mostly helps in allowing developers to specify their
+ * own implementation of onVRRender(...) in cpp files rather than in the header
+ * files.
+ */
 class VRRenderHandlerImpl : public VRRenderHandler {
 public:
+	/**
+	 * Pass in a pointer to a render handler proxy object.  The VRRenderHandlerImpl will
+	 * delete the implementation object for simplicity.
+	 */
 	VRRenderHandlerImpl(VRRenderHandler* handler) : handler(handler) {}
 	virtual ~VRRenderHandlerImpl() { delete handler; }
 
+	/** Calls internal implementation of the render handler.
+	 */
 	void onVRRender(VRDataIndex *renderState, VRDisplayNode *callingNode) {
 		handler->onVRRender(renderState, callingNode);
 	}

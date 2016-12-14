@@ -4,8 +4,8 @@
 
 #include <display/VRConsoleNode.h>
 #include <main/VRMain.h>
-#include <main/VREventHandler.h>
-#include <main/VRRenderHandler.h>
+#include <api/VREventHandler.h>
+#include <api/VRRenderHandler.h>
 #include <math/VRMath.h>
 #include <main/impl/VRDefaultAppLauncher.h>
 

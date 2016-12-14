@@ -6,7 +6,7 @@
  * 		Dan Orban (dtorban)
  */
 
-#include "VRGraphicsHandler.h"
+#include "api/VRGraphicsHandler.h"
 
 namespace MinVR {
 

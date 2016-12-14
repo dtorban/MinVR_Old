@@ -6,7 +6,7 @@
  * 		Dan Orban (dtorban)
  */
 
-#include <api/graphics/VRApp.h>
+#include <api/VRApp.h>
 #include <main/VRMain.h>
 #include <iostream>
 
