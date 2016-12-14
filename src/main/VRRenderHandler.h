@@ -15,6 +15,7 @@ class VRDisplayNode;
 */
 class VRRenderHandler {
 public:
+	virtual ~VRRenderHandler() {}
   /// This function must be implemented in subclasses.  onVRRender(..) is
   /// called from within VRMain::renderDisplayGraph() once for each time a
   /// display node requires the scene to be drawn.  For example, a stereo
@@ -32,6 +33,20 @@ public:
   /// projection matrix to apply in your shaders in order to support head
   /// tracked stereo rendering).
   virtual void onVRRender(VRDataIndex *renderState, VRDisplayNode *callingNode) = 0;
+};
+
+class VRRenderHandlerImpl : public VRRenderHandler {
+public:
+	VRRenderHandlerImpl(VRRenderHandler* handler) : handler(handler) {}
+	virtual ~VRRenderHandlerImpl() { delete handler; }
+
+	void onVRRender(VRDataIndex *renderState, VRDisplayNode *callingNode) {
+		handler->onVRRender(renderState, callingNode);
+	}
+
+private:
+	VRRenderHandler* handler;
+
 };
 
 } // end namespace
