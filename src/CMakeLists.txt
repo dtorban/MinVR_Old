@@ -123,12 +123,13 @@ set(vr_main_cpp
 )
 
 set(vr_api_cpp
-  ${vr_src_dir}/api/graphics/VRGraphicsApp.cpp
+  ${vr_src_dir}/api/graphics/VRApp.cpp
   ${vr_src_dir}/api/graphics/VRGraphicsHandler.cpp
   ${vr_src_dir}/api/graphics/VRGraphicsState.cpp
 )
 
 set(vr_api_h
+  ${vr_src_dir}/api/graphics/VRApp.h
   ${vr_src_dir}/api/graphics/VRGraphicsApp.h
   ${vr_src_dir}/api/graphics/VRGraphicsHandler.h
   ${vr_src_dir}/api/graphics/VRGraphicsState.h
