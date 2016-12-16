@@ -26,6 +26,7 @@ VRApp::VRApp(int argc, char** argv, const std::string& configFile) : _(*(new VRA
 	_.vrMain->initialize(argc, argv, configFile);
 
 	_.vrMain->addEventHandler(this);
+	_.vrMain->addRenderHandler(this);
 }
 
 VRApp::~VRApp()  {

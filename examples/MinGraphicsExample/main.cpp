@@ -21,9 +21,9 @@
 using namespace MinVR;
 
 /** MyVRApp changes the clear color as frames progress. */
-class MyVRApp : public VRGraphicsApp {
+class MyVRApp : public VRApp {
 public:
-	MyVRApp(int argc, char** argv, const std::string& configFile) : VRGraphicsApp(argc, argv, configFile) {}
+	MyVRApp(int argc, char** argv, const std::string& configFile) : VRApp(argc, argv, configFile) {}
 
 	void onVREvent(const std::string &eventName, VRDataIndex *eventData) {
 		// Set time since application began

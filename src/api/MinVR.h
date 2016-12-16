@@ -10,6 +10,5 @@
 #define MINVR_H_
 
 #include <api/VRApp.h>
-#include <api/VRGraphicsApp.h>
 
 #endif /* MINVR_H_ */

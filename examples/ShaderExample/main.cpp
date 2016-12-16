@@ -27,10 +27,10 @@ using namespace MinVR;
  * from VRGraphicsApp, which allows you to override onVREvent to get input events, onRenderContext
  * to setup context sepecific objects, and onRenderScene that renders to each viewport.
  */
-class MyVRApp : public VRGraphicsApp {
+class MyVRApp : public VRApp {
 public:
 	/// The application expects the user to specify the command line arguments and a path to the vr config file.
-	MyVRApp(int argc, char** argv, const std::string& configFile) : VRGraphicsApp(argc, argv, configFile) {}
+	MyVRApp(int argc, char** argv, const std::string& configFile) : VRApp(argc, argv, configFile) {}
 
 	/// onVREvent is called when a new intput event happens.
 	void onVREvent(const std::string &eventName, VRDataIndex *eventData) {
