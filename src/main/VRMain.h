@@ -8,10 +8,10 @@
 #include <display/VRGraphicsToolkit.h>
 #include <display/VRWindowToolkit.h>
 #include <input/VRInputDevice.h>
-#include <api/VREventHandler.h>
+#include <main/VREventHandler.h>
 #include <main/VRFactory.h>
 #include <main/VRMainInterface.h>
-#include <api/VRRenderHandler.h>
+#include <main/VRRenderHandler.h>
 #include <net/VRNetInterface.h>
 #include <main/VRAppLauncher.h>
 

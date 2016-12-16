@@ -133,8 +133,6 @@ set(vr_api_h
   ${vr_src_dir}/api/VRGraphicsApp.h
   ${vr_src_dir}/api/VRGraphicsHandler.h
   ${vr_src_dir}/api/VRGraphicsState.h
-  ${vr_src_dir}/api/VRRenderHandler.h
-  ${vr_src_dir}/api/VREventHandler.h
 )
 
 set(vr_main_h_main
@@ -143,6 +141,8 @@ set(vr_main_h_main
   ${vr_src_dir}/main/VRMain.h
   ${vr_src_dir}/main/VRMainInterface.h
   ${vr_src_dir}/main/VRAppLauncher.h
+  ${vr_src_dir}/main/VRRenderHandler.h
+  ${vr_src_dir}/main/VREventHandler.h
 )
 
 set(vr_main_h_impl
