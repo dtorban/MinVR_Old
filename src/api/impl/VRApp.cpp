@@ -9,24 +9,37 @@
 #include <api/VRApp.h>
 #include <main/VRMain.h>
 #include <iostream>
+#include "VRGraphicsHandler.h"
 
 namespace MinVR {
 
+class VRGraphicsAppHandler : public VRGraphicsHandler  {
+public:
+	VRGraphicsAppHandler(VRApp& app) : app(app) {}
+
+	void onVRRenderGraphics(VRGraphicsState& renderState) { app.onVRRenderGraphics(renderState); }
+	void onVRRenderGraphicsContext(VRGraphicsState& renderState)  { app.onVRRenderGraphicsContext(renderState); }
+
+private:
+	VRApp& app;
+};
+
 class VRApp::VRAppInternal {
 public:
-	VRAppInternal() : vrMain(NULL), running(true), frame(0) {}
+	VRAppInternal(VRApp& app) : vrMain(NULL), running(true), frame(0), graphicsHandler(app) {}
 	VRMain *vrMain;
 	bool running;
 	int frame;
+	VRGraphicsAppHandler graphicsHandler;
 };
 
-VRApp::VRApp(int argc, char** argv, const std::string& configFile) : _(*(new VRAppInternal())) {
+VRApp::VRApp(int argc, char** argv, const std::string& configFile) : _(*(new VRAppInternal(*this))) {
 	_.vrMain = new VRMain();
 
 	_.vrMain->initialize(argc, argv, configFile);
 
 	_.vrMain->addEventHandler(this);
-	_.vrMain->addRenderHandler(this);
+	_.vrMain->addRenderHandler(&_.graphicsHandler);
 }
 
 VRApp::~VRApp()  {
@@ -52,14 +65,6 @@ bool VRApp::isRunning() const {
 
 int VRApp::getFrame() const {
 	return _.frame;
-}
-
-void VRApp::addEventHandler(VREventHandler& handler) {
-	_.vrMain->addEventHandler(&handler);
-}
-
-void VRApp::addRenderHandler(VRRenderHandler& handler) {
-	_.vrMain->addRenderHandler(&handler);
 }
 
 } /* namespace MinVR */

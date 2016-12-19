@@ -10,7 +10,7 @@
 #define VRGRAPHICSHANDLER_H_
 
 #include "main/VRRenderHandler.h"
-#include "VRGraphicsState.h"
+#include "api/VRGraphicsState.h"
 
 namespace MinVR {
 

@@ -12,7 +12,7 @@
 #include <string>
 #include <main/VREventHandler.h>
 #include <main/VRRenderHandler.h>
-#include "VRGraphicsHandler.h"
+#include "VRGraphicsState.h"
 
 namespace MinVR {
 
@@ -44,7 +44,7 @@ int main(int argc, char **argv) {
 
 ------------------------------------------------------------------------
 */
-class VRApp : public VREventHandler, public VRGraphicsHandler {
+class VRApp : public VREventHandler {
 public:
 	/**
 	 * VRApp expects the command line parameters and a config file path.
@@ -102,12 +102,6 @@ public:
 
 	/** Returns the current frame number */
 	int getFrame() const;
-
-	/** Allows event handlers to be added to the application. */
-	void addEventHandler(VREventHandler& handler);
-
-	/** Allows render handlers to be added to the application. */
-	void addRenderHandler(VRRenderHandler& handler);
 
 private:
 	// opaque reference to application
