@@ -40,7 +40,7 @@ public:
 		}
 	}
 
-	void onVRRenderGraphicsContext(VRGraphicsState& renderState) {
+	void onVRRenderGraphicsContext(const VRGraphicsState& renderState) {
 		// Print out when the window was opened and closed
 		if (renderState.isInitialRenderCall()) {
 			std::cout << "Window opened." << std::endl;
@@ -53,7 +53,7 @@ public:
 		}
 	}
 
-	void onVRRenderGraphics(VRGraphicsState& renderState) {
+	void onVRRenderGraphics(const VRGraphicsState& renderState) {
 		// Get projection an view matrices
 		const float* projectionMatrix = renderState.getProjectionMatrix();
 		const float* viewMatrix = renderState.getViewMatrix();

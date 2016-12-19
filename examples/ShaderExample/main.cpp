@@ -57,7 +57,7 @@ public:
 
 	/// onVRRenderContext is the override which allows users to setup context specific
 	/// variables like VBO's, VAO's, textures, framebuffers, and shader programs.
-	void onVRRenderGraphicsContext(VRGraphicsState& renderState) {
+	void onVRRenderGraphicsContext(const VRGraphicsState& renderState) {
 		// If this is the inital call, initialize context variables
 		if (renderState.isInitialRenderCall()) {
 			// Init GL
@@ -193,7 +193,7 @@ public:
 	}
 
 	/// onVRRenderScene will run draw calls on each viewport inside a context.
-	void onVRRenderGraphics(VRGraphicsState& renderState) {
+	void onVRRenderGraphics(const VRGraphicsState& renderState) {
 		// Only draw if the application is still running.
 		if (isRunning()) {
 			// clear screen
