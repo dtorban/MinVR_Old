@@ -146,7 +146,7 @@ VRGLFWWindowToolkit::createWindow(VRWindowSettings settings) {
     glfwSwapInterval(1);
     glfwMakeContextCurrent(NULL);
 
-	_inputDev->addWindow(window);
+	_inputDev->addWindow(window, settings);
 	if (_windows.size() == 0) {
 		// if this is the first window created, then register the virtual input device
 		// with VRMain so that VRMain will start polling GLFW for input events

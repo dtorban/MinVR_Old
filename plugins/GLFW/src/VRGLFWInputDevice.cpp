@@ -53,13 +53,15 @@ void VRGLFWInputDevice::appendNewInputEventsSinceLastCall(VRDataQueue* queue) {
     _events.clear();
 }
 
-void VRGLFWInputDevice::addWindow(GLFWwindow* window) {
+void VRGLFWInputDevice::addWindow(GLFWwindow* window, VRWindowSettings settings) {
 	glfwSetWindowUserPointer(window, this);
 	glfwSetKeyCallback(window, glfw_key_callback);
 	glfwSetWindowSizeCallback(window, glfw_size_callback);
     glfwSetMouseButtonCallback(window, glfw_mouse_button_callback);
     glfwSetCursorPosCallback(window, glfw_cursor_position_callback);
     _windows.push_back(window);
+
+    glfw_size_callback(window, settings.width, settings.height);
 }
 
 void VRGLFWInputDevice::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
@@ -70,12 +72,19 @@ void VRGLFWInputDevice::keyCallback(GLFWwindow* window, int key, int scancode, i
 }
 
 void VRGLFWInputDevice::sizeCallback(GLFWwindow* window, int width, int height) {
-    // TODO: create an event reporting to MinVR that the size has changed
+    std::string event = "Window_Size";
+	int windowId = std::find(_windows.begin(), _windows.end(), window) - _windows.begin();
+    _dataIndex.addData(event + "/Id", windowId);
+    _dataIndex.addData(event + "/Width", 1.0*width);
+    _dataIndex.addData(event + "/Height", 1.0*height);
+    _events.push_back(_dataIndex.serialize(event));
 }
 
 
 void VRGLFWInputDevice::cursorPositionCallback(GLFWwindow* window, double xpos, double ypos) {
   std::string event = "Mouse_Move";
+  int windowId = std::find(_windows.begin(), _windows.end(), window) - _windows.begin();
+  _dataIndex.addData(event + "/Id", windowId);
   _dataIndex.addData(event + "/XPos", xpos);
   _dataIndex.addData(event + "/YPos", ypos);
   _events.push_back(_dataIndex.serialize(event));

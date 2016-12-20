@@ -19,6 +19,7 @@
 #include <config/VRDataQueue.h>
 #include <input/VRInputDevice.h>
 #include <plugin/VRPlugin.h>
+#include <display/VRWindowToolkit.h>
 
 
 namespace MinVR {
@@ -33,7 +34,7 @@ public:
 
 	PLUGIN_API void appendNewInputEventsSinceLastCall(VRDataQueue* queue);
 
-    PLUGIN_API void addWindow(::GLFWwindow* window);
+    PLUGIN_API void addWindow(::GLFWwindow* window, VRWindowSettings settings);
 	// TODO: removeWindow()?
 	// TODO: switch to using the windowID's used by VRGLFWWindowToolkit rather than
 	// GLFWwindow pointers?
