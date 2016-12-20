@@ -118,6 +118,8 @@ void VRGLFWInputDevice::mouseButtonCallback(GLFWwindow* window, int button, int 
   }
 
   std::string event = buttonStr + actionStr;
+  int windowId = std::find(_windows.begin(), _windows.end(), window) - _windows.begin();
+  _dataIndex.addData(event + "/Id", windowId);
   _dataIndex.addData(event + "/ButtonID", button);
   _events.push_back(_dataIndex.serialize(event));
 }
