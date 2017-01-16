@@ -20,6 +20,9 @@ VRTrackedLookAtNode::render(VRDataIndex *renderState, VRRenderHandler *renderHan
 	renderState->pushState();
 
 	renderState->addData("LookAtMatrix", _lookAtMatrix);
+	VRMatrix4 head_frame = _lookAtMatrix.inverse();
+	VRPoint3 headPostion = VRPoint3(head_frame[3][0], head_frame[3][1], head_frame[3][2]);
+	renderState->addData("HeadPosition", headPostion);
 
 	VRDisplayNode::render(renderState, renderHandler);
 
