@@ -7,6 +7,8 @@ namespace MinVR {
 	VRTrackedLookAtNode::VRTrackedLookAtNode(const std::string &name, const std::string &headTrackingEventName, VRMatrix4 initiallookAtMatrix) :
 		VRDisplayNode(name), _lookAtMatrix(initiallookAtMatrix), _trackingEvent(headTrackingEventName)
 {
+  _valuesAdded.push_back("/LookAtMatrix");
+  _valuesAdded.push_back("/HeadPosition");
 }
 
 VRTrackedLookAtNode::~VRTrackedLookAtNode()
@@ -19,10 +21,10 @@ VRTrackedLookAtNode::render(VRDataIndex *renderState, VRRenderHandler *renderHan
 {
 	renderState->pushState();
 
-	renderState->addData("LookAtMatrix", _lookAtMatrix);
+	renderState->addData("/LookAtMatrix", _lookAtMatrix);
 	VRMatrix4 head_frame = _lookAtMatrix.inverse();
 	VRPoint3 headPostion = VRPoint3(head_frame[3][0], head_frame[3][1], head_frame[3][2]);
-	renderState->addData("HeadPosition", headPostion);
+	renderState->addData("/HeadPosition", headPostion);
 
 	VRDisplayNode::render(renderState, renderHandler);
 

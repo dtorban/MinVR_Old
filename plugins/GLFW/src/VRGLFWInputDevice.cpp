@@ -65,14 +65,14 @@ void VRGLFWInputDevice::addWindow(GLFWwindow* window, VRWindowSettings settings)
 }
 
 void VRGLFWInputDevice::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    std::string event = "Kbd" + getGlfwKeyName(key) + "_" + getGlfwActionName(action);
+    std::string event = "/Kbd" + getGlfwKeyName(key) + "_" + getGlfwActionName(action);
     _dataIndex.addData(event + "/KeyString", getGlfwKeyName(key));
     _dataIndex.addData(event + "/EventString", getGlfwActionName(action));
     _events.push_back(_dataIndex.serialize(event));
 }
 
 void VRGLFWInputDevice::sizeCallback(GLFWwindow* window, int width, int height) {
-    std::string event = "Window_Size";
+    std::string event = "/Window_Size";
 	int windowId = std::find(_windows.begin(), _windows.end(), window) - _windows.begin();
     _dataIndex.addData(event + "/Id", windowId);
     _dataIndex.addData(event + "/Width", 1.0*width);
@@ -82,7 +82,7 @@ void VRGLFWInputDevice::sizeCallback(GLFWwindow* window, int width, int height) 
 
 
 void VRGLFWInputDevice::cursorPositionCallback(GLFWwindow* window, double xpos, double ypos) {
-  std::string event = "Mouse_Move";
+  std::string event = "/Mouse_Move";
   int windowId = std::find(_windows.begin(), _windows.end(), window) - _windows.begin();
   _dataIndex.addData(event + "/Id", windowId);
   _dataIndex.addData(event + "/XPos", xpos);
@@ -117,7 +117,7 @@ void VRGLFWInputDevice::mouseButtonCallback(GLFWwindow* window, int button, int 
     actionStr = "_Up";
   }
 
-  std::string event = buttonStr + actionStr;
+  std::string event = std::string("/") + buttonStr + actionStr;
   int windowId = std::find(_windows.begin(), _windows.end(), window) - _windows.begin();
   _dataIndex.addData(event + "/Id", windowId);
   _dataIndex.addData(event + "/ButtonID", button);

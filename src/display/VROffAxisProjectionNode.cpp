@@ -7,6 +7,9 @@ namespace MinVR {
 	VROffAxisProjectionNode::VROffAxisProjectionNode(const std::string &name, VRPoint3 topLeft, VRPoint3 botLeft, VRPoint3 topRight, VRPoint3 botRight, double nearClip, double farClip) :
 	VRDisplayNode(name), _topLeft(topLeft), _botLeft(botLeft), _topRight(topRight), _botRight(botRight),  _nearClip(nearClip), _farClip(farClip)
 {
+  _valuesAdded.push_back("/ProjectionMatrix");
+  _valuesAdded.push_back("/ViewMatrix");
+  _valuesAdded.push_back("/EyePosition");
 }
 
 VROffAxisProjectionNode::~VROffAxisProjectionNode()
@@ -26,8 +29,8 @@ VROffAxisProjectionNode::render(VRDataIndex *renderState, VRRenderHandler *rende
 	VRPoint3 pb = _botRight;
 	VRPoint3 pc = _topLeft;
 	VRPoint3 pe(0,0,0);
-	if (renderState->exists("LookAtMatrix","/")){
-		VRMatrix4 lookAtMatrix = renderState->getValue("LookAtMatrix");
+	if (renderState->exists("/LookAtMatrix")){
+		VRMatrix4 lookAtMatrix = renderState->getValue("/LookAtMatrix");
 		VRMatrix4 head_frame = lookAtMatrix.inverse();
 		pe = VRPoint3(head_frame[3][0], head_frame[3][1], head_frame[3][2]);
 	}
@@ -54,7 +57,7 @@ VROffAxisProjectionNode::render(VRDataIndex *renderState, VRRenderHandler *rende
 
 	VRMatrix4 projMat = VRMatrix4::projection(l, r, b, t, _nearClip, _farClip);
 
-	renderState->addData("ProjectionMatrix", projMat);
+	renderState->addData("/ProjectionMatrix", projMat);
 
 	// Rotate the projection to be non-perpendicular
 	VRMatrix4 Mrot(vr[0], vr[1], vr[2], 0.0,
@@ -66,12 +69,9 @@ VROffAxisProjectionNode::render(VRDataIndex *renderState, VRRenderHandler *rende
 	VRMatrix4 Mtrans = VRMatrix4::translation(VRPoint3(0, 0, 0) - pe);
 
 	VRMatrix4 viewMat = Mrot * Mtrans;
-	renderState->addData("ViewMatrix", viewMat);
 
-	VRMatrix4 normalMatrix = viewMat.inverse().transpose();
-	renderState->addData("NormalMatrix", normalMatrix);
-
-	renderState->addData("EyePosition", pe);
+	renderState->addData("/ViewMatrix", viewMat);
+	renderState->addData("/EyePosition", pe);
 
 	VRDisplayNode::render(renderState, renderHandler);
 
