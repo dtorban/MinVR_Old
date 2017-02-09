@@ -38,8 +38,8 @@ endif()
    
 ExternalProject_add(glfw
 		PREFIX ${glfw_PREFIX}
-		GIT_REPOSITORY https://github.com/ivlab/glfw.git
-		GIT_TAG gpu-affinity
+		GIT_REPOSITORY https://github.com/glfw/glfw
+		GIT_TAG master
 		INSTALL_DIR ${glfw_INSTALL_DIR}
 		CMAKE_ARGS ${glfw_CMAKE_ARGS}
 		UPDATE_COMMAND ""
@@ -108,7 +108,7 @@ endif()
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 	find_package(Threads)
 	find_package(X11)
-	set(LIBS_ALL ${LIBS_ALL} ${CMAKE_THREAD_LIBS_INIT} rt Xrandr Xxf86vm Xi m dl ${X11_LIBRARIES})
+	set(LIBS_ALL ${LIBS_ALL} ${CMAKE_THREAD_LIBS_INIT} rt Xrandr Xxf86vm Xinerama Xcursor Xi m dl ${X11_LIBRARIES})
 endif()
 
 #------------------------------------------

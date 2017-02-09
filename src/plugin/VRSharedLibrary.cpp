@@ -69,7 +69,6 @@ void VRSharedLibrary::load() {
 #endif
 
 		if (!_lib) {
-			//MinVR::Logger::getInstance().assertMessage(false, "Could not load library: " + _filePath + " - " + error);
 			//std::cerr << "Could not load library: " + _filePath + " - " + error << std::endl;
 			return;
 		}
@@ -90,7 +89,7 @@ void VRSharedLibrary::unload() {
 		error = dlerror();
 #endif
 		if(result != 0) {
-			//MinVR::Logger::getInstance().assertMessage(false, "Could not unload library: " + _filePath + " - " + error);
+			//std::cerr << "Could not unload library: " << _filePath  << " - " << error << std::endl;
 			return;
 		}
 
@@ -114,7 +113,7 @@ void* VRSharedLibrary::loadSymbolInternal(const std::string &functionName) {
 		void* symbol = (void*) dlsym(_lib, functionName.c_str());
 		const char* dlsym_error = dlerror();
 		if (dlsym_error) {
-			//MinVR::Logger::getInstance().assertMessage(false, "Cannot load symbol: " + functionName + " - " + dlsym_error);
+			//std::cerr << "Cannot load symbol: " << functionName  << " - " << dlsym_error << std::endl;;
 			dlerror();
 
 			return NULL;

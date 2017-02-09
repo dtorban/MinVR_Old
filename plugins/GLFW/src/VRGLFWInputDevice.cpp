@@ -36,6 +36,9 @@ static void glfw_mouse_button_callback(GLFWwindow* window, int button, int actio
   ((VRGLFWInputDevice*)(glfwGetWindowUserPointer(window)))->mouseButtonCallback(window, button, action, mods);
 }
 
+static void glfw_drop_callback(GLFWwindow* window, int count, const char** paths) {
+  ((VRGLFWInputDevice*)(glfwGetWindowUserPointer(window)))->dropCallback(window, count, paths);
+}
   
 VRGLFWInputDevice::VRGLFWInputDevice() {
 }
@@ -59,6 +62,7 @@ void VRGLFWInputDevice::addWindow(GLFWwindow* window, VRWindowSettings settings)
 	glfwSetWindowSizeCallback(window, glfw_size_callback);
     glfwSetMouseButtonCallback(window, glfw_mouse_button_callback);
     glfwSetCursorPosCallback(window, glfw_cursor_position_callback);
+    glfwSetDropCallback(window, glfw_drop_callback);
     _windows.push_back(window);
 
     glfw_size_callback(window, settings.width, settings.height);
@@ -124,9 +128,20 @@ void VRGLFWInputDevice::mouseButtonCallback(GLFWwindow* window, int button, int 
   _events.push_back(_dataIndex.serialize(event));
 }
 
-  
-  
-  
+
+void VRGLFWInputDevice::dropCallback(GLFWwindow* window, int count,
+		const char** paths) {
+	std::vector<std::string> files;
+
+	for (int f = 0; f < count; f++) {
+		files.push_back(std::string(paths[f]));
+	}
+
+	std::string event = "/FileDrop";
+	_dataIndex.addData(event + "/Files", files);
+	_events.push_back(_dataIndex.serialize(event));
+}
+
   
 std::string getGlfwKeyName(int key) {
     switch (key)
