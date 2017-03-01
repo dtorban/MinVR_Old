@@ -36,6 +36,10 @@ static void glfw_mouse_button_callback(GLFWwindow* window, int button, int actio
   ((VRGLFWInputDevice*)(glfwGetWindowUserPointer(window)))->mouseButtonCallback(window, button, action, mods);
 }
 
+static void glfw_mouse_scroll_callback(GLFWwindow* window, double x, double y) {
+  ((VRGLFWInputDevice*)(glfwGetWindowUserPointer(window)))->mouseScrollCallback(window, x, y);
+}
+
   
 VRGLFWInputDevice::VRGLFWInputDevice() {
 }
@@ -59,6 +63,7 @@ void VRGLFWInputDevice::addWindow(GLFWwindow* window, VRWindowSettings settings)
 	glfwSetWindowSizeCallback(window, glfw_size_callback);
     glfwSetMouseButtonCallback(window, glfw_mouse_button_callback);
     glfwSetCursorPosCallback(window, glfw_cursor_position_callback);
+    glfwSetScrollCallback(window, glfw_mouse_scroll_callback);
     _windows.push_back(window);
 
     glfw_size_callback(window, settings.width, settings.height);
@@ -370,7 +375,16 @@ std::string getGlfwActionName(int action)
     return "caused unknown action";
 }
 
-
+void VRGLFWInputDevice::mouseScrollCallback(GLFWwindow* window, double x,
+		double y) {
+	std::string event = "/Mouse_Scroll";
+	int windowId = std::find(_windows.begin(), _windows.end(), window) - _windows.begin();
+	_dataIndex.addData(event + "/Id", windowId);
+	_dataIndex.addData(event + "/X", x);
+	_dataIndex.addData(event + "/Y", y);
+	_events.push_back(_dataIndex.serialize(event));
+}
 
 } /* namespace MinVR */
+
 

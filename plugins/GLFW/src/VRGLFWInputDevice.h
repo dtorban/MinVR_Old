@@ -43,6 +43,7 @@ public:
 	PLUGIN_API void sizeCallback(GLFWwindow* window, int width, int height);
     PLUGIN_API void cursorPositionCallback(GLFWwindow* window, double xpos, double ypos);
   	PLUGIN_API void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
+  	PLUGIN_API void mouseScrollCallback(GLFWwindow* window, double x, double y);
   
 private:
 	std::vector<std::string> _events;
