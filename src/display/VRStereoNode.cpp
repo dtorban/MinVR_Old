@@ -12,8 +12,8 @@
 
 namespace MinVR {
 
-VRStereoNode::VRStereoNode(const std::string &name, float interOcularDist, VRGraphicsToolkit *gfxToolkit, VRStereoFormat format) :
-  VRDisplayNode(name), _iod(interOcularDist), _gfxToolkit(gfxToolkit), _format(format) {
+VRStereoNode::VRStereoNode(const std::string &name, float interOcularDist, VRGraphicsToolkit *gfxToolkit, VRStereoFormat format, bool swapEyes) :
+	VRDisplayNode(name), _iod(interOcularDist), _gfxToolkit(gfxToolkit), _format(format), _swapEyes(swapEyes){
   _valuesAdded.push_back("/StereoFormat");
   _valuesAdded.push_back("/LookAtMatrix");
   _valuesAdded.push_back("/Eye");
@@ -36,10 +36,10 @@ void VRStereoNode::render(VRDataIndex *renderState, VRRenderHandler *renderHandl
 		renderState->addData("/StereoFormat", "QuadBuffered");
 
 		_gfxToolkit->setDrawBuffer(VRGraphicsToolkit::VRDRAWBUFFER_BACKLEFT);
-		renderOneEye(renderState, renderHandler, Left);
+		renderOneEye(renderState, renderHandler, _swapEyes ? Right : Left);
 
 		_gfxToolkit->setDrawBuffer(VRGraphicsToolkit::VRDRAWBUFFER_BACKRIGHT);
-		renderOneEye(renderState, renderHandler, Right);
+		renderOneEye(renderState, renderHandler, _swapEyes ? Left : Right);
 	}
 	else if (_format == VRSTEREOFORMAT_SIDEBYSIDE) {
 		renderState->addData("/StereoFormat", "SideBySide");
@@ -59,19 +59,19 @@ void VRStereoNode::render(VRDataIndex *renderState, VRRenderHandler *renderHandl
 		}
 
 		_gfxToolkit->setSubWindow(VRRect(x,y,w/2,h));
-		renderOneEye(renderState, renderHandler, Left);
+		renderOneEye(renderState, renderHandler, _swapEyes ? Right : Left);
 
 		_gfxToolkit->setSubWindow(VRRect(x + w / 2 + 1, y, w / 2, h));
-		renderOneEye(renderState, renderHandler, Right);
+		renderOneEye(renderState, renderHandler, _swapEyes ? Left : Right);
 	}
 	else if (_format == VRSTEREOFORMAT_COLUMNINTERLACED) {
 		renderState->addData("/StereoFormat", "ColumnInterlaced");
 
 		_gfxToolkit->disableDrawingOnEvenColumns();
-		renderOneEye(renderState, renderHandler, Left);
+		renderOneEye(renderState, renderHandler, _swapEyes ? Right : Left);
 
 		_gfxToolkit->disableDrawingOnOddColumns();
-		renderOneEye(renderState, renderHandler, Right);
+		renderOneEye(renderState, renderHandler, _swapEyes ? Left : Right);
 
 		_gfxToolkit->enableDrawingOnAllColumns();
 	}
@@ -230,6 +230,10 @@ VRDisplayNode* VRStereoNode::create(VRMainInterface *vrMain, VRDataIndex *config
 	VRGraphicsToolkit *gfxToolkit = vrMain->getGraphicsToolkit(config->getValue("GraphicsToolkit", nameSpace));
 	float iod = 0.0f;
 	std::string formatStr = config->getValue("StereoFormat", nameSpace);
+	bool swapEyes = false;
+	if (config->exists("SwapEyes", nameSpace)) {
+		swapEyes = (int)config->getValue("SwapEyes", nameSpace);
+	}
 	VRStereoNode::VRStereoFormat format = VRStereoNode::VRSTEREOFORMAT_MONO;
 	if (formatStr == "QuadBuffered") {
 		format = VRStereoNode::VRSTEREOFORMAT_QUADBUFFERED;
@@ -244,7 +248,7 @@ VRDisplayNode* VRStereoNode::create(VRMainInterface *vrMain, VRDataIndex *config
 		iod = (double)config->getValue("EyeSeparation", nameSpace);
 	}
 
-	VRDisplayNode *node = new VRStereoNode(nameSpace, iod, gfxToolkit, format);
+	VRDisplayNode *node = new VRStereoNode(nameSpace, iod, gfxToolkit, format, swapEyes);
 
 	return node;
 }
