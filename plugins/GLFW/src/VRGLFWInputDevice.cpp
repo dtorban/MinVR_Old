@@ -92,6 +92,18 @@ void VRGLFWInputDevice::cursorPositionCallback(GLFWwindow* window, double xpos, 
   _dataIndex.addData(event + "/Id", windowId);
   _dataIndex.addData(event + "/XPos", xpos);
   _dataIndex.addData(event + "/YPos", ypos);
+
+  std::vector<double> pos;
+  pos.push_back(xpos);
+  pos.push_back(ypos);
+  _dataIndex.addData(event + "/Position", pos);
+
+  int width, height;
+  glfwGetWindowSize(window, &width, &height);
+  pos[0] /= (float)width;
+  pos[1] /= (float)height;
+  _dataIndex.addData(event + "/NormalizedPosition", pos);
+
   _events.push_back(_dataIndex.serialize(event));
 }
 
