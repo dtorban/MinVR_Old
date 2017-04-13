@@ -89,7 +89,7 @@ VRGLFWWindowToolkit::createWindow(VRWindowSettings settings) {
 		_sharedContextGroups[settings.sharedContextGroupID] = window;
 	}
 
-#ifdef _MSC_VER
+#if (defined MSC_VER && defined GPU_AFFINITY)
 
 #define MAX_AFFINITY_GPUS 16
 

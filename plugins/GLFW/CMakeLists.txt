@@ -87,6 +87,8 @@ include_directories (
 # Specific preprocessor defines
 #------------------------------------------
 
+add_definitions(-DGPU_AFFINITY)
+
 # Windows Section #
 if (MSVC)
     add_definitions(-D_CRT_SECURE_NO_WARNINGS)

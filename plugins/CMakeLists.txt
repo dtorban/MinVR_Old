@@ -24,6 +24,10 @@ endif()
 option(MINVR_GLFW_PLUGIN "If enabled, GLFW plugin will be installed" OFF)
 if (MINVR_GLFW_PLUGIN OR BASE_PLUGINS)
 	add_subdirectory (GLFW)
+endif()
+
+option(MINVR_GLFW_AFFINITY_PLUGIN "If enabled, GLFW Affinity plugin will be installed" OFF)
+if (MINVR_GLFW_AFFINITY_PLUGIN)
 	add_subdirectory (GLFW_Affinity)
 endif()
 
