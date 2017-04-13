@@ -1,15 +1,15 @@
-project(MinVR_GLFW)
+project(MinVR_GLFW_Affinity)
 
 set (SOURCEFILES 
-  src/glew.c
-  src/VRGLFWInputDevice.cpp
-  src/VRGLFWPlugin.cpp
-  src/VRGLFWWindowToolkit.cpp
+  ../GLFW/src/glew.c
+  ../GLFW/src/VRGLFWInputDevice.cpp
+  ../GLFW/src/VRGLFWPlugin.cpp
+  ../GLFW/src/VRGLFWWindowToolkit.cpp
 )
 
 set (HEADERFILES
-  src/VRGLFWInputDevice.h
-  src/VRGLFWWindowToolkit.h
+  ../GLFW/src/VRGLFWInputDevice.h
+  ../GLFW/src/VRGLFWWindowToolkit.h
 )
 
 source_group("Header Files" FILES ${HEADERFILES})
@@ -36,10 +36,10 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 	set(glfw_CMAKE_ARGS ${glfw_CMAKE_ARGS} -DCMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD="c++11" -DCMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY="libc++")
 endif()
    
-ExternalProject_add(glfw
+ExternalProject_add(glfw_gpu_affinity
 		PREFIX ${glfw_PREFIX}
 		GIT_REPOSITORY https://github.com/ivlab/glfw.git
-		GIT_TAG threading
+		GIT_TAG gpu-affinity
 		INSTALL_DIR ${glfw_INSTALL_DIR}
 		CMAKE_ARGS ${glfw_CMAKE_ARGS}
 		UPDATE_COMMAND ""
@@ -79,7 +79,7 @@ link_directories(${CMAKE_BINARY_DIR}/lib)
 # Include Directories
 include_directories (
   ${vr_src_dir}
-  src
+  ../GLFW/src
   deps/glfw/include
 )
 
@@ -108,7 +108,7 @@ endif()
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 	find_package(Threads)
 	find_package(X11)
-	set(LIBS_ALL ${LIBS_ALL} ${CMAKE_THREAD_LIBS_INIT} rt Xrandr Xxf86vm Xinerama Xcursor Xi m dl ${X11_LIBRARIES})
+	set(LIBS_ALL ${LIBS_ALL} ${CMAKE_THREAD_LIBS_INIT} rt Xrandr Xxf86vm Xi m dl ${X11_LIBRARIES})
 endif()
 
 #------------------------------------------
@@ -162,7 +162,7 @@ SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 add_library ( ${PROJECT_NAME} SHARED ${HEADERFILES} ${SOURCEFILES} )
 target_link_libraries(${PROJECT_NAME} ${GLFW_LIBRARY} ${OPENGL_LIBRARIES} MinVR ${LIBS_ALL})
-add_dependencies( ${PROJECT_NAME} glfw)
+add_dependencies( ${PROJECT_NAME} glfw_gpu_affinity)
 
 #------------------------------------------
 # Install Target

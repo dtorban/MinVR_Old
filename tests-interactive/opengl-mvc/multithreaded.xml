@@ -1,6 +1,6 @@
 <MinVR>
   <PluginPath>../../../MinVR2/build/Release/plugins</PluginPath>
-  <GLFWPlugin pluginType="MinVR_GLFW"/>
+  <GLFWPlugin pluginType="MinVR_GLFW_Affinity"/>
   <OpenGLPlugin pluginType="MinVR_OpenGL"/>
   <ThreadingPlugin pluginType="MinVR_Threading"/>
 
