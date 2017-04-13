@@ -52,6 +52,7 @@ private:
 
 	GLuint vbo, vao, vshader, fshader, shaderProgram;
 	MyAppModel& model;
+	int count;
 };
 
 #endif

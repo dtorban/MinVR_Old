@@ -146,10 +146,12 @@ MyAppView::~MyAppView() {
 }
 
 void MyAppView::update(const VRGraphicsState &renderState) {
+	count++;
 }
 
 /// onVRRenderScene will run draw calls on each viewport inside a context.
 void MyAppView::render(const VRGraphicsState &renderState) {
+	glClearColor(count % 2, 0, 0, 1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 	// Set shader parameters

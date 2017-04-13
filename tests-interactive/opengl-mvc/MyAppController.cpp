@@ -20,7 +20,7 @@ MyAppController::~MyAppController() {
 
 void MyAppController::onVREvent(const VREvent &event) {
 
-	event.print();
+	//event.print();
 
 	// Set time since application began
 	if (event.getName() == "FrameStart") {

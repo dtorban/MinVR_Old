@@ -189,6 +189,7 @@ VRGLFWWindowToolkit::makeWindowCurrent(int windowID) {
 void 
 VRGLFWWindowToolkit::swapBuffers(int windowID) {
     glfwMakeContextCurrent(_windows[windowID]);
+    //glfwSwapInterval(1);
   	glfwSwapBuffers(_windows[windowID]);
 }
 
