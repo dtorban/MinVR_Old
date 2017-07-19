@@ -26,6 +26,12 @@ if (MINVR_GLFW_PLUGIN OR BASE_PLUGINS)
 	add_subdirectory (GLFW)
 endif()
 
+#------------------Web Sockets-----------------------------
+option(MINVR_WebSockets_PLUGIN "If enabled, GLFW plugin will be installed" OFF)
+if (MINVR_WebSockets_PLUGIN OR BASE_PLUGINS)
+	add_subdirectory (WebSockets)
+endif()
+
 #------------------VRPN-----------------------------
 option(MINVR_VRPN_PLUGIN "If enabled, VRPN plugin will be installed" OFF)
 if (MINVR_VRPN_PLUGIN)
