@@ -2,11 +2,14 @@ project(MinVR_WebSockets)
 
 set (SOURCEFILES 
   #src/VRWebSocketsNode.cpp
-  #src/VRWebSocketsPlugin.cpp
+  src/VRWebSocketsServer.cpp
+  src/VRWebSocketsInputDevice.cpp
+  src/VRWebSocketsPlugin.cpp
 )
 
 set (HEADERFILES
-  #src/VRWebSocketsNode.h
+  src/VRWebSocketsServer.h
+  src/VRWebSocketsInputDevice.h
 )
 
 source_group("Header Files" FILES ${HEADERFILES})
@@ -26,7 +29,7 @@ set(libwebsockets_tmp_dir ${libwebsockets_build_dir}/tmp)
 set(libwebsockets_PREFIX "${libwebsockets_checkout_Dir}")
 set(libwebsockets_INSTALL_DIR "${libwebsockets_build_dir}/install")
 
-set(libwebsockets_CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${libwebsockets_INSTALL_DIR} -DUSE_MSVC_RUNTIME_LIBRARY_DLL=ON -DLIBWEBSOCKETS_BUILD_DOCS=OFF -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE})
+set(libwebsockets_CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${libwebsockets_INSTALL_DIR} -DUSE_MSVC_RUNTIME_LIBRARY_DLL=ON -DLIBWEBSOCKETS_BUILD_DOCS=OFF -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DLWS_WITH_SHARED=OFF -DLWS_STATIC_PIC=ON)
 set(libwebsockets_DIR "${libwebsockets_INSTALL_DIR}")
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
@@ -36,6 +39,7 @@ endif()
 ExternalProject_add(libwebsockets
 		PREFIX ${libwebsockets_PREFIX}
 		GIT_REPOSITORY https://github.com/warmcat/libwebsockets.git
+		#GIT_TAG v2.0.2
 		INSTALL_DIR ${libwebsockets_INSTALL_DIR}
 		CMAKE_ARGS ${libwebsockets_CMAKE_ARGS}
 		UPDATE_COMMAND ""
@@ -98,7 +102,7 @@ endif()
 if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 	find_package(Threads)
 	find_package(X11)
-	set(LIBS_ALL ${LIBS_ALL} ${CMAKE_THREAD_LIBS_INIT} rt Xrandr Xxf86vm Xi m dl ${X11_LIBRARIES})
+	set(LIBS_ALL ${LIBS_ALL} ${CMAKE_THREAD_LIBS_INIT} rt Xrandr Xxf86vm Xi m dl ${X11_LIBRARIES} ssl z)
 endif()
 
 #------------------------------------------

@@ -16,10 +16,12 @@
 
 #include <openvr.h>
 
+#include <config/VRDataIndex.h>
 #include <config/VRDataQueue.h>
 #include <input/VRInputDevice.h>
 #include <plugin/VRPlugin.h>
 #include <math/VRMath.h>
+#include "VRWebSocketsServer.h"
 
 namespace MinVR {
 

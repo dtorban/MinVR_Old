@@ -113,6 +113,7 @@ void* VRSharedLibrary::loadSymbolInternal(const std::string &functionName) {
 #if defined(WIN32)
 		FARPROC symbol =GetProcAddress(_lib, functionName.c_str());
 		if (!symbol) {
+			//std::cout << "Cannot load symbol: " << functionName << std::endl;
 			//MinVR::Logger::getInstance().assertMessage(false, "Cannot load symbol: " + functionName + " - " + "");
 
 			return NULL;
@@ -123,6 +124,7 @@ void* VRSharedLibrary::loadSymbolInternal(const std::string &functionName) {
 		void* symbol = (void*) dlsym(_lib, functionName.c_str());
 		const char* dlsym_error = dlerror();
 		if (dlsym_error) {
+			//std::cout << "Cannot load symbol: " << functionName << " - " << dlsym_error << std::endl;
 			//MinVR::Logger::getInstance().assertMessage(false, "Cannot load symbol: " + functionName + " - " + dlsym_error);
 			dlerror();
 

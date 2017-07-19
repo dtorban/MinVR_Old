@@ -10,6 +10,8 @@
 #include <plugin/VRPlugin.h>
 #include "VRWebSocketsNode.h"
 #include "main/VRFactory.h"
+#include "VRWebSocketsServer.h"
+#include "VRWebSocketsInputDevice.h"
 
 // special: include this only once in one .cpp file per plugin
 #include <plugin/VRPluginVersion.h>
@@ -29,13 +31,20 @@ public:
 	PLUGIN_API void registerWithMinVR(VRMainInterface *vrMain)
 	{
 		//vrMain->getFactory()->registerItemType<VRDisplayNode, VRWebSocketsNode>("VRWebSocketsNode");
+		server = new VRWebSocketsServer(8081);
+		vrMain->addInputDevice(new VRWebSocketsInputDevice(*server));
 	}
 
 	PLUGIN_API void unregisterWithMinVR(VRMainInterface *vrMain)
 	{
       //std::cout << "Unregistering GlfwPlugin." << std::endl;
 		// TODO
+
+		delete server;
 	}
+
+private:
+	VRWebSocketsServer* server;
 };
 
 } // end namespace
