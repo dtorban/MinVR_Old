@@ -131,10 +131,11 @@ VRWebSocketsServer::VRWebSocketsServer(int port) {
 }
 
 VRWebSocketsServer::~VRWebSocketsServer() {
+	lws_context_destroy(context);
 }
 
 void VRWebSocketsServer::service() {
-	lws_service(context, 0);
+	lws_service(context, 50);
 }
 
 void VRWebSocketsServer::sendData(const std::string& data) {

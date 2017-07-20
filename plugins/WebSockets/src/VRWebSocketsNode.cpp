@@ -24,7 +24,7 @@ void VRWebSocketsNode::render(VRDataIndex* renderState,
 	frame++;
 	std::string pixels = renderState->getValue("pixels", "/");
 	//std::cout << "render web sockets \n" << pixels << std::endl;
-	if (frame % 20 == 0) {
+	if (frame % 60 == 0) {
 		std::cout << frame << std::endl;
 		server.sendData(pixels);
 	}
