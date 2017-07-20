@@ -10,6 +10,7 @@
 #define VRWEBSOCKETSSERVER_H_
 
 #include <libwebsockets.h>
+#include <string>
 
 namespace MinVR {
 
@@ -19,6 +20,7 @@ public:
 	virtual ~VRWebSocketsServer();
 
 	void service();
+	void sendData(const std::string& data);
 
 private:
 	lws_context *context;

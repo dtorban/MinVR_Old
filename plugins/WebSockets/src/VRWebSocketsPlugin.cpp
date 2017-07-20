@@ -12,6 +12,7 @@
 #include "main/VRFactory.h"
 #include "VRWebSocketsServer.h"
 #include "VRWebSocketsInputDevice.h"
+#include "VRWebSocketsNode.h"
 
 // special: include this only once in one .cpp file per plugin
 #include <plugin/VRPluginVersion.h>
@@ -33,6 +34,7 @@ public:
 		//vrMain->getFactory()->registerItemType<VRDisplayNode, VRWebSocketsNode>("VRWebSocketsNode");
 		server = new VRWebSocketsServer(8081);
 		vrMain->addInputDevice(new VRWebSocketsInputDevice(*server));
+		vrMain->getFactory()->addSubFactory(new VRWebSocketsNodeFactory(*server));
 	}
 
 	PLUGIN_API void unregisterWithMinVR(VRMainInterface *vrMain)

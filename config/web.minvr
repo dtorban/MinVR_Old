@@ -37,8 +37,8 @@
 				<GPUAffinity>0</GPUAffinity>	
 				<XPos>100</XPos>
 				<YPos>100</YPos>
-				<Width>640</Width>
-				<Height>640</Height>
+				<Width>300</Width>
+				<Height>300</Height>
 	      <TopNode displaynodeType="VRReadPixelsNode">
 				<LookAtNode displaynodeType="VRTrackedLookAtNode">
 					<LookAtUp type="floatarray">0,1,0</LookAtUp>
@@ -57,6 +57,7 @@
 		            </StereoNode>
                 </LookAtNode>
 			</TopNode>
+			<WebSockets displaynodeType="VRWebSocketsNode"/>
 			</RootNode>
 		</Desktop>
 	</VRSetups>

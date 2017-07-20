@@ -24,17 +24,24 @@
 		
 	});
 
+
+	var canvas = document.getElementById("c");
+	var ctx = canvas.getContext("2d");
+	var image = new Image();
+	image.onload = function() {
+		ctx.drawImage(image, 0, 0, 300, 300);
+		image.src = "";
+		//console.log('drawing');
+	};
+
+	var count = 0;
+
 	try {
 		socket.onmessage =function got_packet(msg) {
-			var canvas = document.getElementById("c");
-			var ctx = canvas.getContext("2d");
-
-			var image = new Image();
-			image.onload = function() {
-			    ctx.drawImage(image, 0, 0, 300, 300);
-			};
-			image.src = "data:image/png;base64," + img2;
-			console.log(msg.data);
+			count++;
+			if (count % 5 == 0) {
+				image.src = "data:image/png;base64," + msg.data;
+			}
 		} 
 	} catch(exception) {
 		alert('<p>Error' + exception);  

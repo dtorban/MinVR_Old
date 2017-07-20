@@ -10,59 +10,37 @@
 #define VRWEBSOCKETSNODE_H_
 
 #include "display/VRDisplayNode.h"
-#include <libwebsockets.h>
+#include "VRWebSocketsServer.h"
+#include <main/VRItemFactory.h>
 
 namespace MinVR {
 
-enum VRWSRenderMethod {
-	VRWS_none,
-	VRWS_render,
-	VRWS_waitForRenderToComplete,
-	VRWS_displayFinishedRendering
-};
-
 class VRWebSocketsNode : public VRDisplayNode {
 public:
-	VRWebSocketsNode(const std::string &name, int port);
+	VRWebSocketsNode(const std::string &name, VRWebSocketsServer& server);
 	virtual ~VRWebSocketsNode();
 
 	virtual std::string getType() { return "VRWebSocketsNode"; }
 
 	virtual void render(VRDataIndex *renderState, VRRenderHandler *renderHandler);
-	virtual void waitForRenderToComplete(VRDataIndex *renderState);
-	virtual void displayFinishedRendering(VRDataIndex *renderState);
 
-	static VRDisplayNode* create(VRMainInterface *vrMain, VRDataIndex *config, const std::string &nameSpace);
-
-	int getFrame() { return frame; }
-
-	VRRenderHandler* getCurrentRenderHanlder() {
-		return currentRenderHanlder;
-	}
-
-	VRDataIndex* getCurrentRenderState() {
-		return currentRenderState;
-	}
-
-	VRWSRenderMethod getCurrentRenderMethod() const {
-		return currentRenderMethod;
-	}
-
-	void setCurrentRenderMethod(VRWSRenderMethod currentRenderMethod) {
-		this->currentRenderMethod = currentRenderMethod;
-	}
-
-	int numClients;
-	int numClientsStarted;
-	int numClientsCompleted;
+	//static VRDisplayNode* create(VRMainInterface *vrMain, VRDataIndex *config, const std::string &nameSpace);
 
 private:
-	lws_context *context;
+	VRWebSocketsServer &server;
 	int frame;
-	VRDataIndex* currentRenderState;
-	VRRenderHandler* currentRenderHanlder;
-	VRWSRenderMethod currentRenderMethod;
 
+};
+
+class VRWebSocketsNodeFactory : public VRSpecificItemFactory<VRDisplayNode> {
+public:
+	VRWebSocketsNodeFactory(VRWebSocketsServer& server) : VRSpecificItemFactory<VRDisplayNode>("VRWebSocketsNode"), server(server) {}
+	virtual ~VRWebSocketsNodeFactory() {}
+	VRDisplayNode* createConcrete(VRMainInterface *vrMain, VRDataIndex *config, const std::string &itemNameSpace) {
+		return new VRWebSocketsNode(itemNameSpace, server);
+	}
+private:
+	VRWebSocketsServer& server;
 };
 
 } /* namespace MinVR */

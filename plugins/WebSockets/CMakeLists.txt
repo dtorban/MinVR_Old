@@ -1,13 +1,14 @@
 project(MinVR_WebSockets)
 
 set (SOURCEFILES 
-  #src/VRWebSocketsNode.cpp
+  src/VRWebSocketsNode.cpp
   src/VRWebSocketsServer.cpp
   src/VRWebSocketsInputDevice.cpp
   src/VRWebSocketsPlugin.cpp
 )
 
 set (HEADERFILES
+  src/VRWebSocketsNode.h
   src/VRWebSocketsServer.h
   src/VRWebSocketsInputDevice.h
 )
