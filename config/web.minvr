@@ -39,6 +39,7 @@
 				<YPos>100</YPos>
 				<Width>640</Width>
 				<Height>640</Height>
+	      <TopNode displaynodeType="VRReadPixelsNode">
 				<LookAtNode displaynodeType="VRTrackedLookAtNode">
 					<LookAtUp type="floatarray">0,1,0</LookAtUp>
 					<LookAtEye type="floatarray">0,0,8</LookAtEye>
@@ -55,6 +56,7 @@
 			            </ProjectionNode>
 		            </StereoNode>
                 </LookAtNode>
+			</TopNode>
 			</RootNode>
 		</Desktop>
 	</VRSetups>
