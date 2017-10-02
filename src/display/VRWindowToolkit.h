@@ -88,6 +88,11 @@ public:
 		std::cerr << "getFramebufferSize() not enabled in this VRWindowToolkit." << std::endl;
 	}
 
+	virtual void* getWindowPtr(int windowID) {
+		std::cerr << "getWindowPtr() not enabled in this VRWindowToolkit." << std::endl;
+		return NULL;
+	}
+
 	static std::string getAttributeName(){ return "windowtoolkitType"; };
 };
 

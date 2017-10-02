@@ -48,6 +48,10 @@ public:
 		return _windows[windowID];
 	}
 
+	PLUGIN_API void* getWindowPtr(int windowID) {
+		return getWindow(windowID);
+	}
+
 	PLUGIN_API static VRWindowToolkit* create(VRMainInterface *vrMain, VRDataIndex *config,const std::string &nameSpace);
 
 private:
