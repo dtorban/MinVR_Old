@@ -380,6 +380,14 @@ minvr_optional_adddir(
   "plugins/OpenVR"
 )
 
+#---- OpenHaptics ----
+minvr_optional_adddir(
+  WITH_PLUGIN_OPENHAPTICS
+  "OpenHaptics Plugin"
+  "(Requires the OpenHaptics library)"
+  "plugins/OpenHaptics"
+)
+
 
 #---- FreeGlut ----
 minvr_optional_adddir(
