@@ -253,12 +253,17 @@ public:
     
     
     void onRenderHapticsContext(const VRHapticsState& state) {
+        // Thread safe changes to haptics state for rendering
 #ifdef WITH_HAPTICS
         std::cout << "On Render haptics context." << std::endl;
         if (state.isInitialRenderCall()) {            
             hdEnable(HD_FORCE_OUTPUT);
             hdEnable(HD_MAX_FORCE_CLAMPING);
         }
+
+        /* This is the position of the gravity well in cartesian
+           (i.e. x,y,z) space. */
+        wellPos = hduVector3Dd(0,0,0);
 #endif
     }
 
@@ -267,20 +272,9 @@ public:
         const HDdouble kStiffness = 0.075; /* N/mm */
         const HDdouble kGravityWellInfluence = 40; /* mm */
 
-        /* This is the position of the gravity well in cartesian
-           (i.e. x,y,z) space. */
-        static const hduVector3Dd wellPos(0,0,0);// = {0,0,0};
-
-        HDErrorInfo error;
         hduVector3Dd position;
         hduVector3Dd force;
         hduVector3Dd positionTwell;
-
-        HHD hHD = hdGetCurrentDevice();
-
-        /* Begin haptics frame.  ( In general, all state-related haptics calls
-           should be made within a frame. ) */
-        hdBeginFrame(hHD);
 
         /* Get the current position of the device. */
         hdGetDoublev(HD_CURRENT_POSITION, position);
@@ -352,6 +346,9 @@ public:
 private:
 	GLuint vbo, vao, vshader, fshader, shaderProgram;
 	float model[16];
+#ifdef WITH_HAPTICS
+    hduVector3Dd wellPos(0,0,0);
+#endif
 };
 
 
