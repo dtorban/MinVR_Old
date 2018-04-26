@@ -12,10 +12,18 @@
 #include "display/VRDisplayNode.h"
 #include <main/VRMainInterface.h>
 
-namespace MinVR {
+
+//#include <HD/hd.h>
+//#include <HDU/hduError.h>
+//#include <HDU/hduVector.h>
 
 #define HDCallbackCode 
 #define HDCALLBACK void
+#define HD_CALLBACK_DONE 
+#define HD_CALLBACK_CONTINUE 
+
+namespace MinVR {
+
 
 /**
  * VRThreadGroupNode runs each of the child display nodes in their own thread.  It synchronizes the three main
@@ -44,6 +52,10 @@ private:
 	VRMainInterface &vrMain;
 	std::vector<VRRenderHandler*> renderHandlers;
 	VRDataIndex hapticsState;
+
+	HHD hHD;
+	HDErrorInfo error;
+    HDSchedulerHandle hRenderHaptics;
 };
 
 } /* namespace MinVR */

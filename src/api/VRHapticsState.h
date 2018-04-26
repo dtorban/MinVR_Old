@@ -32,6 +32,7 @@ public:
     // TODO:  Add special accessors with reasonable defaults.
 
     
+	bool isInitialRenderCall() const;
     
     
 	/** For advanced use, provides access to the VRDataIndex used internally by

@@ -27,6 +27,11 @@ VRHapticsState::~VRHapticsState() {
 
 }
 
+bool VRHapticsState::isInitialRenderCall() const {
+    bool initRender = (int)_index.getValue("InitRender","/") == 1;
+    return initRender;
+}
+
 const VRDataIndex& VRHapticsState::index() const {
 	return _index;
 }

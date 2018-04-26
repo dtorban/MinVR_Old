@@ -29,7 +29,12 @@ using namespace MinVR;
 // This is not required for use of MinVR in general
 #include <math/VRMath.h>
 
-
+//#define WITH_HAPTICS
+#ifdef WITH_HAPTICS
+#include <HD/hd.h>
+#include <HDU/hduError.h>
+#include <HDU/hduVector.h>
+#endif
 
 /**
  * MyVRApp is an example of a modern OpenGL using VBOs, VAOs, and shaders.  MyVRApp inherits
@@ -248,11 +253,64 @@ public:
     
     
     void onRenderHapticsContext(const VRHapticsState& state) {
+#ifdef WITH_HAPTICS
         std::cout << "On Render haptics context." << std::endl;
+        if (state.isInitialRenderCall()) {            
+            hdEnable(HD_FORCE_OUTPUT);
+            hdEnable(HD_MAX_FORCE_CLAMPING);
+        }
+#endif
     }
 
     void onRenderHaptics(const VRHapticsState& state) {
-        std::cout << "On Render haptics." << std::endl;
+#ifdef WITH_HAPTICS
+        const HDdouble kStiffness = 0.075; /* N/mm */
+        const HDdouble kGravityWellInfluence = 40; /* mm */
+
+        /* This is the position of the gravity well in cartesian
+           (i.e. x,y,z) space. */
+        static const hduVector3Dd wellPos(0,0,0);// = {0,0,0};
+
+        HDErrorInfo error;
+        hduVector3Dd position;
+        hduVector3Dd force;
+        hduVector3Dd positionTwell;
+
+        HHD hHD = hdGetCurrentDevice();
+
+        /* Begin haptics frame.  ( In general, all state-related haptics calls
+           should be made within a frame. ) */
+        hdBeginFrame(hHD);
+
+        /* Get the current position of the device. */
+        hdGetDoublev(HD_CURRENT_POSITION, position);
+        
+        memset(force, 0, sizeof(hduVector3Dd));
+        
+        /* >  positionTwell = wellPos-position  < 
+           Create a vector from the device position towards the gravity 
+           well's center. */
+        hduVecSubtract(positionTwell, wellPos, position);
+        
+        /* If the device position is within some distance of the gravity well's 
+           center, apply a spring force towards gravity well's center.  The force
+           calculation differs from a traditional gravitational body in that the
+           closer the device is to the center, the less force the well exerts;
+           the device behaves as if a spring were connected between itself and
+           the well's center. */
+        if (hduVecMagnitude(positionTwell) < kGravityWellInfluence)
+        {
+            /* >  F = k * x  < 
+               F: Force in Newtons (N)
+               k: Stiffness of the well (N/mm)
+               x: Vector from the device endpoint position to the center 
+               of the well. */
+            hduVecScale(force, positionTwell, kStiffness);
+        }
+
+        /* Send the force to the device. */
+        hdSetDoublev(HD_CURRENT_FORCE, force);
+#endif
     }
     
     
