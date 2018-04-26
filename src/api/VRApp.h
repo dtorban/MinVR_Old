@@ -92,6 +92,7 @@ public:
 	 */
 	virtual void onRenderGraphicsContext(const VRGraphicsState& state) {}
 
+	virtual void onRenderHapticsContext(const VRHapticsState& state) {}
 	virtual void onRenderHaptics(const VRHapticsState& state) {}
 
 

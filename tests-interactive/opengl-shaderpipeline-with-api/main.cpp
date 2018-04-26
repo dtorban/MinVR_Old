@@ -247,7 +247,13 @@ public:
     }
     
     
-    void onRenderHaptics(const VRHapticsState& state) {}
+    void onRenderHapticsContext(const VRHapticsState& state) {
+        std::cout << "On Render haptics context." << std::endl;
+    }
+
+    void onRenderHaptics(const VRHapticsState& state) {
+        std::cout << "On Render haptics." << std::endl;
+    }
     
     
 	/// Compiles shader

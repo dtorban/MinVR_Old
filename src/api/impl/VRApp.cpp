@@ -92,7 +92,7 @@ public:
             _app->onRenderConsole(VRConsoleState(renderData));
         }
         else if (renderData.exists("IsHaptics")) {
-            _app->onRenderHaptics(VRHapticsState(renderData));
+            _app->onRenderHapticsContext(VRHapticsState(renderData));
         }
         else {
             VRERROR("VRAppInternal::onRenderContext() received an unknown type of render callback",
@@ -112,6 +112,7 @@ public:
             // nothing to do, already called onRenderConsole() during onVRRenderContext
         }
         else if (renderData.exists("IsHaptics")) {
+            _app->onRenderHaptics(VRHapticsState(renderData));
             // nothing to do, already called onRenderHaptics() during onVRRenderContext
         }
         else {

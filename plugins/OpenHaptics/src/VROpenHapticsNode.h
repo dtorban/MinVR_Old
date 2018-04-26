@@ -10,7 +10,7 @@
 #define VROPENHAPTICSNODE_H
 
 #include "display/VRDisplayNode.h"
-#include <main/VRFactory.h>
+#include <main/VRMainInterface.h>
 
 namespace MinVR {
 
@@ -23,7 +23,7 @@ namespace MinVR {
  */
 class VROpenHapticsNode : public VRDisplayNode {
 public:
-	VROpenHapticsNode(const std::string &name);
+	VROpenHapticsNode(const std::string &name, VRMainInterface &vrMain);
 	virtual ~VROpenHapticsNode();
 
 	virtual std::string getType() const { return "VROpenHapticsNode"; }
@@ -33,6 +33,8 @@ public:
 	static VRDisplayNode* create(VRMainInterface *vrMain, VRDataIndex *config, const std::string &nameSpace);
 
 private:
+	VRMainInterface &vrMain;
+	std::vector<VRRenderHandler*> renderHandlers;
 };
 
 } /* namespace MinVR */
