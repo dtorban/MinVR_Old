@@ -18,10 +18,12 @@ set (SOURCEFILES
 #  src/VRGLFWInputDevice.cpp
   src/VROpenHapticsPlugin.cpp
   src/VROpenHapticsNode.cpp
+  src/VROpenHapticsDevice.cpp
 #  src/VRGLFWWindowToolkit.cpp
 )
 set (HEADERFILES
   src/VROpenHapticsNode.h
+  src/VROpenHapticsDevice.h
 #  src/VRGLFWInputDevice.h
 #  src/VRGLFWWindowToolkit.h
 )

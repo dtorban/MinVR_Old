@@ -14,38 +14,15 @@ namespace MinVR {
 VROpenHapticsNode::VROpenHapticsNode(const std::string& name, VRMainInterface &vrMain) : VRDisplayNode(name), vrMain(vrMain) {
 	hapticsState.addData("IsHaptics", true);
 
-	 /* Initialize the device, must be done before attempting to call any hd 
-       functions. Passing in HD_DEFAULT_DEVICE causes the default device to be 
-       initialized. */
-	    hHD = hdInitDevice("Omni");
-	    if (HD_DEVICE_ERROR(error = hdGetError())) 
-	    {
-	        hduPrintError(stderr, &error, "Failed to initialize haptic device");
-	        fprintf(stderr, "\nPress any key to quit.\n");
-	        //getch();
-	    }
-
-	    printf("Hello Haptic Device!\n");
-	    printf("Found device model: %s.\n\n", hdGetString(HD_DEVICE_MODEL_TYPE));
-		
-	    hdEnable(HD_FORCE_OUTPUT);
-	    hdEnable(HD_MAX_FORCE_CLAMPING);
-	    hdStartScheduler();
-
-	    /* Check for errors and abort if so. */
-	    if (HD_DEVICE_ERROR(error = hdGetError()))
-	    {
-	        hduPrintError(stderr, &error, "Failed to start scheduler");
-	        fprintf(stderr, "\nPress any key to quit.\n");
-	    }
+	device = new VROpenHapticsDevice("Omni");
+	vrMain.addInputDevice(device);
 }
 
 VROpenHapticsNode::~VROpenHapticsNode() {
-	hdStopScheduler();
+#ifdef WITH_HAPTICS
     hdUnschedule(hRenderHaptics);
-
-    /* Disable the device. */
-    hdDisableDevice(hHD);
+#endif
+	delete device;
 }
 
 struct HapticsData {
@@ -54,12 +31,13 @@ struct HapticsData {
 	VRRenderHandler* renderHandler;
 };
 
-void VROpenHapticsNode::render(VRDataIndex* renderState,
-		VRRenderHandler* renderHandler) {
+void VROpenHapticsNode::render(VRDataIndex* renderState, VRRenderHandler* renderHandler) {
 
     bool initRender = (int)renderState->getValue("InitRender","/") == 1;
 
-    hdMakeCurrentDevice(hHD);
+#ifdef WITH_HAPTICS
+    hdMakeCurrentDevice(device->getDevice());
+#endif
 
 	renderState->pushState();
 	renderState->addData("IsHaptics", true);
@@ -67,16 +45,20 @@ void VROpenHapticsNode::render(VRDataIndex* renderState,
     hapticsData.node = this;
     hapticsData.renderState = renderState;
     hapticsData.renderHandler = renderHandler;
+#ifdef WITH_HAPTICS
     // schedule haptics synchronous
     hdScheduleSynchronous(setHapticsState, &hapticsData,
                           HD_MIN_SCHEDULER_PRIORITY);
+#endif
 	renderState->popState();
 
     if (initRender) {
+#ifdef WITH_HAPTICS
     	// schedule haptics asynchronous
 	    hRenderHaptics = hdScheduleAsynchronous(
 	        renderHaptics, this, 
 	        HD_MAX_SCHEDULER_PRIORITY);
+#endif
     }
 
 }
@@ -88,9 +70,13 @@ void VROpenHapticsNode::setHapticsState(VRDataIndex* renderState,
 }
 
 void VROpenHapticsNode::renderHaptics() {
+	device->beginUpdate();
+
 	for (int f = 0; f < renderHandlers.size(); f++) {
 		renderHandlers[f]->onVRRenderScene(hapticsState);
 	}
+
+	device->endUpdate();
 }
 
 HDCallbackCode HDCALLBACK VROpenHapticsNode::setHapticsState(void *data) {
@@ -103,28 +89,22 @@ HDCallbackCode HDCALLBACK VROpenHapticsNode::setHapticsState(void *data) {
 
 HDCallbackCode HDCALLBACK VROpenHapticsNode::renderHaptics(void *data) {
 	VROpenHapticsNode* node = static_cast<VROpenHapticsNode*>(data);
-	
-    /* Begin haptics frame.  ( In general, all state-related haptics calls
-       should be made within a frame. ) */
-    hdBeginFrame(hHD);
-
     node->renderHaptics();
 
-	/* End haptics frame. */
-    hdEndFrame(hHD);
-
+#ifdef WITH_HAPTICS
     /* Check for errors and abort the callback if a scheduler error
        is detected. */
     if (HD_DEVICE_ERROR(error = hdGetError()))
     {
         hduPrintError(stderr, &error, 
-                      "Error detected while rendering gravity well\n");
+                      "Error detected while rendering\n");
         
         if (hduIsSchedulerError(&error))
         {
             return HD_CALLBACK_DONE;
         }
     }
+#endif
 
     /* Signify that the callback should continue running, i.e. that
        it will be called again the next scheduler tick. */
@@ -133,6 +113,7 @@ HDCallbackCode HDCALLBACK VROpenHapticsNode::renderHaptics(void *data) {
 
 VRDisplayNode* VROpenHapticsNode::create(VRMainInterface* vrMain,
 		VRDataIndex* config, const std::string& nameSpace) {
+
 	return new VROpenHapticsNode(nameSpace, *vrMain);
 }
 

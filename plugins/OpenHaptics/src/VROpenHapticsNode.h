@@ -13,14 +13,19 @@
 #include <main/VRMainInterface.h>
 
 
-//#include <HD/hd.h>
-//#include <HDU/hduError.h>
-//#include <HDU/hduVector.h>
-
+//#define WITH_HAPTICS
+#ifdef WITH_HAPTICS
+#include <HD/hd.h>
+#include <HDU/hduError.h>
+#include <HDU/hduVector.h>
+#else
 #define HDCallbackCode 
 #define HDCALLBACK void
 #define HD_CALLBACK_DONE 
 #define HD_CALLBACK_CONTINUE 
+#endif
+
+#include "VROpenHapticsDevice.h"
 
 namespace MinVR {
 
@@ -52,10 +57,12 @@ private:
 	VRMainInterface &vrMain;
 	std::vector<VRRenderHandler*> renderHandlers;
 	VRDataIndex hapticsState;
+	VROpenHapticsDevice* device;
 
-	HHD hHD;
+#ifdef WITH_HAPTICS
 	HDErrorInfo error;
     HDSchedulerHandle hRenderHaptics;
+#endif
 };
 
 } /* namespace MinVR */
