@@ -14,6 +14,9 @@
 
 namespace MinVR {
 
+#define HDCallbackCode 
+#define HDCALLBACK void
+
 /**
  * VRThreadGroupNode runs each of the child display nodes in their own thread.  It synchronizes the three main
  * display node functions render, waitForRenderToComplete, and displayFinishedRendering.  This allows multithreading
@@ -33,8 +36,14 @@ public:
 	static VRDisplayNode* create(VRMainInterface *vrMain, VRDataIndex *config, const std::string &nameSpace);
 
 private:
+	void setHapticsState(VRDataIndex* renderState, VRRenderHandler* renderHandler);
+	void renderHaptics();
+	static HDCallbackCode HDCALLBACK setHapticsState(void *data);
+	static HDCallbackCode HDCALLBACK renderHaptics(void *data);
+
 	VRMainInterface &vrMain;
 	std::vector<VRRenderHandler*> renderHandlers;
+	VRDataIndex hapticsState;
 };
 
 } /* namespace MinVR */
