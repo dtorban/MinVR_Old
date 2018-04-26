@@ -12,6 +12,7 @@
 # Plugin names must begin with "MinVR_"
 project(MinVR_OpenHaptics)
 
+ # add_definitions(-DWITH_HAPTICS)
 
 # Source:
 set (SOURCEFILES 

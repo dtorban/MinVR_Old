@@ -20,6 +20,7 @@ set (HEADERFILES
 set (CONFIGFILES
 )
 
+ # add_definitions(-DWITH_HAPTICS)
 
 # Define the target
 add_executable(${PROJECT_NAME} ${HEADERFILES} ${SOURCEFILES})
