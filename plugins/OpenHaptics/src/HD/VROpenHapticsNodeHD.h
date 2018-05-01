@@ -37,10 +37,10 @@ namespace MinVR {
  * the potential for other threads in MinVR to use the time between render and waitForRenderComplete.  It is possible
  * to nest the VRThreadGroupNodes enableing multi levels of parallel processing.
  */
-class VROpenHapticsNode : public VRDisplayNode {
+class VROpenHapticsNodeHD : public VRDisplayNode {
 public:
-	VROpenHapticsNode(const std::string &name, VRMainInterface &vrMain);
-	virtual ~VROpenHapticsNode();
+	VROpenHapticsNodeHD(const std::string &name, VRMainInterface &vrMain);
+	virtual ~VROpenHapticsNodeHD();
 
 	virtual std::string getType() const { return "VROpenHapticsNodeHD"; }
 

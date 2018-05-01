@@ -36,7 +36,7 @@ public:
 	PLUGIN_API void registerWithMinVR(VRMainInterface *vrMain)
 	{
       std::cout << "Registering VROpenHapticsPlugin." << std::endl;
-		vrMain->getFactory()->registerItemType<VRDisplayNode, VROpenHapticsNode>("VROpenHapticsNodeHD");
+		vrMain->getFactory()->registerItemType<VRDisplayNode, VROpenHapticsNodeHD>("VROpenHapticsNodeHD");
 	}
 
 	PLUGIN_API void unregisterWithMinVR(VRMainInterface *vrMain)

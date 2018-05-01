@@ -11,27 +11,27 @@
 
 namespace MinVR {
 
-VROpenHapticsNode::VROpenHapticsNode(const std::string& name, VRMainInterface &vrMain) : VRDisplayNode(name), vrMain(vrMain) {
+VROpenHapticsNodeHD::VROpenHapticsNodeHD(const std::string& name, VRMainInterface &vrMain) : VRDisplayNode(name), vrMain(vrMain) {
 	hapticsState.addData("IsHaptics", true);
 
 	device = new VROpenHapticsDeviceHD("Omni");
 	vrMain.addInputDevice(device);
 }
 
-VROpenHapticsNode::~VROpenHapticsNode() {
+VROpenHapticsNodeHD::~VROpenHapticsNodeHD() {
 #ifdef WITH_HAPTICS
     hdUnschedule(hRenderHaptics);
 #endif
 	delete device;
 }
 
-struct HapticsData {
-	VROpenHapticsNode* node;
+struct HapticsDataHD {
+	VROpenHapticsNodeHD* node;
 	VRDataIndex* renderState;
 	VRRenderHandler* renderHandler;
 };
 
-void VROpenHapticsNode::render(VRDataIndex* renderState, VRRenderHandler* renderHandler) {
+void VROpenHapticsNodeHD::render(VRDataIndex* renderState, VRRenderHandler* renderHandler) {
 
     bool initRender = (int)renderState->getValue("InitRender","/") == 1;
 
@@ -41,7 +41,7 @@ void VROpenHapticsNode::render(VRDataIndex* renderState, VRRenderHandler* render
 
 	renderState->pushState();
 	renderState->addData("IsHaptics", true);
-    HapticsData hapticsData;
+    HapticsDataHD hapticsData;
     hapticsData.node = this;
     hapticsData.renderState = renderState;
     hapticsData.renderHandler = renderHandler;
@@ -63,13 +63,13 @@ void VROpenHapticsNode::render(VRDataIndex* renderState, VRRenderHandler* render
 
 }
 
-void VROpenHapticsNode::setHapticsState(VRDataIndex* renderState,
+void VROpenHapticsNodeHD::setHapticsState(VRDataIndex* renderState,
 		VRRenderHandler* renderHandler) {
 	renderHandlers = vrMain.getRenderHandlers();
 	renderHandler->onVRRenderContext(*renderState);
 }
 
-void VROpenHapticsNode::renderHaptics() {
+void VROpenHapticsNodeHD::renderHaptics() {
 	device->beginUpdate();
 
 	for (int f = 0; f < renderHandlers.size(); f++) {
@@ -79,16 +79,16 @@ void VROpenHapticsNode::renderHaptics() {
 	device->endUpdate();
 }
 
-HDCallbackCode HDCALLBACK VROpenHapticsNode::setHapticsState(void *data) {
-	HapticsData* hapticsData = static_cast<HapticsData*>(data);
+HDCallbackCode HDCALLBACK VROpenHapticsNodeHD::setHapticsState(void *data) {
+	HapticsDataHD* hapticsData = static_cast<HapticsDataHD*>(data);
 	hapticsData->node->setHapticsState(hapticsData->renderState, hapticsData->renderHandler);
 
     // execute this only once.
     return HD_CALLBACK_DONE;
 }
 
-HDCallbackCode HDCALLBACK VROpenHapticsNode::renderHaptics(void *data) {
-	VROpenHapticsNode* node = static_cast<VROpenHapticsNode*>(data);
+HDCallbackCode HDCALLBACK VROpenHapticsNodeHD::renderHaptics(void *data) {
+	VROpenHapticsNodeHD* node = static_cast<VROpenHapticsNodeHD*>(data);
     node->renderHaptics();
 
 #ifdef WITH_HAPTICS
@@ -111,10 +111,10 @@ HDCallbackCode HDCALLBACK VROpenHapticsNode::renderHaptics(void *data) {
     return HD_CALLBACK_CONTINUE;
 }
 
-VRDisplayNode* VROpenHapticsNode::create(VRMainInterface* vrMain,
+VRDisplayNode* VROpenHapticsNodeHD::create(VRMainInterface* vrMain,
 		VRDataIndex* config, const std::string& nameSpace) {
 
-	return new VROpenHapticsNode(nameSpace, *vrMain);
+	return new VROpenHapticsNodeHD(nameSpace, *vrMain);
 }
 
 } /* namespace MinVR */
