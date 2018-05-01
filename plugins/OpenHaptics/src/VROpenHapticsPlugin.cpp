@@ -15,7 +15,7 @@
 // special: include this only once in one .cpp file per plugin
 #include <plugin/VRPluginVersion.h>
 
-#include "VROpenHapticsNode.h"
+#include "HD/VROpenHapticsNodeHD.h"
 
 #include <main/VRFactory.h>
 
@@ -36,7 +36,7 @@ public:
 	PLUGIN_API void registerWithMinVR(VRMainInterface *vrMain)
 	{
       std::cout << "Registering VROpenHapticsPlugin." << std::endl;
-		vrMain->getFactory()->registerItemType<VRDisplayNode, VROpenHapticsNode>("VROpenHapticsNode");
+		vrMain->getFactory()->registerItemType<VRDisplayNode, VROpenHapticsNode>("VROpenHapticsNodeHD");
 	}
 
 	PLUGIN_API void unregisterWithMinVR(VRMainInterface *vrMain)

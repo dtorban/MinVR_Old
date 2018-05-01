@@ -12,19 +12,19 @@
 # Plugin names must begin with "MinVR_"
 project(MinVR_OpenHaptics)
 
-  add_definitions(-DWITH_HAPTICS)
+#  add_definitions(-DWITH_HAPTICS)
 
 # Source:
 set (SOURCEFILES 
 #  src/VRGLFWInputDevice.cpp
   src/VROpenHapticsPlugin.cpp
-  src/VROpenHapticsNode.cpp
-  src/VROpenHapticsDevice.cpp
+  src/HD/VROpenHapticsNodeHD.cpp
+  src/HD/VROpenHapticsDeviceHD.cpp
 #  src/VRGLFWWindowToolkit.cpp
 )
 set (HEADERFILES
-  src/VROpenHapticsNode.h
-  src/VROpenHapticsDevice.h
+  src/HD/VROpenHapticsNodeHD.h
+  src/HD/VROpenHapticsDeviceHD.h
 #  src/VRGLFWInputDevice.h
 #  src/VRGLFWWindowToolkit.h
 )
@@ -60,8 +60,8 @@ link_directories(
 "$ENV{OH_SDK_BASE}/lib/x64/Release"
 )
 
-target_link_libraries(${PROJECT_NAME} PUBLIC "$ENV{OH_SDK_BASE}/utilities/lib/x64/Release/hdu.lib")
-target_link_libraries(${PROJECT_NAME} PUBLIC "$ENV{OH_SDK_BASE}/lib/x64/Release/hd.lib")
+#target_link_libraries(${PROJECT_NAME} PUBLIC "$ENV{OH_SDK_BASE}/utilities/lib/x64/Release/hdu.lib")
+#target_link_libraries(${PROJECT_NAME} PUBLIC "$ENV{OH_SDK_BASE}/lib/x64/Release/hd.lib")
 
 # Setup dependency on GLFW:
 #include(AutoBuildGLFW)

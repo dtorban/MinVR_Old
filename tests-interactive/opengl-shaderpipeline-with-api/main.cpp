@@ -43,7 +43,7 @@ using namespace MinVR;
  */
 class MyVRApp : public VRApp {
 public:
-    MyVRApp(int argc, char** argv) : VRApp(argc, argv), wellPos(0,0,0) {
+    MyVRApp(int argc, char** argv) : VRApp(argc, argv) {
     }
 
 

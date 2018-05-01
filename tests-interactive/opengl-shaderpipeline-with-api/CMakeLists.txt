@@ -20,7 +20,7 @@ set (HEADERFILES
 set (CONFIGFILES
 )
 
-  add_definitions(-DWITH_HAPTICS)
+  #add_definitions(-DWITH_HAPTICS)
 
 # Define the target
 add_executable(${PROJECT_NAME} ${HEADERFILES} ${SOURCEFILES})
@@ -38,8 +38,8 @@ link_directories(
 )
 
 target_link_libraries(${PROJECT_NAME} PUBLIC MinVR)
-target_link_libraries(${PROJECT_NAME} PUBLIC "$ENV{OH_SDK_BASE}/utilities/lib/x64/Release/hdu.lib")
-target_link_libraries(${PROJECT_NAME} PUBLIC "$ENV{OH_SDK_BASE}/lib/x64/Release/hd.lib")
+#target_link_libraries(${PROJECT_NAME} PUBLIC "$ENV{OH_SDK_BASE}/utilities/lib/x64/Release/hdu.lib")
+#target_link_libraries(${PROJECT_NAME} PUBLIC "$ENV{OH_SDK_BASE}/lib/x64/Release/hd.lib")
 
 # Setup dependency on OpenGL:
 include(AutoBuildOpenGL)

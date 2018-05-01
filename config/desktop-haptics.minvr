@@ -113,7 +113,7 @@
           </StereoNode>
         </TrackingNode>
       </WindowNode>
-      <HapticsNode displaynodeType="VROpenHapticsNode">
+      <HapticsNode displaynodeType="VROpenHapticsNodeHD">
       </HapticsNode>
     </Group>
 
