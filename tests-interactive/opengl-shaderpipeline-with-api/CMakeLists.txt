@@ -20,16 +20,26 @@ set (HEADERFILES
 set (CONFIGFILES
 )
 
- # add_definitions(-DWITH_HAPTICS)
+  add_definitions(-DWITH_HAPTICS)
 
 # Define the target
 add_executable(${PROJECT_NAME} ${HEADERFILES} ${SOURCEFILES})
 
 
-# Setup dependency on libMinVR:
-target_include_directories(${PROJECT_NAME} PUBLIC ../../src)
-target_link_libraries(${PROJECT_NAME} PUBLIC MinVR)
+# Setup dependency on libMinVR:C:\OpenHaptics\Developer\3.4.0\lib\x64\Release
+target_include_directories(${PROJECT_NAME} PUBLIC ../../src
+"$ENV{OH_SDK_BASE}/utilities/include"
+"$ENV{OH_SDK_BASE}/include")
 
+link_directories(
+"$ENV{OH_SDK_BASE}/lib/x64/Release"
+"$ENV{OH_SDK_BASE}/utilities/lib/x64/Release"
+"$ENV{OH_SDK_BASE}/lib/x64/Release"
+)
+
+target_link_libraries(${PROJECT_NAME} PUBLIC MinVR)
+target_link_libraries(${PROJECT_NAME} PUBLIC "$ENV{OH_SDK_BASE}/utilities/lib/x64/Release/hdu.lib")
+target_link_libraries(${PROJECT_NAME} PUBLIC "$ENV{OH_SDK_BASE}/lib/x64/Release/hd.lib")
 
 # Setup dependency on OpenGL:
 include(AutoBuildOpenGL)

@@ -43,7 +43,7 @@ using namespace MinVR;
  */
 class MyVRApp : public VRApp {
 public:
-    MyVRApp(int argc, char** argv) : VRApp(argc, argv) {
+    MyVRApp(int argc, char** argv) : VRApp(argc, argv), wellPos(0,0,0) {
     }
 
 
@@ -347,7 +347,7 @@ private:
 	GLuint vbo, vao, vshader, fshader, shaderProgram;
 	float model[16];
 #ifdef WITH_HAPTICS
-    hduVector3Dd wellPos(0,0,0);
+    hduVector3Dd wellPos;
 #endif
 };
 

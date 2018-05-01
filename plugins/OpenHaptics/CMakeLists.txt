@@ -12,7 +12,7 @@
 # Plugin names must begin with "MinVR_"
 project(MinVR_OpenHaptics)
 
- # add_definitions(-DWITH_HAPTICS)
+  add_definitions(-DWITH_HAPTICS)
 
 # Source:
 set (SOURCEFILES 
@@ -37,6 +37,15 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     $<INSTALL_INTERFACE:${INSTALL_PLUGININCLUDE_DEST}/${PROJECT_NAME}>  # for client in install mode
 )
 
+include_directories(
+
+"$ENV{OH_SDK_BASE}/utilities/include"
+"$ENV{OH_SDK_BASE}/include")
+link_directories(
+"$ENV{OH_SDK_BASE}/lib/x64/Release"
+"$ENV{OH_SDK_BASE}/utilities/lib/x64/Release"
+"$ENV{OH_SDK_BASE}/lib/x64/Release"
+)
 
 # Setup dependency on libMinVR:
 target_include_directories(${PROJECT_NAME} PUBLIC 
@@ -45,6 +54,14 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 )
 target_link_libraries(${PROJECT_NAME} PUBLIC MinVR)
 
+link_directories(
+"$ENV{OH_SDK_BASE}/lib/x64/Release"
+"$ENV{OH_SDK_BASE}/utilities/lib/x64/Release"
+"$ENV{OH_SDK_BASE}/lib/x64/Release"
+)
+
+target_link_libraries(${PROJECT_NAME} PUBLIC "$ENV{OH_SDK_BASE}/utilities/lib/x64/Release/hdu.lib")
+target_link_libraries(${PROJECT_NAME} PUBLIC "$ENV{OH_SDK_BASE}/lib/x64/Release/hd.lib")
 
 # Setup dependency on GLFW:
 #include(AutoBuildGLFW)

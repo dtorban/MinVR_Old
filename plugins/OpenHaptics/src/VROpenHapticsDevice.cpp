@@ -17,7 +17,7 @@ VROpenHapticsDevice::VROpenHapticsDevice(const std::string& name) : name(name) {
      /* Initialize the device, must be done before attempting to call any hd 
        functions. Passing in HD_DEFAULT_DEVICE causes the default device to be 
        initialized. */
-        hHD = hdInitDevice(name);
+		hHD = hdInitDevice(name.c_str());
         if (HD_DEVICE_ERROR(error = hdGetError())) 
         {
             hduPrintError(stderr, &error, "Failed to initialize haptic device");
@@ -54,17 +54,17 @@ void VROpenHapticsDevice::appendNewInputEventsSinceLastCall(VRDataQueue* queue) 
                           HD_MIN_SCHEDULER_PRIORITY);
 
     for (int f = 0; f < hapticsEvents.size(); f++) {
-        if (hapticsEvents[f] == BUTTON_1_DOWN || hapticsEvents[f] == BUTTON_1_UP) {
+		if (hapticsEvents[f]->type == BUTTON_1_DOWN || hapticsEvents[f]->type == BUTTON_1_UP) {
             std::string name = "BUTTON_1_";
-            if (hapticsEvents[f] == BUTTON_1_DOWN) {
+            if (hapticsEvents[f]->type == BUTTON_1_DOWN) {
                 name = name + "_Down";
             }
             else {
                 name = name + "_Up";
             }
 
-            VRDataIndex di = VRButtonEvent::createValidDataIndex(name, down);
-            _events.push_back(di);
+            //VRDataIndex di = VRButtonEvent::createValidDataIndex(name, down);
+            //_events.push_back(di);
         }
 
         delete hapticsEvents[f];
@@ -159,7 +159,7 @@ void VROpenHapticsDevice::getDeviceState() {
 
     deviceState = currentState;
     for (int f = 0; f < currentEvents.size(); f++) {
-        hapticsEvents->push_back(currentEvents[f]);
+        hapticsEvents.push_back(currentEvents[f]);
     }
 
     currentEvents.clear();

@@ -126,12 +126,12 @@ long long VRDataQueue::makeTimeStamp() {
 	GetVersionEx(&osvi);
 
 	//https://en.wikipedia.org/wiki/List_of_Microsoft_Windows_versions
-	if (osvi.dwMajorVersion > 6 || (osvi.dwMajorVersion == 6) && (osvi.dwMinorVersion >= 2)) {
-		GetSystemTimePreciseAsFileTime(&ft); // Requires windows 8 and above. Should give microsecond resolution and be consistent across different machines if they are using a time server.
-	}
-	else {
+//	if (osvi.dwMajorVersion > 6 || (osvi.dwMajorVersion == 6) && (osvi.dwMinorVersion >= 2)) {
+//		GetSystemTimePreciseAsFileTime(&ft); // Requires windows 8 and above. Should give microsecond resolution and be consistent across different machines if they are using a time server.
+//	}
+//	else {
 		GetSystemTimeAsFileTime(&ft);
-	}
+//	}
 
 	
 	t1.LowPart = ft.dwLowDateTime;

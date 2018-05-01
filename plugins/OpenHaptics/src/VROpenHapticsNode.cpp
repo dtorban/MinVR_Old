@@ -94,7 +94,7 @@ HDCallbackCode HDCALLBACK VROpenHapticsNode::renderHaptics(void *data) {
 #ifdef WITH_HAPTICS
     /* Check for errors and abort the callback if a scheduler error
        is detected. */
-    if (HD_DEVICE_ERROR(error = hdGetError()))
+    /*if (HD_DEVICE_ERROR(error = hdGetError()))
     {
         hduPrintError(stderr, &error, 
                       "Error detected while rendering\n");
@@ -103,7 +103,7 @@ HDCallbackCode HDCALLBACK VROpenHapticsNode::renderHaptics(void *data) {
         {
             return HD_CALLBACK_DONE;
         }
-    }
+    }*/
 #endif
 
     /* Signify that the callback should continue running, i.e. that

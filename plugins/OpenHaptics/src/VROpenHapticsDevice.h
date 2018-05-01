@@ -75,7 +75,7 @@ private:
 	        memset(transform, 0, 16 * sizeof(HDdouble));
 	    }
 
-	    DeviceState(const VROpenHapticsDeviceState &state) {
+	    DeviceState(const DeviceState &state) {
 	        position = state.position;
 	        force = state.force;
 	        memcpy(transform, state.transform, 16 * sizeof(HDdouble));
@@ -89,7 +89,7 @@ private:
 	struct HapticsEvent {
 		EventType type;
 		DeviceState state;
-	}
+	};
 	
 	DeviceState deviceState;
 	DeviceState lastState;
