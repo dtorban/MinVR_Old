@@ -61,6 +61,7 @@ public:
     }
     
     void onButtonDown(const VRButtonEvent &state) {
+		std::cout << state.getName() << std::endl;
         if (state.getName() == "KbdEsc_Down") {
             shutdown();
         }
@@ -255,7 +256,7 @@ public:
     void onRenderHapticsContext(const VRHapticsState& state) {
         // Thread safe changes to haptics state for rendering
 #ifdef WITH_HAPTICS
-        std::cout << "On Render haptics context." << std::endl;
+        //std::cout << "On Render haptics context." << std::endl;
         if (state.isInitialRenderCall()) {            
             hdEnable(HD_FORCE_OUTPUT);
             hdEnable(HD_MAX_FORCE_CLAMPING);

@@ -56,15 +56,18 @@ void VROpenHapticsDevice::appendNewInputEventsSinceLastCall(VRDataQueue* queue) 
     for (int f = 0; f < hapticsEvents.size(); f++) {
 		if (hapticsEvents[f]->type == BUTTON_1_DOWN || hapticsEvents[f]->type == BUTTON_1_UP) {
             std::string name = "BUTTON_1_";
+			bool down;
             if (hapticsEvents[f]->type == BUTTON_1_DOWN) {
-                name = name + "_Down";
+                name = name + "Down";
+				down = true;
             }
             else {
-                name = name + "_Up";
+                name = name + "Up";
+				down = false;
             }
 
-            //VRDataIndex di = VRButtonEvent::createValidDataIndex(name, down);
-            //_events.push_back(di);
+            VRDataIndex di = VRButtonEvent::createValidDataIndex(name, down);
+            _events.push_back(di);
         }
 
         delete hapticsEvents[f];
@@ -73,7 +76,6 @@ void VROpenHapticsDevice::appendNewInputEventsSinceLastCall(VRDataQueue* queue) 
     hapticsEvents.clear();
 #endif
 
-    std::cout << "Called haptics event " << name << "." << std::endl;
 
 
     for (size_t f = 0; f < _events.size(); f++)
