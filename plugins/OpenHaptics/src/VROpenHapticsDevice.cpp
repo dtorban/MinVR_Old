@@ -112,7 +112,7 @@ void VROpenHapticsDevice::beginUpdate() {
     else if ((nCurrentButtonState & HD_DEVICE_BUTTON_1) == 0 &&
              (nLastButtonState & HD_DEVICE_BUTTON_1) != 0)
     {
-        //handleEvent(BUTTON_1_UP);
+        handleEvent(BUTTON_1_UP);
     }
     
     if ((nCurrentButtonState & HD_DEVICE_BUTTON_2) != 0 &&

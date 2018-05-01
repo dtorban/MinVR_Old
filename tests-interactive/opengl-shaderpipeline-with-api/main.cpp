@@ -67,7 +67,9 @@ public:
         }
     }
     
-    void onButtonUp(const VRButtonEvent &state) {}
+    void onButtonUp(const VRButtonEvent &state) {
+		std::cout << state.getName() << std::endl;
+	}
     
     void onCursorMove(const VRCursorEvent &state) {}
     
@@ -260,11 +262,13 @@ public:
         if (state.isInitialRenderCall()) {            
             hdEnable(HD_FORCE_OUTPUT);
             hdEnable(HD_MAX_FORCE_CLAMPING);
+
+			/* This is the position of the gravity well in cartesian
+			   (i.e. x,y,z) space. */
+			wellPos = hduVector3Dd(0,0,0);
         }
 
-        /* This is the position of the gravity well in cartesian
-           (i.e. x,y,z) space. */
-        wellPos = hduVector3Dd(0,0,0);
+		//wellPos += hduVector3Dd(0.1,0,0);
 #endif
     }
 
