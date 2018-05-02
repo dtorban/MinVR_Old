@@ -6,8 +6,8 @@
  * 		Dan Orban (dtorban)
  */
 
-#ifndef VROPENHAPTICSNODE_H
-#define VROPENHAPTICSNODE_H
+#ifndef VROpenHapticsNodeHL_H
+#define VROpenHapticsNodeHL_H
 
 #include "display/VRDisplayNode.h"
 #include <main/VRMainInterface.h>
@@ -25,7 +25,7 @@
 #define HD_CALLBACK_CONTINUE 
 #endif
 
-#include "VROpenHapticsDevice.h"
+#include "VROpenHapticsDeviceHL.h"
 
 namespace MinVR {
 
@@ -37,12 +37,12 @@ namespace MinVR {
  * the potential for other threads in MinVR to use the time between render and waitForRenderComplete.  It is possible
  * to nest the VRThreadGroupNodes enableing multi levels of parallel processing.
  */
-class VROpenHapticsNode : public VRDisplayNode {
+class VROpenHapticsNodeHL : public VRDisplayNode {
 public:
-	VROpenHapticsNode(const std::string &name, VRMainInterface &vrMain);
-	virtual ~VROpenHapticsNode();
+	VROpenHapticsNodeHL(const std::string &name, VRMainInterface &vrMain);
+	virtual ~VROpenHapticsNodeHL();
 
-	virtual std::string getType() const { return "VROpenHapticsNode"; }
+	virtual std::string getType() const { return "VROpenHapticsNodeHL"; }
 
 	virtual void render(VRDataIndex *renderState, VRRenderHandler *renderHandler);
 
@@ -57,7 +57,7 @@ private:
 	VRMainInterface &vrMain;
 	std::vector<VRRenderHandler*> renderHandlers;
 	VRDataIndex hapticsState;
-	VROpenHapticsDevice* device;
+	VROpenHapticsDeviceHL* device;
 
 #ifdef WITH_HAPTICS
 	HDErrorInfo error;

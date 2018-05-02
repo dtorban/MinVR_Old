@@ -6,13 +6,13 @@
  * 		Dan Orban (dtorban)
  */
 
-#include "VROpenHapticsDevice.h"
+#include "VROpenHapticsDeviceHL.h"
 #include <api/VRButtonEvent.h>
 #include <api/VRCursorEvent.h>
 
 namespace MinVR {
 
-VROpenHapticsDevice::VROpenHapticsDevice(const std::string& name) : name(name) {
+VROpenHapticsDeviceHL::VROpenHapticsDeviceHL(const std::string& name) : name(name) {
     #ifdef WITH_HAPTICS
      /* Initialize the device, must be done before attempting to call any hd 
        functions. Passing in HD_DEFAULT_DEVICE causes the default device to be 
@@ -39,7 +39,7 @@ VROpenHapticsDevice::VROpenHapticsDevice(const std::string& name) : name(name) {
 #endif
 }
 
-VROpenHapticsDevice::~VROpenHapticsDevice() {
+VROpenHapticsDeviceHL::~VROpenHapticsDeviceHL() {
 #ifdef WITH_HAPTICS
     hdStopScheduler();
 
@@ -48,7 +48,7 @@ VROpenHapticsDevice::~VROpenHapticsDevice() {
 #endif
 }
 
-void VROpenHapticsDevice::appendNewInputEventsSinceLastCall(VRDataQueue* queue) {
+void VROpenHapticsDeviceHL::appendNewInputEventsSinceLastCall(VRDataQueue* queue) {
 #ifdef WITH_HAPTICS
     hdScheduleSynchronous(getDeviceState, this,
                           HD_MIN_SCHEDULER_PRIORITY);
@@ -86,7 +86,7 @@ void VROpenHapticsDevice::appendNewInputEventsSinceLastCall(VRDataQueue* queue) 
     _events.clear();
 }
 
-void VROpenHapticsDevice::beginUpdate() {
+void VROpenHapticsDeviceHL::beginUpdate() {
 #ifdef WITH_HAPTICS
     hdMakeCurrentDevice(hHD);
     /* Begin haptics frame.  ( In general, all state-related haptics calls
@@ -138,7 +138,7 @@ void VROpenHapticsDevice::beginUpdate() {
 #endif
 }
 
-void VROpenHapticsDevice::endUpdate() {
+void VROpenHapticsDeviceHL::endUpdate() {
 #ifdef WITH_HAPTICS
 
     /* End haptics frame. */
@@ -146,7 +146,7 @@ void VROpenHapticsDevice::endUpdate() {
 #endif
 }
 
-void VROpenHapticsDevice::handleEvent(EventType type) {
+void VROpenHapticsDeviceHL::handleEvent(EventType type) {
 #ifdef WITH_HAPTICS
     HapticsEvent* event = new HapticsEvent();
     event->type = type;
@@ -155,7 +155,7 @@ void VROpenHapticsDevice::handleEvent(EventType type) {
 #endif
 }
 
-void VROpenHapticsDevice::getDeviceState() {
+void VROpenHapticsDeviceHL::getDeviceState() {
 #ifdef WITH_HAPTICS
     hdMakeCurrentDevice(hHD);
 
@@ -168,8 +168,8 @@ void VROpenHapticsDevice::getDeviceState() {
 #endif
 }
 
-HDCallbackCode HDCALLBACK VROpenHapticsDevice::getDeviceState(void *data) {
-    VROpenHapticsDevice* device = static_cast<VROpenHapticsDevice*>(data);
+HDCallbackCode HDCALLBACK VROpenHapticsDeviceHL::getDeviceState(void *data) {
+    VROpenHapticsDeviceHL* device = static_cast<VROpenHapticsDeviceHL*>(data);
     device->getDeviceState();
 
     return HD_CALLBACK_DONE;

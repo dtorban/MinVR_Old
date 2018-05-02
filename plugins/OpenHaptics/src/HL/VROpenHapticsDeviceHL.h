@@ -6,8 +6,8 @@
  * 		Dan Orban (dtorban)
  */
 
-#ifndef VROPENHAPTICSDEVICE_H_
-#define VROPENHAPTICSDEVICE_H_
+#ifndef VROpenHapticsDeviceHL_H_
+#define VROpenHapticsDeviceHL_H_
 
 #include <vector>
 
@@ -31,10 +31,10 @@ namespace MinVR {
 /** A VRInputDevice that polls input events (mouse, keyboard, window resize, etc.)
     for all of the active GLFWWindows and returns input in MinVR event format.
  */
-class VROpenHapticsDevice : public VRInputDevice {
+class VROpenHapticsDeviceHL : public VRInputDevice {
 public:
-	VROpenHapticsDevice(const std::string& name);
-	virtual ~VROpenHapticsDevice();
+	VROpenHapticsDeviceHL(const std::string& name);
+	virtual ~VROpenHapticsDeviceHL();
 
     void appendNewInputEventsSinceLastCall(VRDataQueue* queue);
 
