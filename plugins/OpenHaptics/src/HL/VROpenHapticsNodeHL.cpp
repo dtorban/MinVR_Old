@@ -13,6 +13,7 @@ namespace MinVR {
 
 VROpenHapticsNodeHL::VROpenHapticsNodeHL(const std::string& name, VRMainInterface &vrMain) : VRDisplayNode(name), vrMain(vrMain) {
 	hapticsState.addData("IsHaptics", true);
+    hapticsState.addData("API", "HL");
 
 	device = new VROpenHapticsDeviceHL("Omni");
 	vrMain.addInputDevice(device);
@@ -41,6 +42,7 @@ void VROpenHapticsNodeHL::render(VRDataIndex* renderState, VRRenderHandler* rend
 
 	renderState->pushState();
 	renderState->addData("IsHaptics", true);
+    renderState->addData("API", "HL");
     HapticsData hapticsData;
     hapticsData.node = this;
     hapticsData.renderState = renderState;

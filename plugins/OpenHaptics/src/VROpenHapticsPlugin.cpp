@@ -16,6 +16,7 @@
 #include <plugin/VRPluginVersion.h>
 
 #include "HD/VROpenHapticsNodeHD.h"
+#include "HL/VROpenHapticsNodeHL.h"
 
 #include <main/VRFactory.h>
 
@@ -35,8 +36,9 @@ public:
 
 	PLUGIN_API void registerWithMinVR(VRMainInterface *vrMain)
 	{
-      std::cout << "Registering VROpenHapticsPlugin." << std::endl;
+      //std::cout << "Registering VROpenHapticsPlugin." << std::endl;
 		vrMain->getFactory()->registerItemType<VRDisplayNode, VROpenHapticsNodeHD>("VROpenHapticsNodeHD");
+		vrMain->getFactory()->registerItemType<VRDisplayNode, VROpenHapticsNodeHL>("VROpenHapticsNodeHL");
 	}
 
 	PLUGIN_API void unregisterWithMinVR(VRMainInterface *vrMain)
