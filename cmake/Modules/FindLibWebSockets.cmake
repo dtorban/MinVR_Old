@@ -23,6 +23,7 @@ find_library(LibWebSockets_OPT_LIBRARIES
     /usr/local/lib
 )
 
+message(lib sock:${LibWebSockets_OPT_LIBRARIES})
           
 find_library(LibWebSockets_DEBUG_LIBRARIES 
   NAMES 
@@ -34,7 +35,7 @@ find_library(LibWebSockets_DEBUG_LIBRARIES
     $ENV{LibWebSockets_ROOT}/lib 
     /usr/local/lib
 )
-
+ 
 
 if (LibWebSockets_OPT_LIBRARIES AND LibWebSockets_DEBUG_LIBRARIES)
     set(LibWebSockets_OPT_LIBRARIES optimized ${LibWebSockets_OPT_LIBRARIES})
@@ -52,6 +53,7 @@ endif()
 
 set(LibWebSockets_LIBRARIES ${LibWebSockets_OPT_LIBRARIES} ${LibWebSockets_DEBUG_LIBRARIES})
 
+message(lib sock:${LibWebSockets_LIBRARIES})
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(

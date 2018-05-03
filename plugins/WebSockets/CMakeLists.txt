@@ -16,8 +16,10 @@ project(MinVR_WebSockets)
 # Source:
 set (SOURCEFILES 
   src/VRWebSocketsPlugin.cpp
+  src/VRWebSocketsServer.cpp
 )
 set (HEADERFILES
+  src/VRWebSocketsServer.h
 )
 
 # Define the target

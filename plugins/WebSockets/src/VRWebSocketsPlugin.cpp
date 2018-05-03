@@ -16,6 +16,7 @@
 #include <plugin/VRPluginVersion.h>
 
 #include "libwebsockets.h"
+#include "VRWebSocketsServer.h"
 
 namespace MinVR {
 
@@ -30,17 +31,20 @@ public:
 	PLUGIN_API virtual ~VRWebSocketsPlugin() {
       //std::cout << "GlfwPlugin destroyed." << std::endl;
 	}
-
 	PLUGIN_API void registerWithMinVR(VRMainInterface *vrMain)
 	{
-      std::cout << "Registering VRWebSocketsPlugin." << std::endl;
+		//server = new VRWebSocketsServer(8081);
+		//vrMain->addInputDevice(new VRWebSocketsInputDevice(*server));
+		//vrMain->getFactory()->addSubFactory(new VRWebSocketsNodeFactory(*server));
 	}
 
 	PLUGIN_API void unregisterWithMinVR(VRMainInterface *vrMain)
 	{
-      //std::cout << "Unregistering GlfwPlugin." << std::endl;
-		// TODO
+		//delete server;
 	}
+
+private:
+	//VRWebSocketsServer* server;
 };
 
 } // end namespace

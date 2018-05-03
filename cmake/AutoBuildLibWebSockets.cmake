@@ -46,6 +46,7 @@ macro(AutoBuild_use_package_LibWebSockets YOUR_TARGET INTERFACE_PUBLIC_OR_PRIVAT
                 -DLIBWEBSOCKETS_BUILD_DOCS=OFF
                 -DLWS_WITH_SHARED=OFF
                 -DLWS_STATIC_PIC=ON
+                -DCMAKE_DEBUG_POSTFIX=d
             )
 
             AutoBuild_find_built_package_module_mode(${PACKAGE_NAME})
@@ -66,6 +67,8 @@ macro(AutoBuild_use_package_LibWebSockets YOUR_TARGET INTERFACE_PUBLIC_OR_PRIVAT
         target_include_directories(${YOUR_TARGET} ${INTERFACE_PUBLIC_OR_PRIVATE} ${LibWebSockets_INCLUDE_DIR})
         target_link_libraries(${YOUR_TARGET} 
             ${INTERFACE_PUBLIC_OR_PRIVATE} ${LibWebSockets_LIBRARIES}
+            ${INTERFACE_PUBLIC_OR_PRIVATE} ssl 
+            ${INTERFACE_PUBLIC_OR_PRIVATE} z
         )
 
         target_compile_definitions(${YOUR_TARGET} ${INTERFACE_PUBLIC_OR_PRIVATE} -DUSE_${PACKAGE_NAME})
