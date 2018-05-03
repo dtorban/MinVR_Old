@@ -14,9 +14,10 @@
 
 // special: include this only once in one .cpp file per plugin
 #include <plugin/VRPluginVersion.h>
+#include <main/VRFactory.h>
 
 #include "libwebsockets.h"
-#include "VRWebSocketsServer.h"
+#include "VRWebSocketDevice.h"
 
 namespace MinVR {
 
@@ -33,12 +34,12 @@ public:
 	}
 	PLUGIN_API void registerWithMinVR(VRMainInterface *vrMain)
 	{
-		server = new VRWebSocketsServer(8081);
+		//server = new VRWebSocketsServer(8081);
 		//vrMain->addInputDevice(new VRWebSocketsInputDevice(*server));
-		//vrMain->getFactory()->addSubFactory(new VRWebSocketsNodeFactory(*server));
-		while(true) {
-			server->service();
-		}
+		vrMain->getFactory()->registerItemType<VRInputDevice, VRWebSocketDevice>("VRWebSocketDevice");
+		//while(true) {
+		//	server->service();
+		//}
 	}
 
 	PLUGIN_API void unregisterWithMinVR(VRMainInterface *vrMain)

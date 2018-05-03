@@ -47,6 +47,7 @@ macro(AutoBuild_use_package_LibWebSockets YOUR_TARGET INTERFACE_PUBLIC_OR_PRIVAT
                 -DLWS_WITH_SHARED=OFF
                 -DLWS_STATIC_PIC=ON
                 -DCMAKE_DEBUG_POSTFIX=d
+                -DLWS_WITH_LEJP=ON
             )
 
             AutoBuild_find_built_package_module_mode(${PACKAGE_NAME})

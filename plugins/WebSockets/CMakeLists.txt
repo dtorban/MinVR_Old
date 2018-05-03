@@ -17,13 +17,17 @@ project(MinVR_WebSockets)
 set (SOURCEFILES 
   src/VRWebSocketsPlugin.cpp
   src/VRWebSocketsServer.cpp
+  src/VRWebSocketDevice.cpp
 )
 set (HEADERFILES
   src/VRWebSocketsServer.h
+  src/VRWebSocketDevice.h
 )
 
 # Define the target
 add_library(${PROJECT_NAME} SHARED ${HEADERFILES} ${SOURCEFILES})
+
+
 
 target_include_directories(${PROJECT_NAME} PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>                  # for headers when building

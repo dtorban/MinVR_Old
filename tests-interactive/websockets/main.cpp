@@ -20,7 +20,7 @@
 #define GL_GLEXT_PROTOTYPES
 #include <GL/gl.h> 
 #endif
-
+ 
 // MinVR header
 #include <main/VRMain.h>
 using namespace MinVR;
@@ -62,6 +62,9 @@ public:
 			}
 			return;
 		}
+        else {
+            std::cout << event.getName() << std::endl;
+        }
 
 		// Quit if the escape button is pressed
 		if (event.getName() == "KbdEsc_Down") {

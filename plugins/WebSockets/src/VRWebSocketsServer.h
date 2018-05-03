@@ -14,6 +14,11 @@
 
 namespace MinVR {
 
+class WSReceiveCallback {
+public:
+	virtual void receive(const std::string& protocol, int sessionId, const std::string& data) = 0;
+};
+
 class VRWebSocketsServer {
 public:
 	VRWebSocketsServer(int port);
@@ -22,8 +27,11 @@ public:
 	void service();
 	void sendData(const std::string& data);
 
+	void addReceiveCallback(WSReceiveCallback& callback);
+
 private:
 	lws_context *context;
+	void* serverContext;
 
 };
 

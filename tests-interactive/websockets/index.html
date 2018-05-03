@@ -12,7 +12,7 @@
 	d3.select("#command").on("keydown", function() {
 		if (d3.event.keyCode == 13) {
 			var command = d3.select("#command").node().value;
-			socket.send(JSON.stringify({command: command}));
+			socket.send(JSON.stringify({Name: "HTMLEvent",Data: command}));
 			d3.select("#command").node().value = '';
 		}
 	});
@@ -21,13 +21,14 @@
 
 	try {
 		socket.onmessage =function got_packet(msg) {
-			count++;
-			//if (count == 5) {
-				image.src = "data:image/jpg;base64," + msg.data;
-			//}
+			console.log(msg.data);
 		} 
 	} catch(exception) {
 		alert('<p>Error' + exception);  
+	}
+
+	function appendEvents() {
+		alert('append');
 	}
 </script>
 </body>
