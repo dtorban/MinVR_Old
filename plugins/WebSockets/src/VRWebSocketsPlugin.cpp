@@ -33,18 +33,21 @@ public:
 	}
 	PLUGIN_API void registerWithMinVR(VRMainInterface *vrMain)
 	{
-		//server = new VRWebSocketsServer(8081);
+		server = new VRWebSocketsServer(8081);
 		//vrMain->addInputDevice(new VRWebSocketsInputDevice(*server));
 		//vrMain->getFactory()->addSubFactory(new VRWebSocketsNodeFactory(*server));
+		while(true) {
+			server->service();
+		}
 	}
 
 	PLUGIN_API void unregisterWithMinVR(VRMainInterface *vrMain)
 	{
-		//delete server;
+		delete server;
 	}
 
 private:
-	//VRWebSocketsServer* server;
+	VRWebSocketsServer* server;
 };
 
 } // end namespace

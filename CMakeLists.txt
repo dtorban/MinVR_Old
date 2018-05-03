@@ -492,6 +492,15 @@ if (WITH_ITEST_OPENGL_SHADERPIPELINE_WITH_API AND NOT ${HAVE_WINTOOLKIT})
   message(FATAL_ERROR "WITH_ITEST_OPENGL_SHADERPIPELINE_WITH_API requires that you also build a plugin that provides a window toolkit.  You need to add one of the following: ${WINTOOLKIT_PLUGINS}.")
 endif()
 
+minvr_optional_adddir(
+  WITH_ITEST_WEBSOCKETS
+  "itest-websockets-server" 
+  "(Requires the WebSockets Plugin)" 
+  "tests-interactive/websockets"
+)
+if (WITH_ITEST_WEBSOCKETS AND NOT ${WITH_PLUGIN_WEBSOCKETS})
+  message(FATAL_ERROR "WITH_ITEST_WEBSOCKETS requires that you also build WITH_PLUGIN_OPENGL.")
+endif()
 
 # There's not actually anything to build here, right?
 #minvr_optional_adddir(
