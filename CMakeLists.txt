@@ -398,6 +398,14 @@ minvr_optional_adddir(
   "plugins/Scalable"
 )
 
+#---- WebSockets Plugin ----
+minvr_optional_adddir(
+  WITH_PLUGIN_WEBSOCKETS
+  "Web Sockets Plugin"
+  "(Requires the libwebsockets library)"
+  "plugins/WebSockets"
+)
+
 
 # ---- Plugins that Provide a Window Toolkit ----
 # Save a list of plugins that provide a window toolkit so that we can error out
