@@ -20,14 +20,15 @@
 
 namespace MinVR {
 
-class VRWebSocketDevice : public VRInputDevice, public WSReceiveCallback
+class VRWebSocketDevice : public VRInputDevice, public WSReceiveCallback, public VREventHandler
 {
 public:
-	VRWebSocketDevice(int port = WS_SERVER_PORT);
+	VRWebSocketDevice(VRMainInterface* vrMain, int port = WS_SERVER_PORT);
 	virtual ~VRWebSocketDevice();
 	
 	void appendNewInputEventsSinceLastCall(VRDataQueue *inputEvents);
 	void receive(const std::string& protocol, int sessionId, const std::string& data);
+	void onVREvent(const VRDataIndex &event);
 
 	static VRInputDevice* create(VRMainInterface *vrMain, VRDataIndex *config, const std::string &nameSpace);
 

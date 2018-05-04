@@ -5,7 +5,10 @@
 </head>
 <body>
 <input type="text" id="command">
+<div id="output">
 <script>
+
+
 
 	var socket = new WebSocket("ws://127.0.0.1:8081", "input");
 
@@ -21,7 +24,11 @@
 
 	try {
 		socket.onmessage =function got_packet(msg) {
-			console.log(msg.data);
+			if (!(msg.data === "FrameStart")) {
+				//console.log(msg.data);
+				d3.select("#output").text(msg.data);
+			}
+			//
 		} 
 	} catch(exception) {
 		alert('<p>Error' + exception);  
@@ -30,6 +37,26 @@
 	function appendEvents() {
 		alert('append');
 	}
+
+class Animal { 
+  constructor(name) {
+    this.name = name;
+  }
+  
+  speak() {
+    console.log(this.name + ' makes a noise.');
+  }
+}
+
+class Dog extends Animal {
+  speak() {
+    console.log(this.name + ' barks.');
+  }
+}
+
+var d = new Dog('Mitzie');
+d.speak(); // Mitzie barks.
+
 </script>
 </body>
 </html>

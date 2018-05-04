@@ -103,9 +103,6 @@
     <WebSocketDevice inputdeviceType="VRWebSocketDevice">
       <Port>8081</Port>
     </WebSocketDevice>
-    <WebSocketDevice2 inputdeviceType="VRWebSocketDevice">
-      <Port>8082</Port>
-    </WebSocketDevice2>
 
 
     <!-- Display Devices: Just A Single Graphics Window -->

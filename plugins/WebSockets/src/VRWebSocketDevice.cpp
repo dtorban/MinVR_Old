@@ -45,8 +45,8 @@ ws_device_event_parse(struct lejp_ctx *ctx, char reason)
 	return 0;
 }
 
-VRWebSocketDevice::VRWebSocketDevice(int port) : server(port)
-{
+VRWebSocketDevice::VRWebSocketDevice(VRMainInterface* vrMain, int port) : server(port) {
+	vrMain->addEventHandler(this);
 	server.addReceiveCallback(*this);
 }
 
@@ -77,13 +77,18 @@ bail:
 void VRWebSocketDevice::appendNewInputEventsSinceLastCall(VRDataQueue *inputEvents)
 {
 	server.service();
-	server.sendData("abc");
+	//server.sendData("abc");
 
     for (int f = 0; f < events.size(); f++) {
         inputEvents->push(events[f].serialize());
     }
 
     events.clear();   
+}
+
+
+void VRWebSocketDevice::onVREvent(const VRDataIndex &event) {
+	server.sendData(event.getName());
 }
 
 VRInputDevice* VRWebSocketDevice::create(VRMainInterface* vrMain,
@@ -93,7 +98,7 @@ VRInputDevice* VRWebSocketDevice::create(VRMainInterface* vrMain,
 		port = config->getValue("Port", nameSpace);
 	}
 
-	return new VRWebSocketDevice(port);
+	return new VRWebSocketDevice(vrMain, port);
 }
 
 };         // end namespace
