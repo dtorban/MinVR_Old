@@ -37,6 +37,7 @@ public:
 		//server = new VRWebSocketsServer(8081);
 		//vrMain->addInputDevice(new VRWebSocketsInputDevice(*server));
 		vrMain->getFactory()->registerItemType<VRInputDevice, VRWebSocketDevice>("VRWebSocketDevice");
+		vrMain->getFactory()->addSubFactory(new VRConcreteItemFactory<ParentType, T>(typeName));
 		//while(true) {
 		//	server->service();
 		//}

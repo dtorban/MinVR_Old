@@ -24,9 +24,13 @@
 
 	try {
 		socket.onmessage =function got_packet(msg) {
-			if (!(msg.data === "FrameStart")) {
+
+			var obj = JSON.parse(msg.data);
+			var eventName = obj["Name"]; 
+			if (!(eventName === "FrameStart")) {
 				//console.log(msg.data);
-				d3.select("#output").text(msg.data);
+				var obj = JSON.parse(msg.data); 
+				d3.select("#output").text(obj.Name);
 			}
 			//
 		} 

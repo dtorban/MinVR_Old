@@ -88,7 +88,7 @@ void VRWebSocketDevice::appendNewInputEventsSinceLastCall(VRDataQueue *inputEven
 
 
 void VRWebSocketDevice::onVREvent(const VRDataIndex &event) {
-	server.sendData(event.getName());
+	server.sendData("{\"Name\":\"" + event.getName() + "\"}");
 }
 
 VRInputDevice* VRWebSocketDevice::create(VRMainInterface* vrMain,
