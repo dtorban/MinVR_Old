@@ -164,6 +164,8 @@ VRGLFWWindowToolkit::createWindow(VRWindowSettings settings) {
 		_vrMain->addInputDevice(_inputDev);
 	}
 
+	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
 	_windows.push_back(window);
 	return (int)_windows.size()-1;
 }

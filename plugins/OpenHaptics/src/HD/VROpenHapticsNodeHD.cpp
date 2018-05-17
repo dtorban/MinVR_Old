@@ -51,6 +51,8 @@ void VROpenHapticsNodeHD::render(VRDataIndex* renderState, VRRenderHandler* rend
     // schedule haptics synchronous
     hdScheduleSynchronous(setHapticsState, &hapticsData,
                           HD_MIN_SCHEDULER_PRIORITY);
+#else
+    setHapticsState(renderState, renderHandler);
 #endif
 	renderState->popState();
 
@@ -63,6 +65,9 @@ void VROpenHapticsNodeHD::render(VRDataIndex* renderState, VRRenderHandler* rend
 #endif
     }
 
+#ifndef WITH_HAPTICS
+    renderHaptics();
+#endif
 }
 
 void VROpenHapticsNodeHD::setHapticsState(VRDataIndex* renderState,
