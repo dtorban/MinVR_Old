@@ -10,13 +10,13 @@
 
 #include "VRThread.h"
 #include "display/VRDisplayNode.h"
-#include "VRRenderThreadAction.h"
+#include "VRThreadGroup.h"
 
 namespace MinVR {
 
 class VRWhileRenderingNode : public VRDisplayNode {
 public:
-	VRWhileRenderingNode(const std::string &name);
+	VRWhileRenderingNode(const std::string &name, VRMainInterface *vrMain);
 	virtual ~VRWhileRenderingNode();
 
 	virtual std::string getType() const { return "VRWhileRenderingNode"; }
@@ -27,29 +27,11 @@ public:
 	virtual void displayFinishedRendering(VRDataIndex *renderState);
 	void renderLoop();
 
-	/// Starts an action on all the threads
-	void startThreadAction(VRRenderThreadAction threadAction);
-
-	/// Waits for an action to be started
-	VRRenderThreadAction waitForAction();
-
-	/// Notifies the thread group that an action is completed
-	void completeAction();
-
-	/// Waits for all threads to be completed
-	void waitForComplete();
-
 	static VRDisplayNode* create(VRMainInterface *vrMain, VRDataIndex *config, const std::string &nameSpace);
 
 	Thread* thread;
-	VRRenderHandler* renderHandler;
-	VRDataIndex* renderState;
-	VRRenderThreadAction threadAction;
-	bool actionCompleted;
-	Mutex actionMutex;
-	ConditionVariable actionCond;
-	Mutex actionCompletedMutex;
-	ConditionVariable actionCompletedCond;
+	VRMainInterface* vrMain;
+	VRThreadGroup threadGroup;
 };
 
 }

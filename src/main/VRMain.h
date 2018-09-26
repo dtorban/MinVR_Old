@@ -535,6 +535,10 @@ public:
     /// This is for MinVR internal use, public only for testing.
     bool _startLocalProcess(const std::string &name);
 
+    const std::vector<VRRenderHandler*>& getRenderHandlers() const {
+    	return _renderHandlers;
+    }
+
  private:
 
     VRSearchConfig _configPath;

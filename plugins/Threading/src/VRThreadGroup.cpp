@@ -16,6 +16,7 @@ VRThreadGroup::VRThreadGroup(int numThreads) : numThreads(numThreads), threadAct
 }
 
 VRThreadGroup::~VRThreadGroup() {
+	delete barrier;
 }
 
 VRRenderThreadAction VRThreadGroup::waitForAction() {

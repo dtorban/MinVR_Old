@@ -34,6 +34,7 @@ public:
   virtual void addPluginSearchPath(const std::string& path) = 0;
   virtual int getArgc() = 0;
   virtual char** getArgv() = 0;
+  virtual const std::vector<VRRenderHandler*>& getRenderHandlers() const = 0;
 };
 
 

@@ -9,11 +9,13 @@
 
 namespace MinVR {
 
-VRWhileRenderingNode::VRWhileRenderingNode(const std::string &name) : VRDisplayNode(name), renderHandler(NULL), threadAction(THREADACTION_None), actionCompleted(false) {
+VRWhileRenderingNode::VRWhileRenderingNode(const std::string &name, VRMainInterface *vrMain) : VRDisplayNode(name), vrMain(vrMain), threadGroup(1) {
 	thread = new Thread(&VRWhileRenderingNode::renderLoop, this);
 }
 
 VRWhileRenderingNode::~VRWhileRenderingNode() {
+	threadGroup.startThreadAction(THREADACTION_Terminate, NULL, NULL);
+
 	// Join the thread if needed
 	if (thread) {
 		thread->join();
@@ -24,102 +26,63 @@ VRWhileRenderingNode::~VRWhileRenderingNode() {
 }
 
 void VRWhileRenderingNode::renderLoop() {
-	while(true) {
-		std::cout << "Inside" << std::endl;
+	// Ensure all threads are synchronized before starting to render
+	threadGroup.synchronize();
+
+	while (true) {
 		// Wait for an action
-		VRRenderThreadAction action = waitForAction();
+		VRRenderThreadAction action = threadGroup.waitForAction();
 
 		// If the action is terminate, exit loop
 		if (action == THREADACTION_Terminate) {
 			return;
 		}
+		else
+		{
+			VRDataIndex renderState;
 
-		if (action == THREADACTION_WaitForRenderToComplete) {
-			renderState->pushState();
-			std::cout << "while rendering" << std::endl;
-			renderState->addData("WhileRendering", true);
-			VRDisplayNode::waitForRenderToComplete(renderState);
-			VRDisplayNode::displayFinishedRendering(renderState);
-			renderState->popState();
-			completeAction();
-			startThreadAction(THREADACTION_DisplayFinishedRendering);
+			// Various render actions for the display nodes
+			if (action == THREADACTION_WaitForRenderToComplete) {
+				//renderState->pushState();
+				renderState.addData("WhileRendering", true);
+				//renderHandler->onVRRenderScene(renderState);
+				//VRDisplayNode::render(&renderState, renderHandler);
+				const std::vector<VRRenderHandler*>& handlers = vrMain->getRenderHandlers();
+				for (int f = 0; f < handlers.size(); f++) {
+					handlers[f]->onVRRenderScene(renderState);
+				}
+
+				VRDisplayNode::waitForRenderToComplete(&renderState);
+				VRDisplayNode::displayFinishedRendering(&renderState);
+				//renderState->popState();
+			}
 		}
-		/*renderState->pushState();
-		renderState->addData("WhileRendering", true);
-		VRDisplayNode::render(renderState, renderHandler);
-		VRDisplayNode::waitForRenderToComplete(renderState);
-		VRDisplayNode::displayFinishedRendering(renderState);
-		renderState->popState();*/
+
+		// Notify the thread group that this thread is complete
+		threadGroup.completeAction();
+
+		// Synchronize all threads here
+		threadGroup.synchronize();
 	}
 }
 
 void VRWhileRenderingNode::render(VRDataIndex* renderState, VRRenderHandler* renderHandler) {
-	this->renderHandler = renderHandler;
-	this->renderState = renderState;
+	//threadGroup.startThreadAction(THREADACTION_Render, NULL, NULL);
 	VRDisplayNode::render(renderState, renderHandler);
+	//threadGroup.waitForComplete();
 }
 
 void VRWhileRenderingNode::waitForRenderToComplete(VRDataIndex* renderState) {
-	//VRDisplayNode::waitForRenderToComplete(renderState);
-	startThreadAction(THREADACTION_WaitForRenderToComplete);
+	threadGroup.startThreadAction(THREADACTION_WaitForRenderToComplete, NULL, NULL);
 }
 
 void VRWhileRenderingNode::displayFinishedRendering(VRDataIndex* renderState) {
-	//VRDisplayNode::displayFinishedRendering(renderState);
-	completeAction();
-	while (waitForAction() != THREADACTION_DisplayFinishedRendering) {
-	}
-	completeAction();
-
-}
-
-void VRWhileRenderingNode::startThreadAction(VRRenderThreadAction threadAction) {
-	// Sets the approriate variables needed to run an action. Then it notifies all
-	// the threads to wake up and perform that action.
-	actionMutex.lock();
-	actionCompleted = false;
-	this->threadAction = threadAction;
-	actionCond.notify_all();
-	actionMutex.unlock();
-}
-
-VRRenderThreadAction VRWhileRenderingNode::waitForAction() {
-	// Loops until threadAction is not None
-	UniqueMutexLock actionLock(actionMutex);
-	while (threadAction == THREADACTION_None) {
-		actionCond.wait(actionLock);
-	}
-
-	// Returns the defined action
-	VRRenderThreadAction action = threadAction;
-
-	actionLock.unlock();
-
-	return action;
-}
-
-void VRWhileRenderingNode::completeAction() {
-	// Loops until threads are completed and sets the action back to None
-	// once they are finished
-	actionCompletedMutex.lock();
-	threadAction = THREADACTION_None;
-	actionCompleted = true;
-	actionCompletedCond.notify_all();
-	actionCompletedMutex.unlock();
-}
-
-void VRWhileRenderingNode::waitForComplete() {
-	// Waits until all the threads are completed
-	UniqueMutexLock completedActionLock(actionCompletedMutex);
-	while (!actionCompleted) {
-		actionCompletedCond.wait(completedActionLock);
-	}
-	completedActionLock.unlock();
+	threadGroup.waitForComplete();
 }
 
 VRDisplayNode* VRWhileRenderingNode::create(VRMainInterface* vrMain,
 		VRDataIndex* config, const std::string& nameSpace) {
-	return new VRWhileRenderingNode(nameSpace);
+	return new VRWhileRenderingNode(nameSpace, vrMain);
 }
 
 }
