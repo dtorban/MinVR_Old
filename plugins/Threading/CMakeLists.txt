@@ -19,12 +19,14 @@ set (SOURCEFILES
   src/VRThreadGroup.cpp
   src/VRThreadGroupNode.cpp
   src/VRThreadingPlugin.cpp
+  src/VRWhileRenderingNode.cpp
 )
 set (HEADERFILES
   src/VRRenderThread.h
   src/VRThreadGroup.h
   src/VRThreadGroupNode.h
   src/VRThread.h
+  src/VRWhileRenderingNode.h
 )
 
 

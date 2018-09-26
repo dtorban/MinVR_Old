@@ -10,6 +10,7 @@
 #include <plugin/VRPlugin.h>
 #include "VRThreadGroupNode.h"
 #include "main/VRFactory.h"
+#include "VRWhileRenderingNode.h"
 
 // special: include this only once in one .cpp file per plugin
 #include <plugin/VRPluginVersion.h>
@@ -30,6 +31,7 @@ public:
 	{
 		// Register VRThreadGroupNode
 		vrMain->getFactory()->registerItemType<VRDisplayNode, VRThreadGroupNode>("VRThreadGroupNode");
+		vrMain->getFactory()->registerItemType<VRDisplayNode, VRWhileRenderingNode>("VRWhileRenderingNode");
 	}
 
 	PLUGIN_API void unregisterWithMinVR(VRMainInterface *vrMain)

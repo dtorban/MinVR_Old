@@ -11,20 +11,9 @@
 
 #include "VRThread.h"
 #include "display/VRDisplayNode.h"
+#include "VRRenderThreadAction.h"
 
 namespace MinVR {
-
-/**
- * VRRenderThreadAction enables notification of what type of action
- * is being called for the whole thread group
- */
-enum VRRenderThreadAction {
-	THREADACTION_None,
-	THREADACTION_Init,
-	THREADACTION_Render,
-	THREADACTION_WaitForRenderToComplete,
-	THREADACTION_DisplayFinishedRendering,
-	THREADACTION_Terminate };
 
 /**
  * VRThreadGroup is an object that keeps track of all the threading specific synchronization.  It also
