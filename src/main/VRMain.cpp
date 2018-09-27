@@ -10,6 +10,7 @@
 #endif
 
 #include <api/VRAnalogEvent.h>
+#include <display/VRCallbackNode.h>
 #include <display/VRConsoleNode.h>
 #include <display/VRGraphicsWindowNode.h>
 #include <display/VRGroupNode.h>
@@ -270,6 +271,7 @@ VRMain::VRMain() : _initialized(false), _config(NULL), _net(NULL), _factory(NULL
   _config = new VRDataIndex();
   _factory = new VRFactory();
 	// add sub-factories that are part of the MinVR core library right away
+	_factory->registerItemType<VRDisplayNode, VRCallbackNode>("VRCallbackNode");
 	_factory->registerItemType<VRDisplayNode, VRConsoleNode>("VRConsoleNode");
 	_factory->registerItemType<VRDisplayNode, VRGraphicsWindowNode>("VRGraphicsWindowNode");
 	_factory->registerItemType<VRDisplayNode, VRGroupNode>("VRGroupNode");

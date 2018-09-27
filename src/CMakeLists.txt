@@ -43,6 +43,7 @@ set(vr_config_h
 )
 
 set(vr_display_cpp
+  src/display/VRCallbackNode.cpp
   src/display/VRConsoleNode.cpp
   src/display/VRDisplayNode.cpp
   src/display/VRGraphicsWindowNode.cpp
@@ -56,6 +57,7 @@ set(vr_display_cpp
 )
 
 set(vr_display_h
+  src/display/VRCallbackNode.h
   src/display/VRConsoleNode.h
   src/display/VRDisplayNode.h
   src/display/VRGraphicsToolkit.h
