@@ -21,18 +21,25 @@ public:
 
 	virtual std::string getType() const { return "VRWhileRenderingNode"; }
 
+	void addChild(VRDisplayNode* child);
+
 	// The three main methods that need to be synchronized at the thread level
 	virtual void render(VRDataIndex *renderState, VRRenderHandler *renderHandler);
 	virtual void waitForRenderToComplete(VRDataIndex *renderState);
 	virtual void displayFinishedRendering(VRDataIndex *renderState);
 	void renderLoop();
+	void whileLoop();
 
 	static VRDisplayNode* create(VRMainInterface *vrMain, VRDataIndex *config, const std::string &nameSpace);
 
-	Thread* thread;
+	Thread* renderThread;
+	Thread* whileThread;
 	VRMainInterface* vrMain;
 	VRThreadGroup threadGroup;
-	VRDataIndex state;
+	VRDisplayNode* renderNode;
+	VRDisplayNode* whileRenderNode;
+	VRDataIndex renderState;
+
 };
 
 }
