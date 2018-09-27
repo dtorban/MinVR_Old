@@ -973,6 +973,12 @@ VRMain::addRenderHandler(VRRenderHandler* renderHandler)
 	_renderHandlers.push_back(renderHandler);
 }
 
+void
+VRMain::addCallbackHandler(VRCallbackHandler* callbackHandler)
+{
+	_callbackHandlers.push_back(callbackHandler);
+}
+
 
 VRGraphicsToolkit*
 VRMain::getGraphicsToolkit(const std::string &name) {

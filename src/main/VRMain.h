@@ -16,6 +16,7 @@
 #include <main/VREventHandler.h>
 #include <main/VRRenderHandler.h>
 #include <main/VRModelHandler.h>
+#include <main/VRCallbackHandler.h>
 #include <main/VRError.h>
 #include <main/VRSearchPath.h>
 
@@ -349,7 +350,7 @@ public:
 
     // TODO: Add function:  void removeRenderHandler();
 
-
+    void addCallbackHandler(VRCallbackHandler* callbackHandler);
 
     // STEP 2:  INITIALIZE MINVR BASED ON CONFIG FILE SETTINGS
 
@@ -539,6 +540,10 @@ public:
     	return _renderHandlers;
     }
 
+    const std::vector<VRCallbackHandler*>& getCallbackHandlers() const {
+        	return _callbackHandlers;
+       }
+
  private:
 
     VRSearchConfig _configPath;
@@ -557,6 +562,7 @@ public:
     std::vector<VREventHandler*>    _eventHandlers;
     std::vector<VRModelHandler*>    _modelHandlers;
     std::vector<VRRenderHandler*>   _renderHandlers;
+    std::vector<VRCallbackHandler*> _callbackHandlers;
 
     std::vector<VRInputDevice*>     _inputDevices;
     std::vector<VRGraphicsToolkit*> _gfxToolkits;

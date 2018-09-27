@@ -116,6 +116,7 @@ set(vr_main_cpp
 )
 
 set(vr_main_h
+  src/main/VRCallbackHandler.h
   src/main/VREventHandler.h
   src/main/VRModelHandler.h
   src/main/VRFactory.h

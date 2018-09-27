@@ -7,6 +7,7 @@
 #include <main/VREventHandler.h>
 #include <main/VRRenderHandler.h>
 #include <main/VRModelHandler.h>
+#include <main/VRCallbackHandler.h>
 #include <main/VRError.h>
 
 
@@ -26,6 +27,7 @@ public:
   virtual void addEventHandler(VREventHandler *eHandler) = 0;
   virtual void addRenderHandler(VRRenderHandler *rHandler) = 0;
   virtual void addModelHandler(VRModelHandler* modelHandler) = 0;
+  virtual void addCallbackHandler(VRCallbackHandler* callbackHandler) = 0;
   virtual void addInputDevice(VRInputDevice *dev) = 0;
   virtual VRDataIndex* getConfig() = 0;
   virtual VRGraphicsToolkit* getGraphicsToolkit(const std::string &name) = 0;
@@ -35,6 +37,7 @@ public:
   virtual int getArgc() = 0;
   virtual char** getArgv() = 0;
   virtual const std::vector<VRRenderHandler*>& getRenderHandlers() const = 0;
+  virtual const std::vector<VRCallbackHandler*>& getCallbackHandlers() const = 0;
 };
 
 

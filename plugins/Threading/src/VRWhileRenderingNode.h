@@ -32,6 +32,7 @@ public:
 	Thread* thread;
 	VRMainInterface* vrMain;
 	VRThreadGroup threadGroup;
+	VRDataIndex state;
 };
 
 }
