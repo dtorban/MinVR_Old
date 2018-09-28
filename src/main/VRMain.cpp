@@ -244,6 +244,12 @@ public:
 		}
 	}
 
+	virtual void onVRRenderCallback(const std::string& callbackName, VRDataIndex &stateData) {
+		for (std::vector<VRRenderHandler*>::iterator it = _handlers.begin(); it != _handlers.end(); it++) {
+			(*it)->onVRRenderCallback(callbackName, stateData);
+		}
+	}
+
 protected:
 	std::vector<VRRenderHandler*> _handlers;
 };
@@ -906,8 +912,8 @@ void VRMain::renderOnAllDisplays() {
   renderState.setName("RenderState");
 	renderState.addData("InitRender", (int)(_frame == 0));
 
+	VRCompositeRenderHandler compositeHandler(_renderHandlers);
 	if (!_displayGraphs.empty()) {
-		VRCompositeRenderHandler compositeHandler(_renderHandlers);
 		for (std::vector<VRDisplayNode*>::iterator it = _displayGraphs.begin(); it != _displayGraphs.end(); ++it) (*it)->render(&renderState, &compositeHandler);
 
 		// TODO: Advanced: if you are really trying to optimize performance, this

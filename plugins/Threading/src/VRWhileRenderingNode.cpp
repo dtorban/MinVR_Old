@@ -52,6 +52,7 @@ void VRWhileRenderingNode::renderLoop() {
 			if (action == THREADACTION_Render) {
 
 				renderState = *threadGroup.getRenderState();
+				renderHandler = threadGroup.getRenderHandler();
 				renderNode->render(&renderState, threadGroup.getRenderHandler());
 			}
 			else if (action == THREADACTION_WaitForRenderToComplete) {
@@ -88,10 +89,11 @@ void VRWhileRenderingNode::whileLoop() {
 			if (action == THREADACTION_Render) {
 			}
 			else if (action == THREADACTION_WaitForRenderToComplete) {
-				const std::vector<VRRenderHandler*>& handlers = vrMain->getRenderHandlers();
+				/*const std::vector<VRRenderHandler*>& handlers = vrMain->getRenderHandlers();
 				for (int f = 0; f < handlers.size(); f++) {
 					whileRenderNode->render(&renderState, handlers[f]);
-				}
+				}*/
+				whileRenderNode->render(&renderState, renderHandler);
 				whileRenderNode->waitForRenderToComplete(threadGroup.getRenderState());
 				whileRenderNode->displayFinishedRendering(threadGroup.getRenderState());
 			}

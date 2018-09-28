@@ -19,11 +19,7 @@ VRCallbackNode::~VRCallbackNode() {
 }
 
 void VRCallbackNode::render(VRDataIndex *renderState, VRRenderHandler* renderHandler) {
-	const std::vector<VRCallbackHandler*>& handlers = vrMain->getCallbackHandlers();
-
-	for (int f = 0; f < handlers.size(); f++) {
-		handlers[f]->onRun(callbackName, *renderState);
-	}
+	renderHandler->onVRRenderCallback(callbackName, *renderState);
 }
 
 VRDisplayNode*

@@ -39,6 +39,7 @@ public:
 	VRDisplayNode* renderNode;
 	VRDisplayNode* whileRenderNode;
 	VRDataIndex renderState;
+	VRRenderHandler* renderHandler;
 
 };
 

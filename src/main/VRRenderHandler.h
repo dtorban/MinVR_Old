@@ -45,6 +45,8 @@ public:
   /// should do any computation that is the same for both eyes, such as loading
   /// textures or mesh data into graphics card memory.
   virtual void onVRRenderContext(const VRDataIndex &stateData) {};
+
+  virtual void onVRRenderCallback(const std::string& callbackName, VRDataIndex &stateData) {}
 };
 
 } // end namespace
