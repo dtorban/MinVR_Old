@@ -555,7 +555,8 @@ public:
 
     std::string      _name;
     VRDataIndex*     _config;
-    VRNetInterface*  _net;
+    VRNetInterface*  _eventNet;
+    VRNetInterface*  _renderNet;
     VRFactory*       _factory;
     VRPluginManager* _pluginMgr;
 

@@ -272,7 +272,7 @@ std::string getCurrentWorkingDir()
 }
 
 
-VRMain::VRMain() : _initialized(false), _config(NULL), _net(NULL), _factory(NULL), _pluginMgr(NULL), _frame(0), _shutdown(false)
+VRMain::VRMain() : _initialized(false), _config(NULL), _eventNet(NULL), _renderNet(NULL), _factory(NULL), _pluginMgr(NULL), _frame(0), _shutdown(false)
 {
   _config = new VRDataIndex();
   _factory = new VRFactory();
@@ -323,8 +323,12 @@ VRMain::~VRMain()
 		delete _factory;
 	}
 
-	if (_net) {
-		delete _net;
+	if (_eventNet && (_eventNet != _renderNet)) {
+		delete _eventNet;
+	}
+
+	if (_renderNet) {
+		delete _renderNet;
 	}
 
 	if (_pluginMgr) {
@@ -661,28 +665,39 @@ void VRMain::initialize(int argc, char **argv) {
 	// Check the type of this VRSetup, it should be either "VRServer",
 	// "VRClient", or "VRStandAlone"
   if(_config->hasAttribute(_name, "hostType")){
-    std::string type = _config->getAttributeValue(_name, "hostType");
-		if (type == "VRServer") {
-			std::string port = _config->getValue("Port", _name);
-			int numClients = _config->getValue("NumClients", _name);
-      stringstream s;
-      s << "This VRSetup is a SERVER running on Port " << port << " and expecting " << numClients << " clients.";
-      VRLOG_STATUS(s.str());
-			_net = new VRNetServer(port, numClients);
-		}
-		else if (type == "VRClient") {
-			std::string port = _config->getValue("Port", _name);
-			std::string ipAddress = _config->getValue("ServerIP", _name);
-      stringstream s;
-      s << "This VRSetup is a CLIENT that will connect to " << ipAddress << ":" << port << ".";
-      VRLOG_STATUS(s.str());
-      _net = new VRNetClient(ipAddress, port);
-		}
-		else { // type == "VRStandAlone"
-      VRLOG_STATUS("This VRSetup is running in stand alone mode -- no networking.")
-			// no networking, leave _net=NULL
-		}
-	}
+	  std::string type = _config->getAttributeValue(_name, "hostType");
+	  if (type == "VRServer" || type == "VREventServer" || type == "VRRenderServer") {
+		  std::string port = _config->getValue("Port", _name);
+		  int numClients = _config->getValue("NumClients", _name);
+		  stringstream s;
+		  s << "This VRSetup is a SERVER running on Port " << port << " and expecting " << numClients << " clients.";
+		  VRLOG_STATUS(s.str());
+		  VRNetServer* net = new VRNetServer(port, numClients);
+		  _eventNet = type == "VRServer" || type == "VREventServer" ? net : NULL;
+		  _renderNet = type == "VRServer" || type == "VRRenderServer" ? net : NULL;
+	  }
+	  else if (type == "VRClient") {
+		  std::string port = _config->getValue("Port", _name);
+		  std::string eventPort = _config->getValueWithDefault("EventPort", port, _name);
+		  std::string renderPort = _config->getValueWithDefault("RenderPort", port, _name);
+		  std::string ipAddress = _config->getValue("ServerIP", _name);
+		  stringstream s;
+		  s << "This VRSetup is a CLIENT that will connect to " << ipAddress << ":" << port << ".";
+		  VRLOG_STATUS(s.str());
+		  if (eventPort == renderPort) {
+			  _eventNet = new VRNetClient(ipAddress, port);
+			  _renderNet = _eventNet;
+		  }
+		  else {
+			  _eventNet = new VRNetClient(ipAddress, eventPort);
+			  _renderNet = new VRNetClient(ipAddress, renderPort);
+		  }
+	  }
+	  else { // type == "VRStandAlone"
+		  VRLOG_STATUS("This VRSetup is running in stand alone mode -- no networking.")
+					// no networking, leave _net=NULL
+	  }
+  }
 
 	// STEP 7: CONFIGURE INPUT DEVICES:
 	{
@@ -873,8 +888,8 @@ VRMain::synchronizeAndProcessEvents() {
 	// that all MinVR nodes have the same list of input events generated
 	// since the last call to synchronizeAndProcessEvents(..).  So,
 	// every node will process the same set of input events this frame.
-  if (_net != NULL) {
-    eventQueue = _net->syncEventDataAcrossAllNodes(eventQueue);
+  if (_eventNet != NULL) {
+    eventQueue = _eventNet->syncEventDataAcrossAllNodes(eventQueue);
   }
 
   while (eventQueue.notEmpty()) {
@@ -928,8 +943,8 @@ void VRMain::renderOnAllDisplays() {
 	// all nodes have finished rendering on all their attached display
 	// devices.  So, after this, we will be ready to "swap buffers",
 	// simultaneously displaying these new renderings on all nodes.
-	if (_net != NULL) {
-		_net->syncSwapBuffersAcrossAllNodes();
+	if (_renderNet != NULL) {
+		_renderNet->syncSwapBuffersAcrossAllNodes();
 	}
 
 	if (!_displayGraphs.empty()) {
