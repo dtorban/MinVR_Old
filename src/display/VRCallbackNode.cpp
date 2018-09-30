@@ -20,6 +20,9 @@ VRCallbackNode::~VRCallbackNode() {
 
 void VRCallbackNode::render(VRDataIndex *renderState, VRRenderHandler* renderHandler) {
 	renderHandler->onVRRenderCallback(callbackName, *renderState);
+	if (getChildren().size() > 0) {
+		VRDisplayNode::render(renderState, renderHandler);
+	}
 }
 
 VRDisplayNode*
